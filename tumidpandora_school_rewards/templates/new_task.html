@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Start a New Task{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'tasks' %}">Tasks</a></li>
+    <li class="breadcrumb-item active" aria-current="page">New Task</li>
+{% endblock %}
+
+{% block newtask %}
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include 'includes/form.html' %}
+    <button type="submit" class="btn btn-success">Save</button>
+  </form>
+
+{% endblock %}

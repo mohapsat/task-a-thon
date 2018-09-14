@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Reply{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'tasks' %}">Tasks</a></li>
+    <li class="breadcrumb-item" aria-current="page"><a href="{% url 'task_replies' post.task.pk %}">{{ post.task.name }}</a></li>
+    <li class="breadcrumb-item" aria-current="page"><a href="{% url 'task_replies' post.task.pk %}">{{ post.message }}</a></li>
+    <li class="breadcrumb-item active">Edit reply</li>
+{% endblock %}
+
+{% block editreply %}
+  <form method="post" class="mb-4" novalidate>
+    {% csrf_token %}
+    {% include 'includes/form.html' %}
+    <button type="submit" class="btn btn-outline-secondary btn-sm">Save changes</button>
+    <a href="{% url 'task_replies' post.task.pk %}" class="btn btn-outline-info btn-sm" role="button">Cancel</a>
+  </form>
+{% endblock %}

@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'tasks' %}">Tasks</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ task.name }}</li>
+{% endblock %}
+
+
+{% block tasks  %}
+    <table class="table table-hover bg-light">
+      <thead class="thead-dark">
+      <tr>
+        <th>Task</th>
+        <th>Success Criteria</th>
+        <th>Starter</th>
+        <th>Status</th>
+        <th>Expires On</th>
+        <!--<th>Last Update</th>-->
+        <th></th><!--actions-->
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>{{ task.name }}</td>
+        <td class="text-muted">{{ task.success_criteria }}</td>
+        <td class="align-middle">{{ task.starter.username }}</td>
+        <td class="align-middle">{{ task.status }}</td>
+        <td class="align-middle">{{ task.expires_on }}</td>
+        <!--<td class="align-middle">{{ task.last_updated }}</td>-->
+        <td class="align-middle"></td>
+      </tr>
+      </tbody>
+    </table>
+
+    {% if task.starter == user %}
+            <button type="button" class="btn btn-outline-secondary btn-sm disabled">Pay</button>
+    {% endif %}
+    {% if task.starter != user %}
+            <button type="button" class="btn btn-outline-secondary btn-sm">Claim</button>
+    {% endif %}
+    {% if task.starter == user %}
+            <a href="{% url 'edit_task' task.pk %}" class="btn btn-outline-info btn-sm" role="button" aria-pressed="true">
+        Edit</a>
+    {% endif %}
+
+{% endblock %}
+
+{% block replies %}
+    <p class="lead">
+        Replies
+        <span class="badge badge-pill badge-info">{{ task.posts.count }}</span>
+    </p>
+
+
+{% if task.posts.count > 0 %}
+
+    <table class="table bg-white">
+        <thead class="thead-light">
+            <tr>
+                <th>User</th>
+                <th>Message</th>
+                <th>Replied On</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for post in posts %}
+        <tr>
+            <td class="align-middle">{{ post.created_by.username}}
+            <small>(Posts: {{ post.created_by.posts.count }})</small>
+                <!--TODO: Add Karma or UserType based on # posts. If else-->
+            </td>
+            <td class="align-middle">{{ post.message }}</td>
+            <td class="align-middle">{{ post.created_at }}</td>
+            <td class="align-middle">
+                {% if post.created_by == user %}
+                <a href="{% url 'edit_post' post.task.pk post.pk %}" class="btn btn-outline-info btn-sm" role="button" aria-pressed="true">
+                Edit</a>
+                <a href="{% url 'delete_post' post.task.pk post.pk %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">
+                Delete</a>
+                {% endif %}
+                <!--<a href="#" class="btn btn-secondary btn-sm active" role="button" aria-pressed="true">-->
+                <!--Reply</a>-->
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+
+{% if posts.has_other_pages %}
+  <nav aria-label="Posts pagination" class="mb-4">
+    <ul class="pagination">
+      {% if posts.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ posts.previous_page_number }}">Previous</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Previous</span>
+        </li>
+      {% endif %}
+
+      {% for page_num in posts.paginator.page_range %}
+        {% if posts.number == page_num %}
+          <li class="page-item active">
+            <span class="page-link">
+              {{ page_num }}
+              <span class="sr-only">(current)</span>
+            </span>
+          </li>
+        {% else %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+
+      {% if posts.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ posts.next_page_number }}">Next</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Next</span>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+{% endif %}
+
+{% else %}
+    <div class="lead my-3" class="text-muted">
+      No replies yet.
+    </div>
+{% endif %}
+    <a href="{% url 'new_reply_to_task' task.pk %}" class="btn btn-outline-secondary btn-sm active" role="button" aria-pressed="true">
+        New Reply</a>
+
+{% endblock %}
+

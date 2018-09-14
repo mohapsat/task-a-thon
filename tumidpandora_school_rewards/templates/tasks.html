@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active" aria-current="page">Tasks</li>
+{% endblock %}
+
+{% block tasks %}
+
+    <table class="table bg-white table-striped">
+      <thead class="thead-dark">
+      <tr>
+        <th>Task</th>
+        <th>Starter</th>
+        <th>Replies</th>
+        <th>Reward</th>
+        <th>Status</th>
+        <th>Expires On</th>
+        <!--<th>Last Update</th>-->
+        <th>
+            <a href="{% url 'new_task' %}" class="btn btn-warning btn-sm text-dark" role="button" aria-pressed="true">
+        Create New Task</a>
+        </th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for task in tasks %}
+      <tr>
+        <td><a href="{% url 'task_replies' task.pk %}">{{ task.snippet_name }}</a><br>
+        <small class="text-muted d-block">{{ task.snippet_criteria }}</small>
+        </td>
+        <td class="align-middle">{{ task.starter|title }}</td>
+        <td class="align-middle">{{ task.posts.count }}</td>
+        <td class="align-middle">{{ task.reward.amount }}</td>
+        <td class="align-middle">{{ task.status }}</td>
+        <td class="align-middle">{{ task.expires_on |date:"M. d, Y (D)" }}</td>
+        <!--<td class="align-middle">{{ task.last_updated }}</td>-->
+        <td class="align-middle">
+        {% if task.starter == user %}
+            <button type="button" class="btn btn-outline-secondary btn-sm disabled">
+            Pay
+            </button>
+        {% endif %}
+        {% if task.starter != user %}
+            <button type="button" class="btn btn-outline-secondary btn-sm">
+            Claim
+            </button>
+        {% endif %}
+        {% if task.starter == user %}
+            <a href="{% url 'edit_task' task.pk %}" class="btn btn-outline-info btn-sm" role="button" aria-pressed="true">
+            Edit
+            </a>
+            <a href="{% url 'delete_task' task.pk %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">
+            Delete
+            </a>
+        {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+    <!--<a href="{% url 'new_task' %}" class="btn btn-warning btn-sm active" role="button" aria-pressed="true">-->
+        <!--Create New Task</a>-->
+
+{% endblock %}
+
