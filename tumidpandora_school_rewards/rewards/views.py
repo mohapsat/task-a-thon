@@ -3,7 +3,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, get_list_or_404
 from django.views.generic import UpdateView, DeleteView, ListView
 from django.http import HttpResponse
 from django.utils import timezone
@@ -11,20 +11,31 @@ from django.utils.decorators import method_decorator
 
 from .models import Task, Post, Reward, Status
 from .forms import NewTaskForm, NewReplyForm
+from django import forms
 
 
 def home_view(request):
     return render(request, 'home.html')
 
 
-# FBV implementation - refer to CBV below
+# FnBasedVw implementation - refer to ClsBsdVw below
 @login_required
 def tasks_view(request):
-    tasks = Task.objects.all()
-    # task_count = Task.objects.all().count()
-    data = {'tasks': tasks}
+    tasks = Task.objects.order_by('-last_updated')
+    # tasks = get_list_or_404(Task)
 
-    return render(request, 'tasks.html', data)
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(tasks, 5)
+
+    try:
+        tasks = paginator.page(page)
+    except PageNotAnInteger:
+        tasks = paginator.page(1)
+    except EmptyPage:
+        tasks = paginator.page(paginator.num_pages)
+
+    return render(request, 'tasks.html', {'tasks': tasks})
     # pass
 
 
@@ -55,7 +66,7 @@ def task_replies_view(request, pk):  # task detail view
     queryset = task.posts.order_by('-created_at').annotate(replies=Count('id'))  # posts.id
     page = request.GET.get('page', 1)
 
-    paginator = Paginator(queryset, 4)
+    paginator = Paginator(queryset, 2)
 
     try:
         posts = paginator.page(page)
@@ -71,11 +82,12 @@ def task_replies_view(request, pk):  # task detail view
 def new_task_view(request):  # create new task form
 
     # user = User.objects.first()  # TODO: get the currently logged in user
-    status = Status.objects.get(name='Open')  # default Open
-    reward = Reward.objects.first()           # default a reward
+    status = get_object_or_404(Status, name='OPEN')  # default Open
+    # reward = Reward.objects.first()  # default a reward
 
     if request.method == 'POST':
         form = NewTaskForm(request.POST)
+        reward = Reward.objects.get(id=request.POST['reward'])  # Get reward from select field
         if form.is_valid():
             task = form.save(commit=False)
             task.starter = request.user
@@ -214,7 +226,7 @@ class PostDeleteView(DeleteView):
         task = self.object.task
         return reverse_lazy('task_replies', kwargs={'pk': task.pk})
 
-    # TODO: fix for other users deleting any posts / replies problem
+    # fixed: for other users deleting any posts / replies problem
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset.filter(created_by=self.request.user)

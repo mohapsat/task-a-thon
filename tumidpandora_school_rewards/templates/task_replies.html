@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load humanize %}
+
 {% block breadcrumb %}
     <li class="breadcrumb-item"><a href="{% url 'tasks' %}">Tasks</a></li>
     <li class="breadcrumb-item active" aria-current="page">{{ task.name }}</li>
@@ -14,7 +16,7 @@
         <th>Success Criteria</th>
         <th>Starter</th>
         <th>Status</th>
-        <th>Expires On</th>
+          <th>Expires</th>
         <!--<th>Last Update</th>-->
         <th></th><!--actions-->
       </tr>
@@ -23,9 +25,9 @@
       <tr>
         <td>{{ task.name }}</td>
         <td class="text-muted">{{ task.success_criteria }}</td>
-        <td class="align-middle">{{ task.starter.username }}</td>
+          <td class="align-middle">{{ task.starter.last_name|title }}</td>
         <td class="align-middle">{{ task.status }}</td>
-        <td class="align-middle">{{ task.expires_on }}</td>
+          <td class="align-middle">{{ task.expires_on|naturaltime }}</td>
         <!--<td class="align-middle">{{ task.last_updated }}</td>-->
         <td class="align-middle"></td>
       </tr>
@@ -40,10 +42,54 @@
     {% endif %}
     {% if task.starter == user %}
             <a href="{% url 'edit_task' task.pk %}" class="btn btn-outline-info btn-sm" role="button" aria-pressed="true">
-        Edit</a>
+                Edit</a>
+<a href="{% url 'delete_task' task.pk %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">
+    Delete
+</a>
     {% endif %}
 
+
+<!--<table class="table table-dark table-striped my-4">-->
+<!--<thead class="thead">-->
+<!--<tr>-->
+<!--<th>User</th>-->
+<!--<th>Message</th>-->
+<!--<th>Claim Status</th>-->
+<!--<th>Claimed</th>-->
+<!--</tr>-->
+<!--</thead>-->
+<!--<tbody>-->
+
+<!--<tr>-->
+<!--<td class="align-middle">Mr. Smith-->
+<!--<small>(Claimed: 4)</small>-->
+<!--&lt;!&ndash;TODO: Add Karma or UserType based on # posts. If else&ndash;&gt;-->
+<!--</td>-->
+<!--<td class="align-middle">Grade 2 Room 10 has met the criteria... </td>-->
+<!--<td class="align-middle">Waiting for Approval</td>-->
+<!--<td class="align-middle">4 days, 12 hours ago</td>-->
+<!--<td class="align-middle">-->
+
+<!--<a href="#" class="btn btn-info btn-sm" role="button" aria-pressed="true">-->
+<!--Edit</a>-->
+<!--<a href="#" class="btn btn-warning btn-sm" role="button" aria-pressed="true">-->
+<!--View</a>-->
+<!--<a href="#" class="btn btn-success btn-sm" role="button" aria-pressed="true">-->
+<!--Approve</a>-->
+<!--<a href="#" class="btn btn-danger btn-sm" role="button" aria-pressed="true">-->
+<!--Delete</a>-->
+
+<!--&lt;!&ndash;<a href="#" class="btn btn-secondary btn-sm active" role="button" aria-pressed="true">&ndash;&gt;-->
+<!--&lt;!&ndash;Reply</a>&ndash;&gt;-->
+<!--</td>-->
+<!--</tr>-->
+
+<!--</tbody>-->
+<!--</table>-->
+
+
 {% endblock %}
+
 
 {% block replies %}
     <p class="lead">
@@ -59,7 +105,7 @@
             <tr>
                 <th>User</th>
                 <th>Message</th>
-                <th>Replied On</th>
+                <th>Replied</th>
                 <th></th>
             </tr>
         </thead>
@@ -71,7 +117,7 @@
                 <!--TODO: Add Karma or UserType based on # posts. If else-->
             </td>
             <td class="align-middle">{{ post.message }}</td>
-            <td class="align-middle">{{ post.created_at }}</td>
+            <td class="align-middle">{{ post.created_at |naturaltime }}</td>
             <td class="align-middle">
                 {% if post.created_by == user %}
                 <a href="{% url 'edit_post' post.task.pk post.pk %}" class="btn btn-outline-info btn-sm" role="button" aria-pressed="true">
@@ -128,6 +174,7 @@
       {% endif %}
     </ul>
   </nav>
+
 {% endif %}
 
 {% else %}

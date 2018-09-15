@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load humanize %}
+
 {% block breadcrumb %}
     <li class="breadcrumb-item active" aria-current="page">Tasks</li>
 {% endblock %}
@@ -14,8 +16,8 @@
         <th>Replies</th>
         <th>Reward</th>
         <th>Status</th>
-        <th>Expires On</th>
-        <!--<th>Last Update</th>-->
+          <th>Expires</th>
+          <!--<th>Updated</th>-->
         <th>
             <a href="{% url 'new_task' %}" class="btn btn-warning btn-sm text-dark" role="button" aria-pressed="true">
         Create New Task</a>
@@ -28,12 +30,13 @@
         <td><a href="{% url 'task_replies' task.pk %}">{{ task.snippet_name }}</a><br>
         <small class="text-muted d-block">{{ task.snippet_criteria }}</small>
         </td>
-        <td class="align-middle">{{ task.starter|title }}</td>
+          <td class="align-middle">{{ task.starter.last_name|title }}</td>
         <td class="align-middle">{{ task.posts.count }}</td>
-        <td class="align-middle">{{ task.reward.amount }}</td>
+          <td class="align-middle">${{ task.reward.amount }}</td>
         <td class="align-middle">{{ task.status }}</td>
-        <td class="align-middle">{{ task.expires_on |date:"M. d, Y (D)" }}</td>
-        <!--<td class="align-middle">{{ task.last_updated }}</td>-->
+          <!--<td class="align-middle">{{ task.expires_on |date:"M. d, Y (D)" }}</td>-->
+          <td class="align-middle">{{ task.expires_on |naturaltime }}</td>
+          <!--<td class="align-middle">{{ task.last_updated|naturaltime }}</td>-->
         <td class="align-middle">
         {% if task.starter == user %}
             <button type="button" class="btn btn-outline-secondary btn-sm disabled">
@@ -58,6 +61,48 @@
       {% endfor %}
       </tbody>
     </table>
+
+
+{% if tasks.has_other_pages %}
+<nav aria-label="Tasks pagination" class="mb-4">
+    <ul class="pagination">
+        {% if tasks.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ tasks.previous_page_number }}">Previous</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">Previous</span>
+        </li>
+        {% endif %}
+
+        {% for page_num in tasks.paginator.page_range %}
+        {% if tasks.number == page_num %}
+        <li class="page-item active">
+            <span class="page-link">
+              {{ page_num }}
+              <span class="sr-only">(current)</span>
+            </span>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% if tasks.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ tasks.next_page_number }}">Next</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">Next</span>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
 
     <!--<a href="{% url 'new_task' %}" class="btn btn-warning btn-sm active" role="button" aria-pressed="true">-->
         <!--Create New Task</a>-->

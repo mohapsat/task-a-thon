@@ -12,7 +12,9 @@
   <form method="post" novalidate>
     {% csrf_token %}
     {% include 'includes/form.html' %}
-    <button type="submit" class="btn btn-success">Save</button>
+      <button type="submit" class="btn btn-success btn-sm">Save</button>
+      <a href="{% url 'tasks' %}" class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">
+          Cancel</a>
   </form>
 
 {% endblock %}

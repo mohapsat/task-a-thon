@@ -25,9 +25,10 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Hello, {{ user.username|title }}!
+                <!--TODO: Add salutation, last_name-->
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
-              <a class="dropdown-item" href="#">My Account</a>
+                <a class="dropdown-item" href="{% url 'my_account' %}">My Account</a>
               <a class="dropdown-item" href="{% url 'password_change' %}">Change Password</a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
@@ -98,6 +99,11 @@
 
     <div class="deletetask">
         {% block deletetask %}
+        {% endblock %}
+    </div>
+
+    <div class="myaccount">
+        {% block myaccount %}
         {% endblock %}
     </div>
 
