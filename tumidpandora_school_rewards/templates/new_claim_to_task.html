@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Claim {{ task.name }}{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'tasks' %}">Tasks</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'task_replies' task.pk %}">{{ task.name }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">New Claim</li>
+{% endblock %}
+
+{% block newclaimtotask %}
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include 'includes/form.html' %}
+      <button type="submit" class="btn btn-success btn-sm">Save</button>
+      <a href="{% url 'task_replies' task.pk %}" class="btn btn-outline-secondary btn-sm" role="button"
+         aria-pressed="true">
+          Cancel</a>
+  </form>
+
+{% endblock %}

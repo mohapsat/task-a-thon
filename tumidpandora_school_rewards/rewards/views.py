@@ -9,9 +9,11 @@ from django.http import HttpResponse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 
-from .models import Task, Post, Reward, Status
-from .forms import NewTaskForm, NewReplyForm
+from .models import Task, Post, Reward, Status, Claim
+from .forms import NewTaskForm, NewReplyForm, NewClaimForm
 from django import forms
+
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def home_view(request):
@@ -21,6 +23,12 @@ def home_view(request):
 # FnBasedVw implementation - refer to ClsBsdVw below
 @login_required
 def tasks_view(request):
+
+    # TODO: Filter tasks by school. Think it needs to have a school associated to a user.
+    # school1 = School.objects.get(name='School 1')
+    # >>> school1.tasks.all()
+    # school1.users.all()
+
     tasks = Task.objects.order_by('-last_updated')
     # tasks = get_list_or_404(Task)
 
@@ -62,8 +70,16 @@ class TaskListView(ListView):
 def task_replies_view(request, pk):  # task detail view
     # task = Task.objects.get(pk=pk)
     task = get_object_or_404(Task, pk=pk)
+    # claims = get_list_or_404(Claim)
+
+    try:
+        # claims = Claim.objects.get(task=task)
+        claims = Claim.objects.filter(task=task)  # .values()
+    except ObjectDoesNotExist:
+        claims = None
 
     queryset = task.posts.order_by('-created_at').annotate(replies=Count('id'))  # posts.id
+
     page = request.GET.get('page', 1)
 
     paginator = Paginator(queryset, 2)
@@ -75,7 +91,7 @@ def task_replies_view(request, pk):  # task detail view
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
 
-    return render(request, 'task_replies.html', {"task": task, 'posts': posts})
+    return render(request, 'task_replies.html', {"task": task, 'posts': posts, 'claims': claims})
 
 
 @login_required
@@ -134,6 +150,32 @@ def new_reply_to_task_view(request, pk):  # new reply / post to task
 
 
 @login_required
+def new_claim_to_task_view(request, pk):  # new reply / post to task
+
+    task = get_object_or_404(Task, pk=pk)
+    # user = User.objects.first()  # TODO: get the currently logged in user
+    status = get_object_or_404(Status, name='OPEN')  # 1=OPEN
+
+    if request.method == 'POST':
+        form = NewClaimForm(request.POST)
+        if form.is_valid():
+            claim = form.save(commit=False)
+            claim.created_by = request.user
+            # post.save() # TODO: Enable after migrating , added null=True for FKs
+            claim = Claim.objects.create(
+                message=form.cleaned_data.get('message'),
+                task=task,
+                status=status,
+                created_by=request.user
+            )
+            return redirect('task_replies', pk=task.pk)
+    else:
+        form = NewClaimForm()
+    return render(request, 'new_claim_to_task.html', {"task": task, "form": form})
+    pass
+
+
+@login_required
 def reply_to_post_view(request, pk, post_id):  # new reply to post
     task = get_object_or_404(Task, pk=pk)
     post = Task.posts.get(id=post_id)
@@ -149,11 +191,13 @@ class TaskUpdateView(UpdateView):
 
     model = Task
     fields = ('name', 'success_criteria', 'expires_on', 'reward')
+    # TODO: Edit / Update from fields need to look better
+
     template_name = 'edit_task.html'
     pk_url_kwarg = 'pk'
     context_object_name = 'task'
 
-    # TODO: fix for other users editing any tasks problem
+    # Fix for other users editing anyone's tasks problem
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset.filter(starter=self.request.user)

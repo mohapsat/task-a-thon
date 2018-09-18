@@ -1,7 +1,7 @@
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
-from .forms import SignUpForm
+from .forms import SignUpForm, ParentSignUpForm, TeacherSignUpForm
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -33,3 +33,33 @@ class UserUpdateView(UpdateView):
 
     def get_object(self):
         return self.request.user
+
+
+def parent_signup_view(request):
+
+    if request.method == 'POST':
+        form = ParentSignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('tasks')
+    else:
+        form = ParentSignUpForm()
+    return render(request, 'signup.html', {'form': form})
+
+    pass
+
+
+def teacher_signup_view(request):
+
+    if request.method == 'POST':
+        form = TeacherSignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('tasks')
+    else:
+        form = TeacherSignUpForm()
+    return render(request, 'signup.html', {'form': form})
+
+    pass

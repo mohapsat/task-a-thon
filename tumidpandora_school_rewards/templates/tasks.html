@@ -8,6 +8,7 @@
 
 {% block tasks %}
 
+
     <table class="table bg-white table-striped">
       <thead class="thead-dark">
       <tr>
@@ -27,13 +28,15 @@
       <tbody>
       {% for task in tasks %}
       <tr>
-        <td><a href="{% url 'task_replies' task.pk %}">{{ task.snippet_name }}</a><br>
+        <td><a href="{% url 'task_replies' task.pk %}">[{{task.school.name}}] {{ task.snippet_name }}</a><br>
         <small class="text-muted d-block">{{ task.snippet_criteria }}</small>
         </td>
-          <td class="align-middle">{{ task.starter.last_name|title }}</td>
+          <td class="align-middle">{{ task.starter.username|title }}</td>
         <td class="align-middle">{{ task.posts.count }}</td>
           <td class="align-middle">${{ task.reward.amount }}</td>
-        <td class="align-middle">{{ task.status }}</td>
+        <td class="align-middle">
+            {{ task.status }}<!-- TODO: update task status once claimed -->
+        </td>
           <!--<td class="align-middle">{{ task.expires_on |date:"M. d, Y (D)" }}</td>-->
           <td class="align-middle">{{ task.expires_on |naturaltime }}</td>
           <!--<td class="align-middle">{{ task.last_updated|naturaltime }}</td>-->
@@ -43,10 +46,11 @@
             Pay
             </button>
         {% endif %}
-        {% if task.starter != user %}
-            <button type="button" class="btn btn-outline-secondary btn-sm">
+        {% if task.starter != user and task.claims.count == 0%}
+            <!--i.e. show only when task has not been claimed-->
+            <a href="{% url 'new_claim_to_task' task.pk %}" class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">
             Claim
-            </button>
+            </a>
         {% endif %}
         {% if task.starter == user %}
             <a href="{% url 'edit_task' task.pk %}" class="btn btn-outline-info btn-sm" role="button" aria-pressed="true">

@@ -1,9 +1,41 @@
 from datetime import datetime, timedelta
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 
 
-# Create your models here.
+# Ref: https://simpleisbetterthancomplex.com/tutorial/2018/01/18/how-to-implement-multiple-user-types-with-django.html
+class User(AbstractUser):
+    is_parent = models.BooleanField(default=False)
+    is_teacher = models.BooleanField(default=False)
+
+
+class School(models.Model):
+
+    name = models.CharField(max_length=64)
+    street_address = models.CharField(max_length=100)
+    city = models.CharField(max_length=64)
+    state = models.CharField(max_length=25)
+    zip_code = models.CharField(max_length=32)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(null=True)
+    created_by = models.ForeignKey(User, related_name='schools', on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(User, related_name='+', on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        # return self.name
+        return "%s, %s, $s - $s" % (self.name, self.city, self.state, self.zip_code)
+
+
+class Parent(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    school = models.ForeignKey(School, related_name="parents", on_delete=models.CASCADE, null=True)
+
+
+class Teacher(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    school = models.ForeignKey(School, related_name="teachers", on_delete=models.CASCADE, null=True)
+    # TODO: Add Grade and Room
+
 
 class Status(models.Model):
     # OPEN = 1
@@ -20,30 +52,6 @@ class Status(models.Model):
         return self.name
 
 
-# class TaskStatus(models.Model):
-#     name = models.CharField(max_length=256, unique=True)
-#
-#     def __str__(self):
-#         return self.name
-#
-#
-
-
-class ClaimStatus(models.Model):
-    name = models.CharField(max_length=256, default='', primary_key=True)
-
-    def __str__(self):
-        return self.name
-
-
-#
-# class PaymentStatus(models.Model):
-#     name = models.CharField(max_length=256, unique=True)
-#
-#     def __str__(self):
-#         return self.name
-
-
 class Reward(models.Model):
 
     name = models.CharField(max_length=128)
@@ -55,29 +63,11 @@ class Reward(models.Model):
     pass
 
     def __str__(self):
-        return self.name
+        # return self.name
+        return "%s - $%s" % (self.name, self.amount)  # enhance look on dropdown
 
-    def reward_display(self):
-        return self.name + ' - ' + self.amount  # enhance look on dropdown
-
-
-class School(models.Model):
-
-    name = models.CharField(max_length=64)
-    street_address = models.CharField(max_length=100)
-    city = models.CharField(max_length=64)
-    state = models.CharField(max_length=25)
-    zip_code = models.CharField(max_length=32)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(null=True)
-    created_by = models.ForeignKey(User, related_name='schools', on_delete=models.CASCADE, null=True)
-    updated_by = models.ForeignKey(User, related_name='+', on_delete=models.CASCADE, null=True)
-
-    def __str__(self):
-        return self.name
-
-    def school_address(self):
-        return self.name + ', ' + self.city + ', ' + self.state + '(' + self.zip_code + ')'
+    # def reward_display(self):
+    #     return "$%s - %s" % (self.name, self.amount)  # enhance look on dropdown
 
 
 class Task(models.Model):
@@ -86,18 +76,15 @@ class Task(models.Model):
     success_criteria = models.CharField(max_length=4000)
     last_updated = models.DateTimeField(auto_now_add=True)
     expires_on = models.DateTimeField(default=datetime.now()+timedelta(days=30))  # defaulted to +30 days
-
     status = models.ForeignKey(Status, related_name='tasks', on_delete=models.CASCADE, null=True)
-    # task_status = models.ForeignKey(TaskStatus, related_name='tasks', on_delete=models.CASCADE, null=True)
-    # claim_status = models.ForeignKey(ClaimStatus, related_name='tasks', on_delete=models.CASCADE, null=True)
-    # payment_status = models.ForeignKey(PaymentStatus, related_name='tasks', on_delete=models.CASCADE, null=True)
     school = models.ForeignKey(School, related_name='tasks', on_delete=models.CASCADE, null=True)
     starter = models.ForeignKey(User, related_name='tasks', on_delete=models.CASCADE, null=True)
-    reward = models.ForeignKey(Reward, related_name='tasks', on_delete=models.CASCADE, null=True)
+    reward = models.ForeignKey(Reward, related_name='tasks', on_delete=models.CASCADE, null=True, default='GOLD')
+    # TODO: Remove default reward hard coding
     pass
 
     def __str__(self):
-        return self.name
+        return self.name[:10]
 
     def snippet_criteria(self):
         if len(self.success_criteria) > 30:
@@ -107,7 +94,7 @@ class Task(models.Model):
 
     def snippet_name(self):
         if len(self.name) > 30:
-            return self.name[:50] + '...'
+            return self.name[:30] + '...'
         else:
             return self.name
 
@@ -123,7 +110,7 @@ class Post(models.Model):
     pass
 
     def __str__(self):
-        return self.message
+        return self.message[:50]
 
     def post_snippet(self):
         if len(self.message) > 30:
@@ -139,12 +126,23 @@ class Post(models.Model):
 #     reward = models.OneToOneField(Reward, on_delete=models.CASCADE)
 
 
-# class Claim(models.Model):
-#     message = models.CharField(max_length=4000, null=False)
-#     status = models.ForeignKey(ClaimStatus, on_delete=models.CASCASE, default=)
-#     created_at =
-#     updated_at =
-#     created_by =
-#     updated_by =
-#     approved_by =
-#     approved_on =
+class Claim(models.Model):
+
+    message = models.CharField(max_length=4000, null=False)
+    status = models.ForeignKey(Status, related_name='claims', on_delete=models.CASCADE, null=True)
+    task = models.ForeignKey(Task, related_name='claims', on_delete=models.CASCADE, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(null=True)
+    created_by = models.ForeignKey(User, related_name='claims', on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(User, related_name='+', on_delete=models.CASCADE, null=True)
+    approved_by = models.ForeignKey(User, related_name='+', on_delete=models.CASCADE, null=True)
+    approved_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.message[:30]
+
+    def message_snippet(self):
+        if len(self.message) >= 50:
+            return self.message[:50]+'...'
+        else:
+            return self.message

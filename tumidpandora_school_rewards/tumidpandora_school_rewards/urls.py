@@ -9,10 +9,17 @@ from rewards import views
 urlpatterns = [
     path('', views.home_view, name='home'),
     path('signup/', accounts_views.signup_view, name='signup'),
+
+    path('signup/parent/', accounts_views.parent_signup_view, name='parent_signup'),  # parent_signup
+    path('signup/teacher/', accounts_views.teacher_signup_view, name='teacher_signup'),  # teacher_signup
+
+
     path('settings/account/', accounts_views.UserUpdateView.as_view(), name='my_account'),
 
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+
+
 
     path('reset/', auth_views.PasswordResetView.as_view(
         template_name='password_reset.html',
@@ -52,5 +59,8 @@ urlpatterns = [
 
     path('tasks/<pk>/reply/<post_pk>/edit/', views.PostUpdateView.as_view(), name='edit_post'),
     path('tasks/<pk>/reply/<post_pk>/delete/', views.PostDeleteView.as_view(), name='delete_post'),
+
+    path('tasks/<pk>/claim/', views.new_claim_to_task_view, name='new_claim_to_task'),
+
     path('admin/', admin.site.urls),
 ]
