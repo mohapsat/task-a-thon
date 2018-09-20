@@ -2,6 +2,10 @@
 
 {% block title %}Claim {{ task.name }}{% endblock %}
 
+{% block school %}
+        {{school}}
+{% endblock %}
+
 {% block breadcrumb %}
     <li class="breadcrumb-item"><a href="{% url 'tasks' %}">Tasks</a></li>
     <li class="breadcrumb-item"><a href="{% url 'task_replies' task.pk %}">{{ task.name }}</a></li>

@@ -2,16 +2,17 @@ from django.db.models import Count
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
+
+# from django.contrib.auth.models import User
+
 from django.shortcuts import render, get_object_or_404, redirect, get_list_or_404
 from django.views.generic import UpdateView, DeleteView, ListView
 from django.http import HttpResponse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 
-from .models import Task, Post, Reward, Status, Claim
+from .models import Task, Post, Reward, Status, Claim, Parent, Teacher, User
 from .forms import NewTaskForm, NewReplyForm, NewClaimForm
-from django import forms
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -24,13 +25,17 @@ def home_view(request):
 @login_required
 def tasks_view(request):
 
-    # TODO: Filter tasks by school. Think it needs to have a school associated to a user.
-    # school1 = School.objects.get(name='School 1')
-    # >>> school1.tasks.all()
-    # school1.users.all()
+    # TODO: Determine if view is the best place to filter tasks or pass all tasks and schools to template
+    try:
+        if request.user.is_parent:
+            school = request.user.parent.school
+        else:
+            school = request.user.teacher.school
+    except ObjectDoesNotExist:
+        school = None  # TODO: Admin should see tasks for all schools
 
-    tasks = Task.objects.order_by('-last_updated')
-    # tasks = get_list_or_404(Task)
+    # TODO: Filter tasks by school. Think it needs to have a school associated to a user.
+    tasks = Task.objects.filter(school=school).order_by('-last_updated')
 
     page = request.GET.get('page', 1)
 
@@ -43,7 +48,7 @@ def tasks_view(request):
     except EmptyPage:
         tasks = paginator.page(paginator.num_pages)
 
-    return render(request, 'tasks.html', {'tasks': tasks})
+    return render(request, 'tasks.html', {'tasks': tasks, 'school': school})
     # pass
 
 
@@ -78,6 +83,15 @@ def task_replies_view(request, pk):  # task detail view
     except ObjectDoesNotExist:
         claims = None
 
+    # TODO: Determine if view is the best place to filter tasks or pass all tasks and schools to template
+    try:
+        if request.user.is_parent:
+            school = request.user.parent.school
+        else:
+            school = request.user.teacher.school
+    except ObjectDoesNotExist:
+        school = None  # TODO: Admin should see tasks for all schools
+
     queryset = task.posts.order_by('-created_at').annotate(replies=Count('id'))  # posts.id
 
     page = request.GET.get('page', 1)
@@ -91,7 +105,8 @@ def task_replies_view(request, pk):  # task detail view
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
 
-    return render(request, 'task_replies.html', {"task": task, 'posts': posts, 'claims': claims})
+    return render(request, 'task_replies.html', {"task": task, 'posts': posts,
+                                                 'claims': claims, 'school': school})
 
 
 @login_required
@@ -100,6 +115,14 @@ def new_task_view(request):  # create new task form
     # user = User.objects.first()  # TODO: get the currently logged in user
     status = get_object_or_404(Status, name='OPEN')  # default Open
     # reward = Reward.objects.first()  # default a reward
+
+    try:
+        if request.user.is_parent:
+            school = request.user.parent.school
+        else:
+            school = request.user.teacher.school
+    except ObjectDoesNotExist:
+        school = None  # TODO: Admin should see tasks for all schools
 
     if request.method == 'POST':
         form = NewTaskForm(request.POST)
@@ -114,19 +137,28 @@ def new_task_view(request):  # create new task form
                 name=form.cleaned_data.get('name'),
                 success_criteria=form.cleaned_data.get('success_criteria'),
                 starter=request.user,
+                school=school,
                 status=status,
                 reward=reward
             )
             return redirect('tasks')
     else:
         form = NewTaskForm()
-    return render(request, 'new_task.html', {"form": form})
+    return render(request, 'new_task.html', {"form": form, "school":school})
 
     pass
 
 
 @login_required
 def new_reply_to_task_view(request, pk):  # new reply / post to task
+
+    try:
+        if request.user.is_parent:
+            school = request.user.parent.school
+        else:
+            school = request.user.teacher.school
+    except ObjectDoesNotExist:
+        school = None  # TODO: Admin should see tasks for all schools
 
     task = get_object_or_404(Task, pk=pk)
     # user = User.objects.first()  # TODO: get the currently logged in user
@@ -145,7 +177,8 @@ def new_reply_to_task_view(request, pk):  # new reply / post to task
             return redirect('task_replies', pk=task.pk)
     else:
         form = NewReplyForm()
-    return render(request, 'new_reply_to_task.html', {"task": task, "form": form})
+    return render(request, 'new_reply_to_task.html', {"task": task, "form": form,
+                                                      "school": school})
     pass
 
 
@@ -155,6 +188,15 @@ def new_claim_to_task_view(request, pk):  # new reply / post to task
     task = get_object_or_404(Task, pk=pk)
     # user = User.objects.first()  # TODO: get the currently logged in user
     status = get_object_or_404(Status, name='OPEN')  # 1=OPEN
+
+    try:
+        if request.user.is_parent:
+            school = request.user.parent.school
+        else:
+            school = request.user.teacher.school
+    except ObjectDoesNotExist:
+        school = None  # TODO: Admin should see tasks for all schools
+
 
     if request.method == 'POST':
         form = NewClaimForm(request.POST)
@@ -171,7 +213,8 @@ def new_claim_to_task_view(request, pk):  # new reply / post to task
             return redirect('task_replies', pk=task.pk)
     else:
         form = NewClaimForm()
-    return render(request, 'new_claim_to_task.html', {"task": task, "form": form})
+    return render(request, 'new_claim_to_task.html', {"task": task, "form": form,
+                                                      "school": school})
     pass
 
 

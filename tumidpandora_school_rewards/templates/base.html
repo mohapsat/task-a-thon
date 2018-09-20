@@ -5,11 +5,9 @@
     <title>{% block title %}School Rewards{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
+    <!--<link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">-->
     <!--<link rel="stylesheet" href="{% static 'css/accounts.css' %}">-->
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
-    <link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
-
-
     {% block stylesheet %} {% endblock %}
 
 </head>
@@ -19,7 +17,7 @@
 
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
   <div class="container">
-    <a class="navbar-brand" href="{% url 'home' %}">School Rewards</a>
+    <a class="navbar-brand" href="{% url 'home' %}">SCHOOL REWARDS</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -52,11 +50,15 @@
 
 <div class="container">
 
-    <ol class="breadcrumb my-4">
+    <div class="badge badge-info">
+        {% block school %}
+        {% endblock %}
+    </div>
+    <ol class="breadcrumb my-2">
         {% block breadcrumb %}
         {% endblock %}
     </ol>
-    <div class="tasks my-4">
+    <div class="tasks my-2">
         {% block tasks %}
         {% endblock %}
     </div>
@@ -121,8 +123,8 @@
 </body>
 
 <script src="{% static 'js/popper.min.js' %}"></script>
-<script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
 <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
 
 </html>

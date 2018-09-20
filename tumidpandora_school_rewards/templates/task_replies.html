@@ -2,6 +2,10 @@
 
 {% load humanize %}
 
+{% block school %}
+        {{school}}
+{% endblock %}
+
 {% block breadcrumb %}
     <li class="breadcrumb-item"><a href="{% url 'tasks' %}">Tasks</a></li>
     <li class="breadcrumb-item active" aria-current="page">{{ task.name }}</li>
@@ -107,7 +111,8 @@
       No claims yet.
     </div>
 
-    {% if task.starter != user %}
+    {% if task.starter != user and user.is_teacher %}
+    <!--parents cannot raise a claim , only teachers can-->
     <a href="{% url 'new_claim_to_task' task.pk %}" class="btn btn-success btn-sm" role="button" aria-pressed="true">
         Submit a New Claim
     </a>

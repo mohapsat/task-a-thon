@@ -4,7 +4,10 @@ from django.shortcuts import render, redirect
 from .forms import SignUpForm, ParentSignUpForm, TeacherSignUpForm
 
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
+
+# from django.contrib.auth.models import User
+from rewards.models import User
+
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import UpdateView

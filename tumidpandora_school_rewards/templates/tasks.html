@@ -2,12 +2,16 @@
 
 {% load humanize %}
 
+{% block school %}
+        {{school}}
+{% endblock %}
+
 {% block breadcrumb %}
     <li class="breadcrumb-item active" aria-current="page">Tasks</li>
 {% endblock %}
 
-{% block tasks %}
 
+{% block tasks %}
 
     <table class="table bg-white table-striped">
       <thead class="thead-dark">
@@ -20,15 +24,19 @@
           <th>Expires</th>
           <!--<th>Updated</th>-->
         <th>
+            {% if user.is_parent %}
             <a href="{% url 'new_task' %}" class="btn btn-warning btn-sm text-dark" role="button" aria-pressed="true">
         Create New Task</a>
+            {% endif %}
         </th>
       </tr>
       </thead>
       <tbody>
+
       {% for task in tasks %}
+
       <tr>
-        <td><a href="{% url 'task_replies' task.pk %}">[{{task.school.name}}] {{ task.snippet_name }}</a><br>
+        <td><a href="{% url 'task_replies' task.pk %}">({{task.school.name}}) {{ task.snippet_name }}</a><br>
         <small class="text-muted d-block">{{ task.snippet_criteria }}</small>
         </td>
           <td class="align-middle">{{ task.starter.username|title }}</td>
@@ -46,7 +54,7 @@
             Pay
             </button>
         {% endif %}
-        {% if task.starter != user and task.claims.count == 0%}
+        {% if task.starter == user.is_teacher and task.starter != user and task.claims.count == 0%}
             <!--i.e. show only when task has not been claimed-->
             <a href="{% url 'new_claim_to_task' task.pk %}" class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">
             Claim

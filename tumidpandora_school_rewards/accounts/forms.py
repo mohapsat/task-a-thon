@@ -1,8 +1,10 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
-from django.contrib.auth.models import User
-from rewards.models import School, Task, Reward, Parent, Teacher
+# from django.contrib.auth.models import User
+
+from rewards.models import (School, Task, Reward,
+                            Parent, Teacher, User)
 
 
 # UserCreationForm does not provide an email field. But we can extend it.
@@ -25,9 +27,10 @@ class SignUpForm(UserCreationForm):
 class ParentSignUpForm(UserCreationForm):
 
     email = forms.CharField(max_length=254, required=True, widget=forms.EmailInput())
-    school = forms.ModelMultipleChoiceField(
+
+    school = forms.ModelChoiceField(
         queryset=School.objects.all(),
-        widget=forms.Select,
+        widget=forms.Select(),
         required=True
     )
 
@@ -41,15 +44,16 @@ class ParentSignUpForm(UserCreationForm):
         user.is_parent = True
         user.save()
         parent = Parent.objects.create(user=user)
-        parent.schools.add(*self.cleaned_data.get('school'))
+        parent.school.add(*self.cleaned_data.get('school'))
         return user
 
 
 class TeacherSignUpForm(UserCreationForm):
     email = forms.CharField(max_length=254, required=True, widget=forms.EmailInput())
-    school = forms.ModelMultipleChoiceField(
+
+    school = forms.ModelChoiceField(
         queryset=School.objects.all(),
-        widget=forms.Select,
+        widget=forms.Select(),
         required=True
     )
 
@@ -63,5 +67,5 @@ class TeacherSignUpForm(UserCreationForm):
         user.is_teacher = True
         user.save()
         teacher = Teacher.objects.create(user=user)
-        teacher.schools.add(*self.cleaned_data.get('school'))
+        teacher.school.add(*self.cleaned_data.get('school'))
         return user
