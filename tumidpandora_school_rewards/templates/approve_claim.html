@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Approve Claim{% endblock %}
+
+{% block school %}
+        {{school}}
+{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'tasks' %}">Tasks</a></li>
+    <li class="breadcrumb-item" aria-current="page"><a href="{% url 'task_replies' claim.task.pk %}">{{ claim.task.name }}</a></li>
+    <li class="breadcrumb-item" aria-current="page"><a href="{% url 'task_replies' claim.task.pk %}">{{ claim.message }}</a></li>
+    <li class="breadcrumb-item active">Approve claim</li>
+{% endblock %}
+
+{% block approveclaim %}
+  <form method="post" class="mb-4" novalidate>
+    {% csrf_token %}
+    {% include 'includes/form.html' %}
+      <p class="lead">Are you sure you would like to <strong>approve</strong> this claim ?</p>
+    <button type="submit" class="btn btn-success btn-sm">Yes, Approve</button>
+    <a href="{% url 'task_replies' claim.task.pk %}" class="btn btn-secondary btn-sm" role="button">Cancel</a>
+  </form>
+{% endblock %}

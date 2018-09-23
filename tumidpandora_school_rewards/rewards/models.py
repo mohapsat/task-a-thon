@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils.html import escape, mark_safe
 
 
 # Ref: https://simpleisbetterthancomplex.com/tutorial/2018/01/18/how-to-implement-multiple-user-types-with-django.html
@@ -44,18 +45,36 @@ class Teacher(models.Model):
 
 
 class Status(models.Model):
-    # OPEN = 1
-    # CLOSED = 2
+
+    OPEN = 1
+    CLOSED = 2
+    IN_PROGRESS = 3
+    PENDING_APPROVAL = 4
+    APPROVED = 5
+    CLOSED = 6
+    PENDING_PAYMENT = 7
     #
-    # STATUS_CHOICES = (
-    #     (1, 'Open'),
-    #     (2, 'In Progress'),
-    #     (3, 'Closed'),
-    # )
-    name = models.CharField(max_length=256, default='OPEN', primary_key=True)
+    STATUS_CHOICES = (
+        (OPEN, 'Open'),
+        (CLOSED, 'Closed'),
+        (IN_PROGRESS, 'In Progress'),
+        (PENDING_APPROVAL, 'Pending Approval'),
+        (APPROVED, 'Approved'),
+        (PENDING_PAYMENT, 'Pending Payment'),
+    )
+
+    status = models.IntegerField(default=OPEN, choices=STATUS_CHOICES, primary_key=True)
+    # REF: "https://docs.djangoproject.com/en/dev/ref/models/instances/#django.db.models.Model.get_FOO_display"
+    color = models.CharField(max_length=7, default='#007bff')
 
     def __str__(self):
-        return self.name
+        return str(self.get_status_display())
+
+    def get_html_badge(self):
+        name = escape(self.get_status_display())
+        color = escape(self.color)
+        html = '<span class="badge badge-primary" style="background-color: %s">%s</span>' % (color, name)
+        return mark_safe(html)
 
 
 class Reward(models.Model):
@@ -66,20 +85,29 @@ class Reward(models.Model):
     updated_at = models.DateTimeField(null=True)
     created_by = models.ForeignKey(User, related_name='rewards', on_delete=models.CASCADE, null=True),
     updated_by = models.ForeignKey(User, related_name='+', on_delete=models.CASCADE, null=True)  # one sided association
+    color = models.CharField(max_length=7, default='#007bff')
     pass
 
     def __str__(self):
         # return self.name
         return "%s - $%s" % (self.name, self.amount)  # enhance look on dropdown
 
+    def get_html_badge(self):
+        name = escape(self.amount)
+        color = escape(self.color)
+        html = '<span class="badge badge-pill badge-primary" style="background-color: %s">$%s</span>' % (color, name)
+        return mark_safe(html)
+
 
 class Task(models.Model):
+
+    DAYS_TO_EXPIRE_TASK = 30  # default expiration date
 
     name = models.CharField(max_length=50, unique=False)
     success_criteria = models.CharField(max_length=4000)
     last_updated = models.DateTimeField(auto_now_add=True)
-    expires_on = models.DateTimeField(default=datetime.now()+timedelta(days=30))  # defaulted to +30 days
-    status = models.ForeignKey(Status, related_name='tasks', on_delete=models.CASCADE, null=True)
+    expires_on = models.DateTimeField(default=datetime.now()+timedelta(days=DAYS_TO_EXPIRE_TASK))  # defaulted to +30 days
+    status = models.ForeignKey(Status, related_name='tasks', on_delete=models.CASCADE, null=True, default=Status.OPEN)
     school = models.ForeignKey(School, related_name='school', on_delete=models.CASCADE, null=True)
     starter = models.ForeignKey(User, related_name='tasks', on_delete=models.CASCADE, null=True)
     reward = models.ForeignKey(Reward, related_name='tasks', on_delete=models.CASCADE, null=True, default='GOLD')
@@ -132,7 +160,7 @@ class Post(models.Model):
 class Claim(models.Model):
 
     message = models.CharField(max_length=4000, null=False)
-    status = models.ForeignKey(Status, related_name='claims', on_delete=models.CASCADE, null=True)
+    status = models.ForeignKey(Status, related_name='claims', on_delete=models.CASCADE, null=True, default=Status.OPEN)
     task = models.ForeignKey(Task, related_name='claims', on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True)

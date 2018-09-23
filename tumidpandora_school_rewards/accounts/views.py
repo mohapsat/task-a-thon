@@ -30,12 +30,13 @@ def signup_view(request):
 @method_decorator(login_required, name='dispatch')
 class UserUpdateView(UpdateView):
     model = User
-    fields = ('first_name', 'last_name', 'email', 'username',)
+    fields = ('first_name', 'last_name', 'email', 'username')
     template_name = 'my_account.html'
     success_url = reverse_lazy('tasks')
 
     def get_object(self):
         return self.request.user
+    # TODO: Pass school info to user update view
 
 
 def parent_signup_view(request):

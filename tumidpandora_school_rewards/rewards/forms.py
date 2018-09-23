@@ -58,3 +58,10 @@ class NewClaimForm(ModelForm):  # Post
             'message': _('Enter a short description to support your claim here.')
         }
         localize = '_all_'
+
+
+class ClaimApprovalForm(ModelForm):
+
+    class Meta:
+        model = Claim
+        fields = []  # can't create a ModelForm without the fields property, so add a blank one

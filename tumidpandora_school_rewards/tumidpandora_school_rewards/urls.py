@@ -50,17 +50,21 @@ urlpatterns = [
          name='password_change_done'),
 
     path('tasks/', views.tasks_view, name='tasks'),
-    # path('tasks/', views.TaskListView.as_view, name='tasks'),
     path('tasks/new/', views.new_task_view, name='new_task'),
+
     path('tasks/<pk>/', views.task_replies_view, name='task_replies'),
-    path('tasks/<pk>/reply/', views.new_reply_to_task_view, name='new_reply_to_task'),
     path('tasks/<pk>/edit/', views.TaskUpdateView.as_view(), name='edit_task'),
     path('tasks/<pk>/delete/', views.TaskDeleteView.as_view(), name='delete_task'),
 
+    path('tasks/<pk>/reply/', views.new_reply_to_task_view, name='new_reply_to_task'),
     path('tasks/<pk>/reply/<post_pk>/edit/', views.PostUpdateView.as_view(), name='edit_post'),
     path('tasks/<pk>/reply/<post_pk>/delete/', views.PostDeleteView.as_view(), name='delete_post'),
 
     path('tasks/<pk>/claim/', views.new_claim_to_task_view, name='new_claim_to_task'),
+    path('tasks/<pk>/claim/<claim_pk>/approve/', views.claim_approve_view, name='approve_claim'),
+    path('tasks/<pk>/claim/<claim_pk>/edit/', views.ClaimUpdateView.as_view(), name='edit_claim'),
+    path('tasks/<pk>/claim/<claim_pk>/delete/', views.ClaimDeleteView.as_view(), name='delete_claim'),
+
 
     path('admin/', admin.site.urls),
 ]

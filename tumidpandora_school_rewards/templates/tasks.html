@@ -13,8 +13,9 @@
 
 {% block tasks %}
 
-    <table class="table bg-white table-striped">
-      <thead class="thead-dark">
+    <!--<table class="table table-hover table-sm bg-white table-responsive">-->
+    <table class="table table-hover table-sm bg-white">
+      <thead class="thead thead-light">
       <tr>
         <th>Task</th>
         <th>Starter</th>
@@ -41,9 +42,9 @@
         </td>
           <td class="align-middle">{{ task.starter.username|title }}</td>
         <td class="align-middle">{{ task.posts.count }}</td>
-          <td class="align-middle">${{ task.reward.amount }}</td>
+          <td class="align-middle">{{ task.reward.get_html_badge }}</td>
         <td class="align-middle">
-            {{ task.status }}<!-- TODO: update task status once claimed -->
+            {{ task.status.get_html_badge }}<!-- TODO: update task status once claimed -->
         </td>
           <!--<td class="align-middle">{{ task.expires_on |date:"M. d, Y (D)" }}</td>-->
           <td class="align-middle">{{ task.expires_on |naturaltime }}</td>
@@ -60,7 +61,8 @@
             Claim
             </a>
         {% endif %}
-        {% if task.starter == user %}
+        {% if task.starter == user and task.claims.count < 1 and user.is_parent %}
+            <!--prevent task edit and delete if a claim exists-->
             <a href="{% url 'edit_task' task.pk %}" class="btn btn-outline-info btn-sm" role="button" aria-pressed="true">
             Edit
             </a>

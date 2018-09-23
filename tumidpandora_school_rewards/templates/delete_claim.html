@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Claim{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'tasks' %}">Tasks</a></li>
+    <li class="breadcrumb-item" aria-current="page"><a href="{% url 'task_replies' claim.task.pk %}">{{ claim.task.name }}</a></li>
+    <li class="breadcrumb-item" aria-current="page"><a href="{% url 'task_replies' claim.task.pk %}">{{ claim.message }}</a></li>
+    <li class="breadcrumb-item active">Delete Claim</li>
+{% endblock %}
+
+{% block deletereply %}
+  <form method="post" class="mb-4" novalidate>
+    {% csrf_token %}
+    {% include 'includes/form.html' %}
+      <p class="lead">Are you sure you would like to <strong><u>delete</u></strong> this claim ?</p>
+    <button type="submit" class="btn btn-danger btn-sm">Yes, Delete</button>
+    <a href="{% url 'task_replies' claim.task.pk %}" class="btn btn-outline-secondary btn-sm" role="button">Cancel</a>
+  </form>
+{% endblock %}

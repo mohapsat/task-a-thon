@@ -50,11 +50,13 @@
 
 <div class="container">
 
-    <div class="badge badge-info">
-        {% block school %}
-        {% endblock %}
-    </div>
-    <ol class="breadcrumb my-2">
+    <h2>
+        <div class="badge badge-light text-muted">
+            {% block school %}
+            {% endblock %}
+        </div>
+    </h2>
+    <ol class="breadcrumb bg-white my-2">
         {% block breadcrumb %}
         {% endblock %}
     </ol>
@@ -117,7 +119,10 @@
         {% block newclaimtotask %}
         {% endblock %}
     </div>
-
+    <div class="approveclaim">
+        {% block approveclaim %}
+        {% endblock %}
+    </div>
 </div>
 {% endblock %} <!--body-->
 </body>

@@ -31,7 +31,7 @@
         <td class="text-muted">{{ task.success_criteria }}</td>
           <td class="align-middle">{{ task.starter.username|title }}</td>
         <td class="align-middle">
-            {{ task.status }} <!-- TODO: update task status once claimed -->
+            {{ task.status.get_html_badge }} <!-- TODO: update task status once claimed -->
         </td>
           <td class="align-middle">{{ task.expires_on|naturaltime }}</td>
         <!--<td class="align-middle">{{ task.last_updated }}</td>-->
@@ -41,7 +41,8 @@
     </table>
 
 <div class="my-4">
-    {% if task.starter == user %}
+    {% if task.starter == user and task.claims.count < 1 and user.is_parent %}
+    <!--prevent task edit and delete if a claim exists-->
             <a href="{% url 'edit_task' task.pk %}" class="btn btn-outline-info btn-sm" role="button" aria-pressed="true">
             Edit</a>
             <a href="{% url 'delete_task' task.pk %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">
@@ -77,25 +78,28 @@
       </td>
       <td class="align-middle">{{ claim.message_snippet }} </td>
       <td class="align-middle">
-            {{ claim.status}}
+            {{ claim.status.get_html_badge }}
       </td>
       <td class="align-middle">{{ claim.created_at |naturaltime }}</td>
       <td class="align-middle">
 
         {% if claim.created_by == user %}
-                <a href="#" class="btn btn-info btn-sm" role="button" aria-pressed="true">
-                Edit</a>
-                <a href="#" class="btn btn-danger btn-sm" role="button" aria-pressed="true">
-                Delete</a>
-                <a href="#" class="btn btn-warning btn-sm" role="button" aria-pressed="true">
-                View</a>
+          <a href="{% url 'edit_claim' claim.task.pk claim.pk %}" class="btn btn-info btn-sm" role="button" aria-pressed="true">
+            Edit</a>
+          <a href="{% url 'delete_claim' claim.task.pk claim.pk %}" class="btn btn-danger btn-sm" role="button" aria-pressed="true">
+            Delete</a>
         {% endif %}
 
         {% if task.starter == user %}
-        <a href="#" class="btn btn-warning btn-sm" role="button" aria-pressed="true">
-            View</a>
-        <a href="#" class="btn btn-success btn-sm" role="button" aria-pressed="true">
+
+        <a href="{% url 'new_reply_to_task' task.pk %}" class="btn btn-warning btn-sm" role="button" aria-pressed="true">
+            Request more info</a>
+        <a href="{% url 'approve_claim' claim.task.pk claim.pk %}" class="btn btn-success btn-sm" role="button" aria-pressed="true">
             Approve</a>
+
+        <!--<a href="#" class="btn btn-danger btn-sm" role="button" aria-pressed="true">-->
+            <!--Reject</a>-->
+          <!--No rejections allowed-->
         {% endif %}
 
         <!--<a href="#" class="btn btn-secondary btn-sm active" role="button" aria-pressed="true">-->
