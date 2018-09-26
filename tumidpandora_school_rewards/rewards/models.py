@@ -29,7 +29,8 @@ class School(models.Model):
 
 class Parent(models.Model):
     user = models.OneToOneField(User, related_name='parent', on_delete=models.CASCADE, primary_key=True)
-    school = models.ForeignKey(School, related_name="parentOfSchool", on_delete=models.CASCADE, null=True)
+    # school = models.ForeignKey(School, related_name='p_school', on_delete=models.CASCADE, null=True)
+    school = models.ForeignKey(School, related_name='t_school', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return "%s" % self.user
@@ -37,8 +38,9 @@ class Parent(models.Model):
 
 class Teacher(models.Model):
     user = models.OneToOneField(User, related_name='teacher', on_delete=models.CASCADE, primary_key=True)
-    school = models.ForeignKey(School, related_name="teacherOfSchool", on_delete=models.CASCADE, null=True)
+    # school = models.ForeignKey(School, related_name='t_school', on_delete=models.CASCADE, null=True)
     # TODO: Add Grade and Room
+    school = models.ForeignKey(School, related_name='p_school', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return "%s" % self.user

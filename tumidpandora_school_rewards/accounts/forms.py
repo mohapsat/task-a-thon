@@ -10,11 +10,6 @@ from rewards.models import (School, Task, Reward,
 # UserCreationForm does not provide an email field. But we can extend it.
 class SignUpForm(UserCreationForm):
 
-    # SALUTATION_CHOICES = (
-    #     ('1', 'Mr'),
-    #     ('2', 'Ms'),
-    # )
-
     email = forms.CharField(max_length=254, required=True, widget=forms.EmailInput())
     # is_parent = forms.CheckboxInput(check_test=False)
     # salutation = forms.ChoiceField(choices=SALUTATION_CHOICES)
@@ -25,9 +20,13 @@ class SignUpForm(UserCreationForm):
 
 
 class ParentSignUpForm(UserCreationForm):
+    # SALUTATION_CHOICES = (
+    #     ('1', 'Mr'),
+    #     ('2', 'Ms'),
+    # )
 
     email = forms.CharField(max_length=254, required=True, widget=forms.EmailInput())
-
+    # salutation = forms.ChoiceField(choices=SALUTATION_CHOICES)
     school = forms.ModelChoiceField(
         queryset=School.objects.all(),
         widget=forms.Select(),
@@ -36,15 +35,17 @@ class ParentSignUpForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = ('school', 'username', 'email', 'password1', 'password2',)
+        fields = ('school', 'first_name', 'last_name', 'username', 'email', 'password1', 'password2',)
+        # TODO: set "---------" by default) with the empty_label attribute to "Select a School"
 
     @transaction.atomic
     def save(self):
         user = super().save(commit=False)
         user.is_parent = True
         user.save()
-        parent = Parent.objects.create(user=user)
-        parent.school.add(*self.cleaned_data.get('school'))
+
+        parent = Parent.objects.create(user=user, school=self.cleaned_data.get('school'))
+
         return user
 
 
@@ -54,18 +55,21 @@ class TeacherSignUpForm(UserCreationForm):
     school = forms.ModelChoiceField(
         queryset=School.objects.all(),
         widget=forms.Select(),
-        required=True
+        required=True,
     )
 
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = ('school', 'username', 'email', 'password1', 'password2',)
+        fields = ('school', 'first_name', 'last_name', 'username', 'email', 'password1', 'password2',)
 
-    @transaction.atomic
+    @transaction.atomic  # so all transaction happen together
     def save(self):
         user = super().save(commit=False)
         user.is_teacher = True
         user.save()
-        teacher = Teacher.objects.create(user=user)
-        teacher.school.add(*self.cleaned_data.get('school'))
+
+        teacher = Teacher.objects.create(user=user, school=self.cleaned_data.get('school'))
+
+        # teacher = Teacher.objects.create(user=user)
+        # teacher.t_schools.add(*self.cleaned_data.get('school'))
         return user

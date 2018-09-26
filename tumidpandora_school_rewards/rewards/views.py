@@ -34,7 +34,7 @@ def tasks_view(request):
     except ObjectDoesNotExist:
         school = None  # TODO: Admin should see tasks for all schools
 
-    # TODO: Filter tasks by school. Think it needs to have a school associated to a user.
+    # TODO: Filter tasks by school.
     tasks = Task.objects.filter(school=school).order_by('-last_updated')
 
     page = request.GET.get('page', 1)
