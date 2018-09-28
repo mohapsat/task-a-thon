@@ -53,8 +53,7 @@ class Status(models.Model):
     IN_PROGRESS = 3
     PENDING_APPROVAL = 4
     APPROVED = 5
-    CLOSED = 6
-    PENDING_PAYMENT = 7
+    PENDING_PAYMENT = 6
     #
     STATUS_CHOICES = (
         (OPEN, 'Open'),

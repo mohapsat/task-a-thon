@@ -37,7 +37,7 @@
       {% for task in tasks %}
 
       <tr>
-        <td><a href="{% url 'task_replies' task.pk %}">({{task.school.name}}) {{ task.snippet_name }}</a><br>
+        <td><a href="{% url 'task_replies' task.pk %}">{{ task.snippet_name }}</a><br>
         <small class="text-muted d-block">{{ task.snippet_criteria }}</small>
         </td>
           <td class="align-middle">{{ task.starter.username|title }}</td>

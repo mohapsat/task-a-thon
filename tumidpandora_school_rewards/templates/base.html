@@ -1,3 +1,5 @@
+<!--TODO: Add a tour for the overall app-->
+
 {% load static %}<!DOCTYPE html>
 <html>
 <head>
@@ -8,6 +10,7 @@
     <!--<link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">-->
     <!--<link rel="stylesheet" href="{% static 'css/accounts.css' %}">-->
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
+
     {% block stylesheet %} {% endblock %}
 
 </head>
@@ -17,7 +20,7 @@
 
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
   <div class="container">
-    <a class="navbar-brand" href="{% url 'home' %}">SCHOOL REWARDS</a>
+    <a class="navbar-brand" href="{% url 'home' %}">School Rewards</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -26,7 +29,7 @@
         <ul class="navbar-nav ml-auto">
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Hello, {{ user.username|title }}!
+              Hello, {{ user.username|title }}
                 <!--TODO: Add salutation, last_name-->
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
@@ -50,13 +53,40 @@
 
 <div class="container">
 
-    <h2>
-        <div class="badge badge-light text-muted">
+    <h4 class="text-center">
+        <a class="badge badge-dark my-2" data-toggle="collapse" href="#collapseCharts"
+                aria-expanded="true" aria-controls="collapseCharts">
             {% block school %}
             {% endblock %}
+        </a>
+    </h4>
+
+    <div class="collapse show" id="collapseCharts">
+        <!--to show  charts by default you need collapse show-->
+        <div class="row">
+            <div class="col-4">
+                <div id="chart_left"></div>
+                <script src="{% static 'js/highcharts.src.js' %}"></script>
+                    <script>
+                        Highcharts.chart('chart_left', {{ chart_left|safe }});
+                    </script>
+            </div>
+            <div class="col-4">
+                <div id="chart_middle"></div>
+                    <script>
+                        Highcharts.chart('chart_middle', {{ chart_middle|safe }});
+                    </script>
+            </div>
+            <div class="col-4">
+                <div id="chart_right"></div>
+                    <script>
+                        Highcharts.chart('chart_right', {{ chart_right|safe }});
+                    </script>
+            </div>
         </div>
-    </h2>
-    <ol class="breadcrumb bg-white my-2">
+    </div>
+
+    <ol class="breadcrumb bg-light my-2">
         {% block breadcrumb %}
         {% endblock %}
     </ol>
@@ -125,11 +155,15 @@
     </div>
 </div>
 {% endblock %} <!--body-->
+
 </body>
+
 
 <script src="{% static 'js/popper.min.js' %}"></script>
 <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
 <script src="{% static 'js/jquery-ui.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+
 
 </html>

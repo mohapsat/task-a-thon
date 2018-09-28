@@ -1,4 +1,4 @@
-from django.db.models import Count
+from django.db.models import Count, Q, Sum
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
@@ -14,7 +14,10 @@ from django.utils.decorators import method_decorator
 from .models import Task, Post, Reward, Status, Claim, Parent, Teacher, User
 from .forms import NewTaskForm, NewReplyForm, NewClaimForm, ClaimApprovalForm
 
+
 from django.core.exceptions import ObjectDoesNotExist
+
+import json
 
 
 def home_view(request):
@@ -39,7 +42,7 @@ def tasks_view(request):
 
     page = request.GET.get('page', 1)
 
-    paginator = Paginator(tasks, 5)
+    paginator = Paginator(tasks, 50)
 
     try:
         tasks = paginator.page(page)
@@ -48,7 +51,190 @@ def tasks_view(request):
     except EmptyPage:
         tasks = paginator.page(paginator.num_pages)
 
-    return render(request, 'tasks.html', {'tasks': tasks, 'school': school})
+# section for chart
+    # chart_dataset = Task.objects.\
+    #     values('status').\
+    #     annotate(open_count=Count('status', filter(Q(status=1))))
+
+    # Get status and count of tasks for logged in user's school
+
+    # TODO: For pie to work, it needs {name:, y:} for series data
+
+    # REF: https://simpleisbetterthancomplex.com/tutorial/2016/12/06/how-to-create-group-by-queries.html
+    chart_left_data = Task.objects.filter(school=school).values('reward__name').annotate(Sum('reward__amount'))
+    chart_left_categories = list()
+    chart_left_counts_series = list()
+
+    print("chart_left_data = %s" % chart_left_data)
+
+    for entry in chart_left_data:
+        chart_left_categories.append(entry['reward__name'])
+        chart_left_counts_series.append({'name': entry['reward__name'], 'y': entry['reward__amount__sum']})
+
+    print("chart_left_categories = %s" % chart_left_categories)
+    print("chart_left_counts_series = %s" % chart_left_counts_series)
+
+    chart_left_counts_series = {
+        'name': 'Rewards',
+        'colorByPoint': 'true',
+        'data': chart_left_counts_series
+    }
+
+    chart_left = {
+        'chart': {'type': 'pie'},  # column, pie, area, line
+        'title': {'text': '$ Rewards'},
+        'tooltip': {
+            'pointFormat': '{series.name}: <b>${point.y}</b>'
+        },
+        'plotOptions': {
+            'pie': {
+                'cursor': 'pointer',
+                'allowPointSelect': 'true',
+                'dataLabels': {
+                    'enabled': 'true',
+                    'format': '<b>{point.name}</b>: ${point.y}'
+                },
+                'style': {
+                    'color': "(Highcharts.theme & & Highcharts.theme.contrastTextColor) | | 'black'"
+                }
+            }
+        },
+        'xAxis': {'categories': chart_left_categories},
+        'series': [chart_left_counts_series]
+    }
+
+    chart_middle_data = Task.objects.filter(school=school).values('status')\
+        .annotate(Count('id'))
+
+    chart_middle_categories = list()
+    chart_middle_counts_series = list()
+    print("chart_middle_data = %s" % chart_middle_data)
+
+    # STATUS_CHOICES = (
+    #     (OPEN, 'Open'),
+    #     (CLOSED, 'Closed'),
+    #     (IN_PROGRESS, 'In Progress'),
+    #     (PENDING_APPROVAL, 'Pending Approval'),
+    #     (APPROVED, 'Approved'),
+    #     (PENDING_PAYMENT, 'Pending Payment'),
+    # )
+
+    for entry in chart_middle_data:
+
+        if entry['status'] == 1:
+            entry['status'] = 'Open'
+        elif entry['status'] == 2:
+            entry['status'] = 'Closed'
+        elif entry['status'] == 3:
+            entry['status'] = 'In Progress'
+        elif entry['status'] == 4:
+            entry['status'] = 'Pending Approval'
+        elif entry['status'] == 5:
+            entry['status'] = 'Approved'
+        elif entry['status'] == 6:
+            entry['status'] = 'Pending Payment'
+
+        chart_middle_categories.append(entry['status'])
+        chart_middle_counts_series.append({'name': entry['status'], 'y': entry['id__count']})
+
+    print("chart_middle_categories = %s" % chart_middle_categories)
+
+    chart_middle_counts_series = {
+        'name': 'Tasks',
+        'colorByPoint': 'true',
+        'data': chart_middle_counts_series
+    }
+
+    chart_middle = {
+        'chart': {'type': 'bar'},  # column, pie, area, line
+        'title': {'text': '# Tasks by Status'},
+        'tooltip': {
+            'pointFormat': '{series.name}: <b>{point.y}</b>'
+        },
+        'plotOptions': {
+            'bar': {
+                'cursor': 'pointer',
+                'allowPointSelect': 'true',
+                'dataLabels': {
+                    'enabled': 'true',
+                    'format': '{point.y}'
+                },
+                'style': {
+                    'color': "(Highcharts.theme & & Highcharts.theme.contrastTextColor) | | 'black'"
+                }
+            }
+        },
+        'xAxis': {'categories': chart_middle_categories},
+        'series': [chart_middle_counts_series]
+    }
+
+    # chart_right_data = chart_left_data
+    chart_right_data = Task.objects.filter(school=school). \
+        filter(claims__status__in=[4, 5]).\
+        values('claims__status').annotate(Count('id'))
+    chart_right_categories = list()
+    chart_right_counts_series = list()
+
+    print("chart_right_data = %s" % chart_right_data)
+
+    for entry in chart_right_data:
+
+        # if entry['claims__status'] == 1:
+        #     entry['claims__status'] = 'Open'
+        # elif entry['claims__status'] == 2:
+        #     entry['claims__status'] = 'Closed'
+        # elif entry['claims__status'] == 3:
+        #     entry['claims__status'] = 'In Progress'
+        if entry['claims__status'] == 4:
+            entry['claims__status'] = 'Pending Approval'
+        elif entry['claims__status'] == 5:
+            entry['claims__status'] = 'Approved'
+        # elif entry['claims__status'] == 6:
+        #     entry['claims__status'] = 'Pending Payment'
+
+        chart_right_categories.append(entry['claims__status'])
+        chart_right_counts_series.append({'name': entry['claims__status'],'y': entry['id__count']})
+
+    chart_right_counts_series = {
+        'name': 'Claims',
+        'colorByPoint': 'true',
+        'data': chart_right_counts_series
+    }
+
+    print("chart_right_counts_series = %s" % chart_right_counts_series)
+
+    chart_right = {
+        'chart': {'type': 'column'},  # column, pie, area, line
+        'title': {'text': '# Claims by Status'},
+        'tooltip': {
+            'pointFormat': '{series.name}: <b>{point.y}</b>'
+        },
+        'plotOptions': {
+            'column': {
+                'cursor': 'pointer',
+                'allowPointSelect': 'true',
+                'dataLabels': {
+                    'enabled': 'true',
+                    'format': '{point.y}'
+                },
+                'style': {
+                    'color': "(Highcharts.theme & & Highcharts.theme.contrastTextColor) | | 'black'"
+                }
+            }
+        },
+        'xAxis': {'categories': chart_right_categories},
+        'series': [chart_right_counts_series]
+    }
+
+    dump_left = json.dumps(chart_left)
+    dump_middle = json.dumps(chart_middle)
+    dump_right = json.dumps(chart_right)
+
+    return render(request, 'tasks.html', {'tasks': tasks, 'school': school,
+                                          'chart_left': dump_left,
+                                          'chart_middle': dump_middle,
+                                          'chart_right': dump_right
+                                          })
     # pass
 
 
