@@ -1,9 +1,8 @@
 .navbar-brand {
-/*font-family: 'Pacifico', cursive;*/
-
-font-family:"Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;font-size:12px;
-
+font-family: 'Pacifico', cursive;
 }
+/*font-family:"Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;font-size:12px;*/
+
 /*
 #chart_left, #chart_middle, #chart_right {
 

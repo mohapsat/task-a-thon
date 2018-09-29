@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+
+{% block title %}My School{% endblock %}
+
+{% block school %}
+    {{school}}
+{% endblock %}
+
+
+{% block users %}
+
+<h3 class="my-2">Teachers</h3>
+    <table class="table table-hover table-sm bg-white">
+        <thead class="thead thead-light">
+        <tr>
+            <th>Username</th>
+            <th>Status</th>
+            <th>Email</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Date Joined</th>
+            <th>Last Login</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for teacher in teachers %}
+        <tr>
+                <td>{{ teacher.user.username }}</td>
+                <td>
+                    {% if teacher.user.is_active %}
+                        <span class="badge badge-success">Active</span>
+                    {% else %}
+                        <span class="badge badge-danger">Inactive</span>
+                    {% endif %}
+                </td>
+                <td>{{ teacher.user.email }}</td>
+                <td>{{ teacher.user.first_name }}</td>
+                <td>{{ teacher.user.last_name }}</td>
+                <td>{{ teacher.user.date_joined | date:'Y-m-d' }}</td>
+                <td>{{ teacher.user.last_login | naturaltime }}</td>
+                <td>
+                    {% if teacher.user.is_active %}
+                    <a href="{% url 'deactivate_user' teacher.user.pk %}" class="btn btn-outline-dark btn-sm" role="button">
+                    Deactivate
+                    </a>
+                    <a href="{% url 'remove_user' teacher.user.pk %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">
+                    Remove
+                    </a>
+                    {% else %}
+                    <a href="{% url 'activate_user' teacher.user.pk %}" class="btn btn-success btn-sm" role="button" aria-pressed="true">
+                    Activate
+                    </a>
+                    <a href="{% url 'remove_user' teacher.user.pk %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">
+                    Remove
+                    </a>
+                    {% endif %}
+                </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+<h3 class="my-2">Parents</h3>
+    <table class="table table-hover table-sm bg-white">
+    <thead class="thead thead-light">
+        <tr>
+            <th>Username</th>
+            <th>Status</th>
+            <th>Email</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Date Joined</th>
+            <th>Last Login</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for parent in parents %}
+        <tr>
+                <td>{{ parent.user.username }}</td>
+                <td>
+                    {% if parent.user.is_active %}
+                        <span class="badge badge-success">Active</span>
+                    {% else %}
+                        <span class="badge badge-danger">Inactive</span>
+                    {% endif %}
+                </td>
+                <td>{{ parent.user.email }}</td>
+                <td>{{ parent.user.first_name }}</td>
+                <td>{{ parent.user.last_name }}</td>
+                <td>{{ parent.user.date_joined| date:'Y-m-d' }}</td>
+                <td>{{ parent.user.last_login | naturaltime }}</td>
+                <td>
+                    {% if parent.user.is_active %}
+                    <a href="{% url 'deactivate_user' parent.user.pk %}" class="btn btn-outline-dark btn-sm" role="button">
+                    Deactivate
+                    </a>
+                    <a href="{% url 'remove_user' parent.user.pk %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">
+                    Remove
+                    </a>
+                    {% else %}
+                    <a href="{% url 'activate_user' parent.user.pk %}" class="btn btn-success btn-sm" role="button" aria-pressed="true">
+                    Activate
+                    </a>
+                    <a href="{% url 'remove_user' parent.user.pk %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">
+                    Remove
+                    </a>
+                    {% endif %}
+                </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

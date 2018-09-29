@@ -37,7 +37,7 @@ def tasks_view(request):
     except ObjectDoesNotExist:
         school = None  # TODO: Admin should see tasks for all schools
 
-    # TODO: Filter tasks by school.
+    # TODO: Filter tasks by school - DONE.
     tasks = Task.objects.filter(school=school).order_by('-last_updated')
 
     page = request.GET.get('page', 1)
@@ -65,14 +65,14 @@ def tasks_view(request):
     chart_left_categories = list()
     chart_left_counts_series = list()
 
-    print("chart_left_data = %s" % chart_left_data)
+    # print("chart_left_data = %s" % chart_left_data)
 
     for entry in chart_left_data:
         chart_left_categories.append(entry['reward__name'])
         chart_left_counts_series.append({'name': entry['reward__name'], 'y': entry['reward__amount__sum']})
 
-    print("chart_left_categories = %s" % chart_left_categories)
-    print("chart_left_counts_series = %s" % chart_left_counts_series)
+    # print("chart_left_categories = %s" % chart_left_categories)
+    # print("chart_left_counts_series = %s" % chart_left_counts_series)
 
     chart_left_counts_series = {
         'name': 'Rewards',
@@ -108,7 +108,7 @@ def tasks_view(request):
 
     chart_middle_categories = list()
     chart_middle_counts_series = list()
-    print("chart_middle_data = %s" % chart_middle_data)
+    # print("chart_middle_data = %s" % chart_middle_data)
 
     # STATUS_CHOICES = (
     #     (OPEN, 'Open'),
@@ -137,7 +137,7 @@ def tasks_view(request):
         chart_middle_categories.append(entry['status'])
         chart_middle_counts_series.append({'name': entry['status'], 'y': entry['id__count']})
 
-    print("chart_middle_categories = %s" % chart_middle_categories)
+    # print("chart_middle_categories = %s" % chart_middle_categories)
 
     chart_middle_counts_series = {
         'name': 'Tasks',
@@ -147,7 +147,7 @@ def tasks_view(request):
 
     chart_middle = {
         'chart': {'type': 'bar'},  # column, pie, area, line
-        'title': {'text': '# Tasks by Status'},
+        'title': {'text': '# Task Statuses'},
         'tooltip': {
             'pointFormat': '{series.name}: <b>{point.y}</b>'
         },
@@ -175,7 +175,7 @@ def tasks_view(request):
     chart_right_categories = list()
     chart_right_counts_series = list()
 
-    print("chart_right_data = %s" % chart_right_data)
+    # print("chart_right_data = %s" % chart_right_data)
 
     for entry in chart_right_data:
 
@@ -201,11 +201,11 @@ def tasks_view(request):
         'data': chart_right_counts_series
     }
 
-    print("chart_right_counts_series = %s" % chart_right_counts_series)
+    # print("chart_right_counts_series = %s" % chart_right_counts_series)
 
     chart_right = {
         'chart': {'type': 'column'},  # column, pie, area, line
-        'title': {'text': '# Claims by Status'},
+        'title': {'text': '# Reward Claims'},
         'tooltip': {
             'pointFormat': '{series.name}: <b>{point.y}</b>'
         },
@@ -559,7 +559,7 @@ class ClaimDeleteView(DeleteView):
     def form_valid(self, form):
         # TODO: Reset task status to OPEN
         post = form.delete()
-        Task.object.filter(pk=post.task.pk).update(status = Status.OPEN)
+        Task.object.filter(pk=post.task.pk).update(status=Status.OPEN)
 
 
 @login_required

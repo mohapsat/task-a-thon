@@ -13,8 +13,13 @@ urlpatterns = [
     path('signup/parent/', accounts_views.parent_signup_view, name='parent_signup'),  # parent_signup
     path('signup/teacher/', accounts_views.teacher_signup_view, name='teacher_signup'),  # teacher_signup
 
-
     path('settings/account/', accounts_views.UserUpdateView.as_view(), name='my_account'),
+
+    path('settings/school/', accounts_views.my_school_view, name='my_school'),
+    path('settings/school/activate/<pk>', accounts_views.ActivateUserView.as_view(), name='activate_user'),
+    path('settings/school/deactivate/<pk>', accounts_views.DeactivateUserView.as_view(), name='deactivate_user'),
+    path('settings/school/remove/<pk>', accounts_views.RemoveUserView.as_view(), name='remove_user'),
+
 
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),

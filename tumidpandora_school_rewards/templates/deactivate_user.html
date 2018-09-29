@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Deactivate User{% endblock %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb bg-light my-2">
+    <li class="breadcrumb-item"><a href="{% url 'my_school' %}">My School</a></li>
+    <li class="breadcrumb-item">Deactivate</li>
+    <li class="breadcrumb-item active" aria-current="page">{{ user.username }}</a></li>
+
+</ol>
+{% endblock %}
+
+{% block removeuser %}
+  <form method="post" class="mb-4" novalidate>
+    {% csrf_token %}
+    {% include 'includes/form.html' %}
+      <p class="lead">Are you sure you would like to <strong><u>deactivate</u></strong> user: <kbd>{{ user.username }}</kbd> ?</p>
+    <button type="submit" class="btn btn-danger btn-sm">Yes, deactivate</button>
+    <a href="{% url 'my_school' %}" class="btn btn-outline-secondary btn-sm" role="button">Cancel</a>
+  </form>
+{% endblock %}

@@ -1,3 +1,4 @@
+from django.utils.translation import gettext_lazy as _
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
@@ -37,6 +38,10 @@ class ParentSignUpForm(UserCreationForm):
         model = User
         fields = ('school', 'first_name', 'last_name', 'username', 'email', 'password1', 'password2',)
         # TODO: set "---------" by default) with the empty_label attribute to "Select a School"
+        help_texts = {
+            'school': _("Can't find your school? Please contact mailto:support@schoolrewards.com")
+        }
+
 
     @transaction.atomic
     def save(self):

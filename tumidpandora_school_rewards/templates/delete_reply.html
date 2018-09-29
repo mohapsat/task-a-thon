@@ -3,10 +3,12 @@
 {% block title %}Delete Reply{% endblock %}
 
 {% block breadcrumb %}
+<ol class="breadcrumb bg-light my-2">
     <li class="breadcrumb-item"><a href="{% url 'tasks' %}">Tasks</a></li>
     <li class="breadcrumb-item" aria-current="page"><a href="{% url 'task_replies' post.task.pk %}">{{ post.task.name }}</a></li>
     <li class="breadcrumb-item" aria-current="page"><a href="{% url 'task_replies' post.task.pk %}">{{ post.message }}</a></li>
     <li class="breadcrumb-item active">Delete reply</li>
+</ol>
 {% endblock %}
 
 {% block deletereply %}

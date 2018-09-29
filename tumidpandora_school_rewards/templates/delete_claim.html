@@ -3,10 +3,12 @@
 {% block title %}Delete Claim{% endblock %}
 
 {% block breadcrumb %}
+<ol class="breadcrumb bg-light my-2">
     <li class="breadcrumb-item"><a href="{% url 'tasks' %}">Tasks</a></li>
     <li class="breadcrumb-item" aria-current="page"><a href="{% url 'task_replies' claim.task.pk %}">{{ claim.task.name }}</a></li>
     <li class="breadcrumb-item" aria-current="page"><a href="{% url 'task_replies' claim.task.pk %}">{{ claim.message }}</a></li>
     <li class="breadcrumb-item active">Delete Claim</li>
+</ol>
 {% endblock %}
 
 {% block deletereply %}
