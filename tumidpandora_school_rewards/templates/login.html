@@ -23,19 +23,22 @@
               {% csrf_token %}
               <input type="hidden" name="next" value="{{ next }}">
               {% include 'includes/form.html' %}
-              <button type="submit" class="btn btn-secondary btn-sm">LOG IN</button>
+              <button type="submit" class="btn btn-secondary btn-block btn-sm"><strong>LOG IN</strong></button>
             </form>
           </div>
+
           <div class="card-footer text-muted text-center">
               New to School Rewards?
+            <a href="{% url 'new_school' %}" class="btn btn-primary btn-block btn-sm my-1" role="button" aria-pressed="true">
+              <strong>ADD MY SCHOOL</strong></a>
+            <a href="{% url 'parent_signup' %}" class="btn btn-info btn-block btn-sm my-1" role="button" aria-pressed="true">
+              <strong>SIGNUP AS PARENT</strong></a>
+            <a href="{% url 'teacher_signup' %}" class="btn btn-secondary btn-block btn-sm my-1 active" role="button" aria-pressed="true">
+              <strong>SIGNUP AS TEACHER</strong></a>
           </div>
 
-        <a href="{% url 'parent_signup' %}" class="btn btn-info btn-block btn-sm my-1" role="button" aria-pressed="true">
-            <strong>SIGNUP AS PARENT</strong></a>
-        <a href="{% url 'teacher_signup' %}" class="btn btn-light btn-block btn-sm my-1 active" role="button" aria-pressed="true">
-            <strong>SIGNUP AS TEACHER</strong></a>
+            <div class="text-center py-2">
 
-        <div class="text-center py-2">
           <small>
             <a href="{% url 'password_reset' %}" class="text-muted">Forgot your password?</a>
           </small>

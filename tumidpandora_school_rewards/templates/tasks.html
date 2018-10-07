@@ -29,8 +29,9 @@
           <!--<th>Updated</th>-->
         <th>
             {% if user.is_parent %}
-            <a href="{% url 'new_task' %}" class="btn btn-warning btn-sm text-dark" role="button" aria-pressed="true">
-        Create New Task</a>
+            <a href="{% url 'new_task' %}" class="btn btn-success btn-lg" role="button" aria-pressed="true">
+                <strong>+ New Task</strong>
+            </a>
             {% endif %}
         </th>
       </tr>
@@ -50,21 +51,36 @@
             {{ task.status.get_html_badge }}<!-- TODO: update task status once claimed -->
         </td>
           <!--<td class="align-middle">{{ task.expires_on |date:"M. d, Y (D)" }}</td>-->
-          <td class="align-middle">{{ task.expires_on |naturaltime }}</td>
+
+        {% if task.is_expired %}
+          <td class="align-middle">
+              <small class="text-muted">
+                <strong>Expired</strong>
+                  : {{task.expires_on |naturaltime }}
+              </small>
+          </td>
+        {% else %}
+          <td class="align-middle">{{ task.expires_on | date:"D, d M, Y" }}
+              <small class="text-muted">({{ task.expires_on |naturaltime }})</small>
+          </td>
+        {% endif %}
+
           <!--<td class="align-middle">{{ task.last_updated|naturaltime }}</td>-->
         <td class="align-middle">
-        {% if task.starter == user %}
-            <button type="button" class="btn btn-outline-secondary btn-sm disabled">
-            Pay
-            </button>
+        {% if task.starter == user and task.status|upper == "PENDING PAYMENT" and not task.is_expired %}
+            <!--6 is for pending payment-->
+            <!--had to add upper for the match-->
+            <a href="{% url 'new_payment_to_task' task.pk %}" class="btn btn-success btn-sm" role="button" aria-pressed="true">
+            Pay ${{task.reward.amount}}
+            </a>
         {% endif %}
-        {% if task.starter == user.is_teacher and task.starter != user and task.claims.count == 0%}
+        {% if task.starter == user.is_teacher and task.starter != user and task.claims.count == 0 and not task.is_expired %}
             <!--i.e. show only when task has not been claimed-->
             <a href="{% url 'new_claim_to_task' task.pk %}" class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">
             Claim
             </a>
         {% endif %}
-        {% if task.starter == user and task.claims.count < 1 and user.is_parent %}
+        {% if task.starter == user and task.claims.count < 1 and user.is_parent and task.status|upper != "PENDING PAYMENT" and task.status|upper != "PAID" and not task.is_expired %}
             <!--prevent task edit and delete if a claim exists-->
             <a href="{% url 'edit_task' task.pk %}" class="btn btn-outline-info btn-sm" role="button" aria-pressed="true">
             Edit

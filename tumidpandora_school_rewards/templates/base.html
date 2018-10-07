@@ -18,6 +18,7 @@
 <body>
 {% block body %}
 
+
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
   <div class="container">
     <a class="navbar-brand" href="{% url 'tasks' %}">School Rewards</a>
@@ -29,13 +30,15 @@
         <ul class="navbar-nav ml-auto">
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Hello, {{ user.username|title }}
-                <!--TODO: Add salutation, last_name-->
+              <!--TODO: switch user label to first_name instead of username-->
+                Hello, {{ user.username|title }}
+                <!--TODO: Add salutation-->
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
                 <a class="dropdown-item" href="{% url 'my_account' %}">My Account</a>
                 <a class="dropdown-item" href="{% url 'password_change' %}">Change Password</a>
 
+                <!--TODO: make my_school available to all users?-->
                 {% if user.teacher.is_school_admin %}
                 <!--only teachers who're school admins can see this menu item-->
                 <a class="dropdown-item active" href="{% url 'my_school' %}">My School</a>
@@ -61,7 +64,7 @@
 
     {% if school %}
     <h4 class="text-center">
-        <a class="badge badge-dark my-2" data-toggle="collapse" href="#collapseCharts"
+        <a class="badge badge-primary my-1" data-toggle="collapse" href="#collapseCharts"
                 aria-expanded="true" aria-controls="collapseCharts">
             {% block school %}
                 {{school}}
@@ -170,6 +173,11 @@
 
     {% block removeuser %}
     {% endblock %}
+
+
+    {% block newpaymenttotask %}
+    {% endblock %}
+
 
 </div>
 {% endblock %} <!--body-->

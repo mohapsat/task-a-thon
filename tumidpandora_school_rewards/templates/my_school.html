@@ -39,29 +39,72 @@
                 <td>{{ teacher.user.email }}</td>
                 <td>{{ teacher.user.first_name }}</td>
                 <td>{{ teacher.user.last_name }}</td>
-                <td>{{ teacher.user.date_joined | date:'Y-m-d' }}</td>
+                <td>{{ teacher.user.date_joined | date:"D, d M, Y" }}</td>
                 <td>{{ teacher.user.last_login | naturaltime }}</td>
                 <td>
                     {% if teacher.user.is_active %}
-                    <a href="{% url 'deactivate_user' teacher.user.pk %}" class="btn btn-outline-dark btn-sm" role="button">
-                    Deactivate
-                    </a>
-                    <a href="{% url 'remove_user' teacher.user.pk %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">
-                    Remove
-                    </a>
+                        <a href="{% url 'deactivate_user' teacher.user.pk %}" class="btn btn-outline-dark btn-sm" role="button">
+                            Deactivate
+                        </a>
+                        <a href="{% url 'remove_user' teacher.user.pk %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">
+                            Remove
+                        </a>
                     {% else %}
-                    <a href="{% url 'activate_user' teacher.user.pk %}" class="btn btn-success btn-sm" role="button" aria-pressed="true">
-                    Activate
-                    </a>
-                    <a href="{% url 'remove_user' teacher.user.pk %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">
-                    Remove
-                    </a>
+                        <a href="{% url 'activate_user' teacher.user.pk %}" class="btn btn-success btn-sm" role="button" aria-pressed="true">
+                            Activate
+                        </a>
+                        <a href="{% url 'remove_user' teacher.user.pk %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">
+                            Remove
+                        </a>
                     {% endif %}
                 </td>
         </tr>
         {% endfor %}
         </tbody>
     </table>
+
+<!--START teachers pagination-->
+{% if teachers.has_other_pages %}
+<nav aria-label="Teachers pagination" class="mb-4">
+    <ul class="pagination">
+        {% if teachers.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?t_page={{ teachers.previous_page_number }}">Previous</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">Previous</span>
+        </li>
+        {% endif %}
+
+        {% for page_num in teachers.paginator.page_range %}
+        {% if teachers.number == page_num %}
+        <li class="page-item active">
+            <span class="page-link">
+              {{ page_num }}
+              <span class="sr-only">(current)</span>
+            </span>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?t_page={{ page_num }}">{{ page_num }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% if teachers.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?t_page={{ teachers.next_page_number }}">Next</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">Next</span>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+<!--END teachers pagination-->
 
 
 <h3 class="my-2">Parents</h3>
@@ -92,27 +135,72 @@
                 <td>{{ parent.user.email }}</td>
                 <td>{{ parent.user.first_name }}</td>
                 <td>{{ parent.user.last_name }}</td>
-                <td>{{ parent.user.date_joined| date:'Y-m-d' }}</td>
+                <td>{{ parent.user.date_joined| date:"D, d M, Y" }}</td>
                 <td>{{ parent.user.last_login | naturaltime }}</td>
                 <td>
                     {% if parent.user.is_active %}
-                    <a href="{% url 'deactivate_user' parent.user.pk %}" class="btn btn-outline-dark btn-sm" role="button">
-                    Deactivate
-                    </a>
-                    <a href="{% url 'remove_user' parent.user.pk %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">
-                    Remove
-                    </a>
+                        <a href="{% url 'deactivate_user' parent.user.pk %}" class="btn btn-outline-dark btn-sm" role="button">
+                            Deactivate
+                        </a>
+                        <a href="{% url 'remove_user' parent.user.pk %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">
+                            Remove
+                        </a>
                     {% else %}
-                    <a href="{% url 'activate_user' parent.user.pk %}" class="btn btn-success btn-sm" role="button" aria-pressed="true">
-                    Activate
-                    </a>
-                    <a href="{% url 'remove_user' parent.user.pk %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">
-                    Remove
-                    </a>
+                        <a href="{% url 'activate_user' parent.user.pk %}" class="btn btn-success btn-sm" role="button" aria-pressed="true">
+                            Activate
+                        </a>
+                        <a href="{% url 'remove_user' parent.user.pk %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">
+                            Remove
+                        </a>
                     {% endif %}
                 </td>
         </tr>
         {% endfor %}
         </tbody>
     </table>
+
+
+<!--START parents pagination-->
+{% if parents.has_other_pages %}
+<nav aria-label="Parents pagination" class="mb-4">
+    <ul class="pagination">
+        {% if parents.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?p_page={{ parents.previous_page_number }}">Previous</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">Previous</span>
+        </li>
+        {% endif %}
+
+        {% for page_num in parents.paginator.page_range %}
+        {% if parents.number == page_num %}
+        <li class="page-item active">
+            <span class="page-link">
+              {{ page_num }}
+              <span class="sr-only">(current)</span>
+            </span>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?p_page={{ page_num }}">{{ page_num }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% if parents.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?p_page={{ parents.next_page_number }}">Next</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">Next</span>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+<!--END parents pagination-->
+
 {% endblock %}

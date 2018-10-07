@@ -31,16 +31,19 @@ class ParentSignUpForm(UserCreationForm):
     school = forms.ModelChoiceField(
         queryset=School.objects.all(),
         widget=forms.Select(),
-        required=True
-    )
+        required=True,
+        label=_("Select School"),
+        help_text=_("Can't find your school? Click here to add one "
+                    "<a href =/schools/new class=\"btn btn-primary btn-sm my-1\" role=\"button\" aria-pressed=\"true\"><strong>ADD MY SCHOOL</strong></a>",
+                    )
+        # TODO: Hard coded new school, as it doesn't access {% url 'new_school' %}
+        )
 
     class Meta(UserCreationForm.Meta):
         model = User
         fields = ('school', 'first_name', 'last_name', 'username', 'email', 'password1', 'password2',)
         # TODO: set "---------" by default) with the empty_label attribute to "Select a School"
-        help_texts = {
-            'school': _("Can't find your school? Please contact mailto:support@schoolrewards.com")
-        }
+
 
 
     @transaction.atomic
@@ -61,6 +64,11 @@ class TeacherSignUpForm(UserCreationForm):
         queryset=School.objects.all(),
         widget=forms.Select(),
         required=True,
+        label=_("Select School"),
+        help_text=_("Can't find your school? Click here to add one "
+                    "<a href =/schools/new class=\"btn btn-primary btn-sm my-1\" role=\"button\" aria-pressed=\"true\"><strong>ADD MY SCHOOL</strong></a>",
+                    )
+        # TODO: Hard coded new school, as it doesn't access {% url 'new_school' %}
     )
 
     class Meta(UserCreationForm.Meta):

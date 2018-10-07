@@ -54,6 +54,8 @@ urlpatterns = [
         template_name='password_change_done.html'),
          name='password_change_done'),
 
+    path('schools/new/', views.new_school_view, name='new_school'),
+
     path('tasks/', views.tasks_view, name='tasks'),
     path('tasks/new/', views.new_task_view, name='new_task'),
 
@@ -64,6 +66,8 @@ urlpatterns = [
     path('tasks/<pk>/reply/', views.new_reply_to_task_view, name='new_reply_to_task'),
     path('tasks/<pk>/reply/<post_pk>/edit/', views.PostUpdateView.as_view(), name='edit_post'),
     path('tasks/<pk>/reply/<post_pk>/delete/', views.PostDeleteView.as_view(), name='delete_post'),
+
+    path('tasks/<pk>/pay/', views.new_payment_to_task_view, name='new_payment_to_task'),
 
     path('tasks/<pk>/claim/', views.new_claim_to_task_view, name='new_claim_to_task'),
     path('tasks/<pk>/claim/<claim_pk>/approve/', views.claim_approve_view, name='approve_claim'),

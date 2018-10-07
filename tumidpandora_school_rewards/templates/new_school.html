@@ -15,19 +15,14 @@
       <div class="col-lg-5 col-md-6 col-sm-7">
         <div class="card border-dark">
             <h5 class="card-header bg-dark text-white">
-            Please Sign Up
+            Please Register Your School
             </h5>
           <div class="card-body">
             <!--<h3 class="card-title">Sign up</h3>-->
             <form method="post" novalidate>
-              <small class="text-muted">
-                Your school is using <a target="_blank" href="https://www.paypal.com/us/webapps/mpp/education">Paypal School Payment Solutions</a>
-                to accept payments. All the <strong>parents</strong> are requested to open a PayPal account to participate.
-              </small>
-              <hr>
               {% csrf_token %}
               {% include 'includes/form.html' %}
-              <button type="submit" class="btn btn-primary btn-block "><strong>Create My Account</strong></button>
+              <button type="submit" class="btn btn-primary btn-block ">Add My School</button>
             </form>
           </div>
           <div class="card-footer text-muted text-center">

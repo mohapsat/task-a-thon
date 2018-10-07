@@ -35,7 +35,19 @@
         <td class="align-middle">
             {{ task.status.get_html_badge }} <!-- TODO: update task status once claimed -->
         </td>
-          <td class="align-middle">{{ task.expires_on|naturaltime }}</td>
+
+          {% if task.is_expired %}
+          <td class="align-middle"><span class="text-muted">Expired {{task.expires_on |naturaltime }}</span></td>
+        {% else %}
+          <td class="align-middle">{{ task.expires_on | date:"D, d M, Y" }}
+              <small class="text-muted"><i>({{ task.expires_on |naturaltime }})</i></small>
+          </td>
+        {% endif %}
+
+          <!--<td class="align-middle">{{ task.expires_on | date:"D, d M, Y" }}-->
+              <!--<small class="text-muted">[<i>{{ task.expires_on |naturaltime }}</i>]</small>-->
+          <!--</td>-->
+          <!--<td class="align-middle">{{ task.expires_on|naturaltime }}</td>-->
         <!--<td class="align-middle">{{ task.last_updated }}</td>-->
         <td class="align-middle"></td>
       </tr>
@@ -43,15 +55,25 @@
     </table>
 
 <div class="my-4">
-    {% if task.starter == user and task.claims.count < 1 and user.is_parent %}
-    <!--prevent task edit and delete if a claim exists-->
+{% if not task.is_expired %}
+    {% if task.starter == user and task.claims.count < 1 and user.is_parent and task.status|upper != "PENDING PAYMENT" and task.status|upper != "PAID" %}
+            <!--prevent task edit and delete if a claim exists-->
             <a href="{% url 'edit_task' task.pk %}" class="btn btn-outline-info btn-sm" role="button" aria-pressed="true">
-            Edit</a>
+            Edit
+            </a>
             <a href="{% url 'delete_task' task.pk %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">
-            Delete</a>
-            <button type="button" class="btn btn-outline-secondary btn-sm disabled">
-            Pay</button>
+            Delete
+            </a>
     {% endif %}
+
+    {% if task.starter == user and task.status|upper == "PENDING PAYMENT" %}
+            <!--6 is for pending payment-->
+            <!--had to add upper for the match-->
+            <a href="{% url 'new_payment_to_task' task.pk %}" class="btn btn-outline-success btn-sm" role="button" aria-pressed="true">
+            <strong>PAY ${{task.reward.amount}}</strong>
+            </a>
+    {% endif %}
+{% endif %}
 </div>
 
 <p class="lead">

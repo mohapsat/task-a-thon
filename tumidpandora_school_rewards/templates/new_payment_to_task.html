@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Reply to {{ task.name }}{% endblock %}
+
+{% block school %}
+        {{school}}
+{% endblock %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb bg-light my-2">
+    <li class="breadcrumb-item"><a href="{% url 'tasks' %}">Tasks</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'task_replies' task.pk %}">{{ task.name }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Payment</li>
+</ol>
+{% endblock %}
+
+{% block newpaymenttotask %}
+
+
+
+  <form id="checkout" method="post"  action="" novalidate>
+    {% csrf_token %}
+    {% include 'includes/form.html' %}
+    <hr>
+      <p class="display-4 my-4 text-muted"> Thank you for supporting your school!</p>
+      <p class="lead my-4">
+          Please <a target="_blank" href="{{task.school.paypal_account}}/{{task.reward.amount}}" class="badge badge-primary">click here</a> to go to your school's paypal.me page and
+          make a payment of ${{task.reward.amount}} for the task - <strong>{{task.name}}</strong>. <span class="text-muted">For your convenience, the reward amount will be pre-populated in Paypal.</span></p>
+
+      <p class="lead"> Once done, please come back and confirm your payment here. This is
+          <strong>important</strong>, since <span class="text-info font-weight-light">we don't keep any portion of the payment, store your card information or track your payments on Paypal.</span>
+      </p>
+      <p class="lead my-4">
+          I have paid the reward amount of <strong>$<u>{{task.reward.amount}}</u></strong> for this task.
+      </p>
+
+        <div class="my-4"></div>
+      <button class="btn btn-outline-success" type="submit">
+          <strong>Confirm</strong>
+      </button>
+      <a href="{% url 'task_replies' task.pk %}" class="btn btn-outline-secondary" role="button"
+         aria-pressed="true">
+          <strong>Cancel</strong>
+      </a>
+      <hr>
+      <!--<p class="text-muted ">Can't see the paypal tab ? <a target="_blank" href="{{task.school.paypal_account}}/{{task.reward.amount}}" class="badge badge-primary">CLICK HERE</a></p>-->
+  </form>
+
+{% endblock %}
+
+{%block paymentiframe%}
+
+<div class="embed-responsive embed-responsive-1by1">
+        <iframe class="embed-responsive-item" src="{{ task.school.paypal_account }}/{{task.reward.amount}}" allowfullscreen></iframe>
+</div>
+
+{%endblock%}

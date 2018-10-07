@@ -91,13 +91,8 @@ def my_school_view(request):
     # teachers = Teacher.objects.filter(school=school).order_by('user__last_login')
     # print("teachers = %s" % teachers)
 
-    # TODO: Add parents to admin view (if required)
-    parents = Parent.objects.filter(school=school).order_by('user__last_login')
-    # print("parents = %s" % parents)
-
-    page = request.GET.get('page', 1)
-
-    paginator = Paginator(teachers, 10)
+    paginator = Paginator(teachers, 4)  # #teacher records seen at one page
+    page = request.GET.get('t_page')
 
     try:
         teachers = paginator.page(page)
@@ -105,6 +100,24 @@ def my_school_view(request):
         teachers = paginator.page(1)
     except EmptyPage:
         teachers = paginator.page(paginator.num_pages)
+
+    print("teachers = %s" % teachers)
+
+    # TODO: Add parents to admin view (if required)
+    parents = Parent.objects.filter(school=school).order_by('user__last_login')
+    # print("parents = %s" % parents)
+
+    paginator = Paginator(parents, 4)  # #parent records seen at one page
+    page = request.GET.get('p_page')
+
+    try:
+        parents = paginator.page(page)
+    except PageNotAnInteger:
+        parents = paginator.page(1)
+    except EmptyPage:
+        parents = paginator.page(paginator.num_pages)
+
+    print("parents = %s" % parents)
 
     return render(request, 'my_school.html', {"school": school, "teachers": teachers,
                                               "parents": parents

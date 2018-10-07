@@ -1,6 +1,6 @@
 from django.utils.translation import gettext_lazy as _
-from django.forms import ModelForm, Textarea, CharField, MultiValueField, DateTimeInput, ChoiceField
-from .models import Task, Post, Claim
+from django.forms import ModelForm, Textarea, CharField, MultiValueField, DateTimeInput, ChoiceField, TextInput
+from .models import Task, Post, Claim, School, Payment
 
 # ref: https://docs.djangoproject.com/en/dev/topics/forms/modelforms/#overriding-the-default-fields
 
@@ -60,8 +60,42 @@ class NewClaimForm(ModelForm):  # Post
         localize = '_all_'
 
 
+class NewSchoolForm(ModelForm):  # School
+
+    class Meta:
+        model = School
+        fields = ('name', 'paypal_account', 'street_address', 'city', 'state', 'zip_code', )
+        # 'expires_on' is inside the new_task.html
+
+        widgets = {
+            'paypal_account': TextInput(attrs={'placeholder': 'PayPal.Me/YourSchool'}),
+            # 'name': TextInput(attrs={'placeholder': 'Little Angles Elementary'}),
+        }
+        labels = {
+            'name': _('School Name'),
+        }
+        help_texts = {
+            'name': _("Enter your school's name (e.g. Little Angles Elementary)"),
+            'paypal_account': _("Your school will receive payments into your Paypal account directly."
+                                " Please create one here: <a target=\"_blank\" href=\"https://www.paypal.com/us/webapps/mpp/education\">"
+                                "School Payment Solutions with PayPal</a>"),
+        }
+        error_messages = {
+            'name': {
+                'max_length': _("Please limit school name to 128 characters."),
+            },
+        }
+
+
 class ClaimApprovalForm(ModelForm):
 
     class Meta:
         model = Claim
+        fields = []  # can't create a ModelForm without the fields property, so add a blank one
+
+
+class NewPaymentForm(ModelForm):
+
+    class Meta:
+        model = Payment
         fields = []  # can't create a ModelForm without the fields property, so add a blank one

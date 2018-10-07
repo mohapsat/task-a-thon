@@ -11,8 +11,8 @@ from django.http import HttpResponse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 
-from .models import Task, Post, Reward, Status, Claim, Parent, Teacher, User
-from .forms import NewTaskForm, NewReplyForm, NewClaimForm, ClaimApprovalForm
+from .models import Task, Post, Reward, Status, Claim, Parent, Teacher, User, School, Payment
+from .forms import NewTaskForm, NewReplyForm, NewClaimForm, ClaimApprovalForm, NewSchoolForm, NewPaymentForm
 
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -42,7 +42,7 @@ def tasks_view(request):
 
     page = request.GET.get('page', 1)
 
-    paginator = Paginator(tasks, 50)
+    paginator = Paginator(tasks, 4)
 
     try:
         tasks = paginator.page(page)
@@ -59,6 +59,8 @@ def tasks_view(request):
     # Get status and count of tasks for logged in user's school
 
     # TODO: For pie to work, it needs {name:, y:} for series data
+
+    chart_height = 200  # applies to all charts
 
     # REF: https://simpleisbetterthancomplex.com/tutorial/2016/12/06/how-to-create-group-by-queries.html
     chart_left_data = Task.objects.filter(school=school).values('reward__name').annotate(Sum('reward__amount'))
@@ -81,7 +83,7 @@ def tasks_view(request):
     }
 
     chart_left = {
-        'chart': {'type': 'pie'},  # column, pie, area, line
+        'chart': {'type': 'pie', 'height': chart_height},  # column, pie, area, line
         'title': {'text': '$ Rewards'},
         'tooltip': {
             'pointFormat': '{series.name}: <b>${point.y}</b>'
@@ -133,6 +135,8 @@ def tasks_view(request):
             entry['status'] = 'Approved'
         elif entry['status'] == 6:
             entry['status'] = 'Pending Payment'
+        elif entry['status'] == 7:
+            entry['status'] = 'Paid'
 
         chart_middle_categories.append(entry['status'])
         chart_middle_counts_series.append({'name': entry['status'], 'y': entry['id__count']})
@@ -146,7 +150,7 @@ def tasks_view(request):
     }
 
     chart_middle = {
-        'chart': {'type': 'bar'},  # column, pie, area, line
+        'chart': {'type': 'bar', 'height': chart_height},  # column, pie, area, line
         'title': {'text': '# Task Statuses'},
         'tooltip': {
             'pointFormat': '{series.name}: <b>{point.y}</b>'
@@ -204,7 +208,7 @@ def tasks_view(request):
     # print("chart_right_counts_series = %s" % chart_right_counts_series)
 
     chart_right = {
-        'chart': {'type': 'column'},  # column, pie, area, line
+        'chart': {'type': 'column', 'height': chart_height},  # column, pie, area, line
         'title': {'text': '# Reward Claims'},
         'tooltip': {
             'pointFormat': '{series.name}: <b>{point.y}</b>'
@@ -597,4 +601,58 @@ def claim_approve_view(request, pk, claim_pk):  # new reply / post to task
         claim = Claim.objects.get(pk=claim_pk)
         form = ClaimApprovalForm()
     return render(request, 'approve_claim.html', {"claim": claim, "form": form, "school": school})
+    pass
+
+
+def new_payment_to_task_view(request, pk):
+
+    task = get_object_or_404(Task, pk=pk)
+
+    try:
+        if request.user.is_parent:
+            school = request.user.parent.school
+        else:
+            school = request.user.teacher.school
+    except ObjectDoesNotExist:
+        school = None
+
+    if request.method == 'POST':
+        form = NewPaymentForm(request.POST)
+        if form.is_valid():
+            Task.objects.filter(pk=pk).update(status=Status.PAID)  # i.e. update payment status to PAID_PENDING_CONFIRMATION
+            payment = form.save(commit=False)
+            payment.created_by = request.user
+            payment.save()
+            return redirect('task_replies', pk=pk)
+    else:
+        # payment = Payment.objects.get(pk=payment_pk)
+        form = NewPaymentForm()
+    return render(request, 'new_payment_to_task.html', {"form": form, "school": school,
+                                                        "task": task})
+    pass
+
+
+def new_school_view(request):  # create new school
+
+    if request.method == 'POST':
+        form = NewSchoolForm(request.POST)
+
+        if form.is_valid():
+            school = form.save(commit=False)
+            school.save()  # TODO: Enable after migrating , added null=True for FKs
+            school = School.objects.create(
+                name=form.cleaned_data.get('name'),
+                street_address=form.cleaned_data.get('street_address'),
+                city=form.cleaned_data.get('city'),
+                state=form.cleaned_data.get('state'),
+                zip_code=form.cleaned_data.get('zip_code'),
+                paypal_account=form.cleaned_data.get('paypal_account'),
+            )
+            return redirect('login')
+    else:
+        form = NewSchoolForm()
+    return render(request, 'new_school.html', {"form": form})
+
+    # TODO: Show success message, after creating school. Don't switch to login quickly!!
+
     pass

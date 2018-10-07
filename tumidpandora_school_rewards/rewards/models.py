@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.html import escape, mark_safe
+from localflavor.us.models import USStateField
 
 
 # Ref: https://simpleisbetterthancomplex.com/tutorial/2018/01/18/how-to-implement-multiple-user-types-with-django.html
@@ -12,11 +13,18 @@ class User(AbstractUser):
 
 class School(models.Model):
 
-    name = models.CharField(max_length=64)
+    STATE_CHOICES = (
+        ('California', 'CA'),
+        ('Texas', 'TX'),
+        ('Arizona', 'AZ'),
+    )
+
+    name = models.CharField(max_length=128)
     street_address = models.CharField(max_length=100)
     city = models.CharField(max_length=64)
-    state = models.CharField(max_length=25)
+    state = USStateField(null=True, blank=True)
     zip_code = models.CharField(max_length=32)
+    paypal_account = models.CharField(max_length=128, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True)
     created_by = models.ForeignKey(User, related_name='schools', on_delete=models.CASCADE, null=True)
@@ -54,6 +62,7 @@ class Status(models.Model):
     PENDING_APPROVAL = 4
     APPROVED = 5
     PENDING_PAYMENT = 6
+    PAID = 7
     #
     STATUS_CHOICES = (
         (OPEN, 'Open'),
@@ -62,6 +71,7 @@ class Status(models.Model):
         (PENDING_APPROVAL, 'Pending Approval'),
         (APPROVED, 'Approved'),
         (PENDING_PAYMENT, 'Pending Payment'),
+        (PAID, 'Paid'),
     )
 
     status = models.IntegerField(default=OPEN, choices=STATUS_CHOICES, primary_key=True)
@@ -130,6 +140,10 @@ class Task(models.Model):
         else:
             return self.name
 
+    def is_expired(self):
+        # self.expires_on returns a datetime.datetime object, converting to date
+        return self.expires_on.date() < datetime.now().date()
+
 
 class Post(models.Model):
 
@@ -178,3 +192,15 @@ class Claim(models.Model):
             return self.message[:50]+'...'
         else:
             return self.message
+
+
+class Payment(models.Model):
+
+    # status = models.ForeignKey(Status, related_name='payments', on_delete=models.CASCADE, null=True, default=Status.OPEN)
+    # payment status is not needed, using task status.. all payments are paid
+    task = models.ForeignKey(Task, related_name='payments', on_delete=models.CASCADE, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, related_name='payments', on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return self.task
