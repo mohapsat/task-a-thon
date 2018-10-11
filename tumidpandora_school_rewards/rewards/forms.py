@@ -13,7 +13,8 @@ class NewTaskForm(ModelForm):
         # 'expires_on' is inside the new_task.html
 
         widgets = {
-            'success_criteria': Textarea(attrs={'cols': 80, 'rows': 4}),
+            'success_criteria': Textarea(attrs={'class': 'form-control form-control-alternative',
+                                                'cols': 80, 'rows': 4}),
             'expires_on': DateTimeInput(attrs={'class': 'datetimepicker'})
             # TODO: Add a datetime picker in the Create Task Form
         }
@@ -75,7 +76,7 @@ class NewSchoolForm(ModelForm):  # School
             'name': _('School Name'),
         }
         help_texts = {
-            'name': _("Enter your school's name (e.g. Little Angles Elementary)"),
+            'name': _("Enter your school's name (e.g. Little Angels Elementary)"),
             'paypal_account': _("Your school will receive payments into your Paypal account directly."
                                 " Please create one here: <a target=\"_blank\" href=\"https://www.paypal.com/us/webapps/mpp/education\">"
                                 "School Payment Solutions with PayPal</a>"),

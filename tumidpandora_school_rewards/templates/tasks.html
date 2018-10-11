@@ -8,134 +8,186 @@
 
 
 {% block breadcrumb %}
-<ol class="breadcrumb bg-light my-2">
-    <li class="breadcrumb-item active" aria-current="page">Tasks</li>
-</ol>
+
+    <ol class="breadcrumb bg-white">
+        <li class="breadcrumb-item" aria-current="page">Tasks /</li>
+    </ol>
+
 {% endblock %}
 
 
 {% block tasks %}
+<div class="row">
+    <div class="col">
+        <div class="card shadow">
+            <div class="card-header bg-secondary border-0">
+                <h5 class="text-muted mb-0">
+                    <i class="fa fa-star-o"></i>
+                    {{school|upper}}
+                    <div class="float-right">
+                    {% if user.is_parent %}
+                            <!--<a href="{% url 'new_task' %}" class="btn btn-success btn-lg" role="button" aria-pressed="true">-->
+                                <!--<strong>+ New Task</strong>-->
+                            <!--</a>-->
+                                <a href="{% url 'new_task' %}" class="btn btn-icon btn-3 btn-primary">
+	                                <span class="btn-inner--icon"><i class="ni ni-bag-17"></i></span>
+                                    <span class="btn-inner--text">New Task</span>
+                            </a>
+                    {% endif %}
+                    </div>
+                </h5>
+            </div>
 
-    <!--<table class="table table-hover table-sm bg-white table-responsive">-->
-    <table class="table table-hover table-sm bg-white">
-      <thead class="thead thead-light">
-      <tr>
-        <th>Task</th>
-        <th>Starter</th>
-        <th>Replies</th>
-        <th>Reward</th>
-        <th>Status</th>
-          <th>Expires</th>
-          <!--<th>Updated</th>-->
-        <th>
-            {% if user.is_parent %}
-            <a href="{% url 'new_task' %}" class="btn btn-success btn-lg" role="button" aria-pressed="true">
-                <strong>+ New Task</strong>
-            </a>
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">
+                                <i class="fa fa-tasks"></i>
+                                Task
+                            </th>
+                            <th scope="col">
+                                <i class="fa fa-bolt"></i>
+                                Starter
+                            </th>
+                            <th scope="col">
+                                <i class="fa fa-comments"></i>
+                                Replies
+                            </th>
+                            <th scope="col">
+                                <i class="fa fa-trophy"></i>
+                                Reward
+                            </th>
+                            <th scope="col">
+                                <i class="fa fa-toggle-on"></i>
+                                Status
+                            </th>
+                            <th scope="col">
+                                <i class="fa fa-calendar"></i>
+                                <!--<i class="fa fa-clock-o"></i>-->
+                                Expires
+                            </th>
+                            <!--<th>Updated</th>-->
+                            <th scope="col">
+
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for task in tasks %}
+
+                        <tr>
+                            <td>
+                                <a href="{% url 'task_replies' task.pk %}">{{ task.snippet_name }}</a>
+                                <br><small class="text-muted d-block">{{ task.snippet_criteria }}</small>
+                            </td>
+                            <td class="align-middle">
+                                <span class="avatar avatar-sm bg-purple">
+                                    {{ task.avatar_text| upper }}
+                                </span>
+                            </td>
+                            <td class="align-middle">
+                                {{ task.posts.count }}
+                            </td>
+                            <td class="align-middle">
+                                {{ task.reward.get_html_badge }}
+                            </td>
+                            <td class="align-middle">
+                                {{ task.status.get_html_badge }}<!-- TODO: update task status once claimed -->
+                            </td>
+                            <!--<td class="align-middle">{{ task.expires_on |date:"M. d, Y (D)" }}</td>-->
+
+                            {% if task.is_expired %}
+                            <td class="align-middle">
+                                <small class="text-muted">
+                                <strong>Expired</strong>: {{task.expires_on |naturaltime }}
+                                </small>
+                            </td>
+                            {% else %}
+                            <td class="align-middle">{{ task.expires_on | date:"D, d M, Y" }}
+                                <br><small class="text-muted">({{ task.expires_on |naturaltime }})</small>
+                            </td>
+                            {% endif %}
+                            <!--<td class="align-middle">{{ task.last_updated|naturaltime }}</td>-->
+                            <td class="align-middle">
+                            {% if task.starter == user and task.status|upper == "PENDING PAYMENT" and not task.is_expired %}
+                                <!--6 is for pending payment-->
+                                <!--had to add upper for the match-->
+                                <a href="{% url 'new_payment_to_task' task.pk %}" class="btn btn-success btn-sm" role="button" aria-pressed="true">
+                                    Pay ${{task.reward.amount}}
+                                </a>
+                            {% endif %}
+                            {% if task.starter == user.is_teacher and task.starter != user and task.claims.count == 0 and not task.is_expired %}
+                                <!--i.e. show only when task has not been claimed-->
+                                    <a href="{% url 'new_claim_to_task' task.pk %}" class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">
+                                    Claim Reward
+                                    </a>
+                            {% endif %}
+                            {% if task.starter == user and task.claims.count < 1 and user.is_parent and task.status|upper != "PENDING PAYMENT" and task.status|upper != "PAID" and not task.is_expired %}
+                                <!--prevent task edit and delete if a claim exists-->
+                                    <a href="{% url 'edit_task' task.pk %}" class="btn btn-info btn-sm" role="button" aria-pressed="true">
+                                    Edit
+                                    </a>
+                                    <a href="{% url 'delete_task' task.pk %}" class="btn btn-danger btn-sm" role="button" aria-pressed="true">
+                                    Delete
+                                    </a>
+                            {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card-footer py-4">
+            {% if tasks.has_other_pages %}
+                <nav aria-label="Tasks pagination" class="pagination justify-content-center mb-0">
+                    <ul class="pagination">
+                {% if tasks.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ tasks.previous_page_number }}"> < </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link"> < </span>
+                    </li>
+                {% endif %}
+
+                {% for page_num in tasks.paginator.page_range %}
+                {% if tasks.number == page_num %}
+                    <li class="page-item active">
+                        <span class="page-link">
+                            {{ page_num }}
+                            <span class="sr-only">(current)</span>
+                        </span>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_num }}">
+                            {{ page_num }}</a>
+                    </li>
+                {% endif %}
+                {% endfor %}
+
+                {% if tasks.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ tasks.next_page_number }}"> > </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link"> > </span>
+                    </li>
+                {% endif %}
+                    </ul>
+                </nav>
             {% endif %}
-        </th>
-      </tr>
-      </thead>
-      <tbody>
+            </div>
+    </div>
+</div>
+    <!--<table class="table table-hover table-sm bg-white table-responsive">-->
 
-      {% for task in tasks %}
+    </div>
 
-      <tr>
-        <td><a href="{% url 'task_replies' task.pk %}">{{ task.snippet_name }}</a><br>
-        <small class="text-muted d-block">{{ task.snippet_criteria }}</small>
-        </td>
-          <td class="align-middle">{{ task.starter.username|title }}</td>
-        <td class="align-middle">{{ task.posts.count }}</td>
-          <td class="align-middle">{{ task.reward.get_html_badge }}</td>
-        <td class="align-middle">
-            {{ task.status.get_html_badge }}<!-- TODO: update task status once claimed -->
-        </td>
-          <!--<td class="align-middle">{{ task.expires_on |date:"M. d, Y (D)" }}</td>-->
-
-        {% if task.is_expired %}
-          <td class="align-middle">
-              <small class="text-muted">
-                <strong>Expired</strong>
-                  : {{task.expires_on |naturaltime }}
-              </small>
-          </td>
-        {% else %}
-          <td class="align-middle">{{ task.expires_on | date:"D, d M, Y" }}
-              <small class="text-muted">({{ task.expires_on |naturaltime }})</small>
-          </td>
-        {% endif %}
-
-          <!--<td class="align-middle">{{ task.last_updated|naturaltime }}</td>-->
-        <td class="align-middle">
-        {% if task.starter == user and task.status|upper == "PENDING PAYMENT" and not task.is_expired %}
-            <!--6 is for pending payment-->
-            <!--had to add upper for the match-->
-            <a href="{% url 'new_payment_to_task' task.pk %}" class="btn btn-success btn-sm" role="button" aria-pressed="true">
-            Pay ${{task.reward.amount}}
-            </a>
-        {% endif %}
-        {% if task.starter == user.is_teacher and task.starter != user and task.claims.count == 0 and not task.is_expired %}
-            <!--i.e. show only when task has not been claimed-->
-            <a href="{% url 'new_claim_to_task' task.pk %}" class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">
-            Claim
-            </a>
-        {% endif %}
-        {% if task.starter == user and task.claims.count < 1 and user.is_parent and task.status|upper != "PENDING PAYMENT" and task.status|upper != "PAID" and not task.is_expired %}
-            <!--prevent task edit and delete if a claim exists-->
-            <a href="{% url 'edit_task' task.pk %}" class="btn btn-outline-info btn-sm" role="button" aria-pressed="true">
-            Edit
-            </a>
-            <a href="{% url 'delete_task' task.pk %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">
-            Delete
-            </a>
-        {% endif %}
-        </td>
-      </tr>
-      {% endfor %}
-      </tbody>
-    </table>
-
-
-{% if tasks.has_other_pages %}
-<nav aria-label="Tasks pagination" class="mb-4">
-    <ul class="pagination">
-        {% if tasks.has_previous %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ tasks.previous_page_number }}">Previous</a>
-        </li>
-        {% else %}
-        <li class="page-item disabled">
-            <span class="page-link">Previous</span>
-        </li>
-        {% endif %}
-
-        {% for page_num in tasks.paginator.page_range %}
-        {% if tasks.number == page_num %}
-        <li class="page-item active">
-            <span class="page-link">
-              {{ page_num }}
-              <span class="sr-only">(current)</span>
-            </span>
-        </li>
-        {% else %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
-        </li>
-        {% endif %}
-        {% endfor %}
-
-        {% if tasks.has_next %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ tasks.next_page_number }}">Next</a>
-        </li>
-        {% else %}
-        <li class="page-item disabled">
-            <span class="page-link">Next</span>
-        </li>
-        {% endif %}
-    </ul>
-</nav>
-{% endif %}
 
     <!--<a href="{% url 'new_task' %}" class="btn btn-warning btn-sm active" role="button" aria-pressed="true">-->
         <!--Create New Task</a>-->

@@ -4,27 +4,45 @@
 <html>
 <head>
     <meta charset="utf-8">
+
+    <!--responsive viewport meta tag-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
     <title>{% block title %}School Rewards{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
-    <!--<link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">-->
-    <!--<link rel="stylesheet" href="{% static 'css/accounts.css' %}">-->
-    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+
+    <!-- Favicon -->
+    <!--TODO: change hardcoded url references-->
+    <link href="{% static '/assets/img/brand/favicon.png' %}" rel="icon" type="image/png">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="{% static '/assets/vendor/nucleo/css/nucleo.css' %}" rel="stylesheet">
+    <link href="{% static '/assets/vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+
+    <!-- APP CSS -->
+    <link type="text/css" href="{% static '/assets/css/argon.css' %}" rel="stylesheet">
 
     {% block stylesheet %} {% endblock %}
 
 </head>
 
 <body>
-{% block body %}
 
+    <div class="container">
 
-<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    {% block body %}
+
+<nav class="navbar navbar-horizontal navbar-expand navbar-dark bg-primary">
+<!--<nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white">-->
   <div class="container">
     <a class="navbar-brand" href="{% url 'tasks' %}">School Rewards</a>
+
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="mainMenu">
       {% if user.is_authenticated %}
         <ul class="navbar-nav ml-auto">
@@ -60,19 +78,19 @@
 </nav>
 
 
-<div class="container">
-
+<!--<div class="container">-->
+<!--
     {% if school %}
-    <h4 class="text-center">
-        <a class="badge badge-primary my-1" data-toggle="collapse" href="#collapseCharts"
+    <div class="school text-center">
+        <a class="btn btn-success btn-sm my-1" data-toggle="collapse" href="#collapseCharts"
                 aria-expanded="true" aria-controls="collapseCharts">
             {% block school %}
                 {{school}}
             {% endblock %}
         </a>
-    </h4>
+    </div>
     {% endif %}
-
+-->
 
     <div class="collapse show" id="collapseCharts">
         <!--to show  charts by default you need collapse show-->
@@ -182,14 +200,21 @@
 </div>
 {% endblock %} <!--body-->
 
+    <!-- Core -->
+    <script src="{% static '/assets/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static '/assets/vendor/bootstrap/bootstrap.min.js' %}"></script>
+    <script src="{% static '/assets/vendor/popper/popper.min.js' %}"></script>
+
+
+    <!-- Optional plugins -->
+    <!--<script src="{% static '/assets/vendor/PLUGIN_FOLDER/PLUGIN_SCRIPT.js' %}"></script>-->
+
+    <!-- Theme JS -->
+    <script src="{% static '/assets/js/argon.js' %}"></script>
+
+    <!--</div>-->
+
+
 </body>
-
-
-<script src="{% static 'js/popper.min.js' %}"></script>
-<script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
-<script src="{% static 'js/jquery-ui.min.js' %}"></script>
-<script src="{% static 'js/bootstrap.min.js' %}"></script>
-
-
 
 </html>

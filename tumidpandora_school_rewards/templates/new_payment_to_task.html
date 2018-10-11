@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block breadcrumb %}
-<ol class="breadcrumb bg-light my-2">
+<ol class="breadcrumb bg-white my-2">
     <li class="breadcrumb-item"><a href="{% url 'tasks' %}">Tasks</a></li>
     <li class="breadcrumb-item"><a href="{% url 'task_replies' task.pk %}">{{ task.name }}</a></li>
     <li class="breadcrumb-item active" aria-current="page">Payment</li>
@@ -22,7 +22,7 @@
     {% csrf_token %}
     {% include 'includes/form.html' %}
     <hr>
-      <p class="display-4 my-4 text-muted"> Thank you for supporting your school!</p>
+      <p class="display-4 my-4"> Thank you for supporting your school!</p>
       <p class="lead my-4">
           Please <a target="_blank" href="{{task.school.paypal_account}}/{{task.reward.amount}}" class="badge badge-primary">click here</a> to go to your school's paypal.me page and
           make a payment of ${{task.reward.amount}} for the task - <strong>{{task.name}}</strong>. <span class="text-muted">For your convenience, the reward amount will be pre-populated in Paypal.</span></p>
@@ -35,10 +35,10 @@
       </p>
 
         <div class="my-4"></div>
-      <button class="btn btn-outline-success" type="submit">
+      <button class="btn btn-success" type="submit">
           <strong>Confirm</strong>
       </button>
-      <a href="{% url 'task_replies' task.pk %}" class="btn btn-outline-secondary" role="button"
+      <a href="{% url 'task_replies' task.pk %}" class="btn btn-secondary" role="button"
          aria-pressed="true">
           <strong>Cancel</strong>
       </a>

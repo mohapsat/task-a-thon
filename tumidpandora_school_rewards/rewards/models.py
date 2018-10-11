@@ -84,7 +84,8 @@ class Status(models.Model):
     def get_html_badge(self):
         name = escape(self.get_status_display())
         color = escape(self.color)
-        html = '<span class="badge badge-primary" style="background-color: %s">%s</span>' % (color, name)
+        # html = '<span class="badge badge-primary" style="background-color: %s">%s</span>' % (color, name)
+        html = '<span class="badge badge-primary" >%s</span>' % name
         return mark_safe(html)
 
 
@@ -106,7 +107,8 @@ class Reward(models.Model):
     def get_html_badge(self):
         name = escape(self.amount)
         color = escape(self.color)
-        html = '<span class="badge badge-pill badge-primary" style="background-color: %s">$%s</span>' % (color, name)
+        # html = '<span class="badge badge-pill badge-primary" style="background-color: %s">$%s</span>' % (color, name)
+        html = '<span class="badge badge-pill badge-info">$%s</span>' % name
         return mark_safe(html)
 
 
@@ -143,6 +145,9 @@ class Task(models.Model):
     def is_expired(self):
         # self.expires_on returns a datetime.datetime object, converting to date
         return self.expires_on.date() < datetime.now().date()
+
+    def avatar_text(self):
+        return "%s%s" % (self.starter.first_name[:1],self.starter.last_name[:1])
 
 
 class Post(models.Model):

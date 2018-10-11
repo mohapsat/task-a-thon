@@ -34,7 +34,7 @@ class ParentSignUpForm(UserCreationForm):
         required=True,
         label=_("Select School"),
         help_text=_("Can't find your school? Click here to add one "
-                    "<a href =/schools/new class=\"btn btn-primary btn-sm my-1\" role=\"button\" aria-pressed=\"true\"><strong>ADD MY SCHOOL</strong></a>",
+                    "<a href =/schools/new class=\"btn btn-primary btn-sm my-1 float-right\" role=\"button\" aria-pressed=\"true\"><strong>ADD MY SCHOOL</strong></a>",
                     )
         # TODO: Hard coded new school, as it doesn't access {% url 'new_school' %}
         )
@@ -66,7 +66,7 @@ class TeacherSignUpForm(UserCreationForm):
         required=True,
         label=_("Select School"),
         help_text=_("Can't find your school? Click here to add one "
-                    "<a href =/schools/new class=\"btn btn-primary btn-sm my-1\" role=\"button\" aria-pressed=\"true\"><strong>ADD MY SCHOOL</strong></a>",
+                    "<a href =/schools/new class=\"btn btn-primary btn-sm float-right my-1\" role=\"button\" aria-pressed=\"true\"><strong>ADD MY SCHOOL</strong></a>",
                     )
         # TODO: Hard coded new school, as it doesn't access {% url 'new_school' %}
     )

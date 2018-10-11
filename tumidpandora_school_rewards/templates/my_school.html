@@ -69,11 +69,11 @@
     <ul class="pagination">
         {% if teachers.has_previous %}
         <li class="page-item">
-            <a class="page-link" href="?t_page={{ teachers.previous_page_number }}">Previous</a>
+            <a class="page-link" href="?t_page={{ teachers.previous_page_number }}"> << </a>
         </li>
         {% else %}
         <li class="page-item disabled">
-            <span class="page-link">Previous</span>
+            <span class="page-link"> << </span>
         </li>
         {% endif %}
 
@@ -94,11 +94,11 @@
 
         {% if teachers.has_next %}
         <li class="page-item">
-            <a class="page-link" href="?t_page={{ teachers.next_page_number }}">Next</a>
+            <a class="page-link" href="?t_page={{ teachers.next_page_number }}"> >> </a>
         </li>
         {% else %}
         <li class="page-item disabled">
-            <span class="page-link">Next</span>
+            <span class="page-link"> >> </span>
         </li>
         {% endif %}
     </ul>
@@ -166,11 +166,11 @@
     <ul class="pagination">
         {% if parents.has_previous %}
         <li class="page-item">
-            <a class="page-link" href="?p_page={{ parents.previous_page_number }}">Previous</a>
+            <a class="page-link" href="?p_page={{ parents.previous_page_number }}"> << </a>
         </li>
         {% else %}
         <li class="page-item disabled">
-            <span class="page-link">Previous</span>
+            <span class="page-link"> << </span>
         </li>
         {% endif %}
 
@@ -191,11 +191,11 @@
 
         {% if parents.has_next %}
         <li class="page-item">
-            <a class="page-link" href="?p_page={{ parents.next_page_number }}">Next</a>
+            <a class="page-link" href="?p_page={{ parents.next_page_number }}"> >> </a>
         </li>
         {% else %}
         <li class="page-item disabled">
-            <span class="page-link">Next</span>
+            <span class="page-link"> >> </span>
         </li>
         {% endif %}
     </ul>

@@ -1,41 +1,276 @@
-{% extends 'base.html' %}
+{% load static %}<!DOCTYPE html>
+<html>
 
-{% load static %}
+<head>
+  <meta charset="utf-8">
 
-{% block stylesheet %}
-  <link rel="stylesheet" href="{% static 'css/accounts.css' %}">
-{% endblock %}
+    <!--responsive viewport meta tag-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-{% block body %}
-  <div class="container">
-    <h1 class="text-center logo my-4">
-      <a href="{% url 'home' %}">School Rewards</a>
-    </h1>
-    <div class="row justify-content-center">
-      <div class="col-lg-5 col-md-6 col-sm-7">
-        <div class="card border-dark">
-            <h5 class="card-header bg-dark text-white">
-            Please Sign Up
-            </h5>
-          <div class="card-body">
-            <!--<h3 class="card-title">Sign up</h3>-->
-            <form method="post" novalidate>
-              <small class="text-muted">
-                Your school is using <a target="_blank" href="https://www.paypal.com/us/webapps/mpp/education">Paypal School Payment Solutions</a>
-                to accept payments. All the <strong>parents</strong> are requested to open a PayPal account to participate.
-              </small>
-              <hr>
-              {% csrf_token %}
-              {% include 'includes/form.html' %}
-              <button type="submit" class="btn btn-primary btn-block "><strong>Create My Account</strong></button>
-            </form>
+    <title>{% block title %}School Rewards{% endblock %}</title>
+
+    <!-- Favicon -->
+    <!--TODO: change hardcoded url references-->
+    <link href="{% static '/assets/img/brand/favicon.png' %}" rel="icon" type="image/png">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="{% static '/assets/vendor/nucleo/css/nucleo.css' %}" rel="stylesheet">
+    <link href="{% static '/assets/vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+
+    <!-- APP CSS -->
+    <link type="text/css" href="{% static '/assets/css/argon.css' %}" rel="stylesheet">
+
+    {% block stylesheet %} {% endblock %}
+</head>
+
+<body>
+  <header class="header-global">
+    <nav id="navbar-main" class="navbar navbar-main navbar-expand-lg navbar-transparent navbar-light headroom">
+      <div class="container">
+        <a class="navbar-brand mr-lg-5" href="{% url 'home' %}">School Rewards
+          <!--<img src="{% static '/assets/img/brand/white.png' %}">-->
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar_global" aria-controls="navbar_global" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse" id="navbar_global">
+          <div class="navbar-collapse-header">
+            <div class="row">
+              <div class="col-6 collapse-brand">
+                <a href="{% url 'home' %}">
+                  <img src="{% static '/assets/img/brand/blue.png' %}">
+                </a>
+              </div>
+              <div class="col-6 collapse-close">
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar_global" aria-controls="navbar_global" aria-expanded="false" aria-label="Toggle navigation">
+                  <span></span>
+                  <span></span>
+                </button>
+              </div>
+            </div>
           </div>
-          <div class="card-footer text-muted text-center">
-            Already have an account? <a href="{% url 'login' %}">Log in</a>
-          </div>
+          <ul class="navbar-nav navbar-nav-hover align-items-lg-center">
+            <li class="nav-item dropdown">
+              <a href="#" class="nav-link" data-toggle="dropdown" href="#" role="button">
+                <i class="ni ni-ui-04 d-lg-none"></i>
+                <span class="nav-link-inner--text">Components</span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-xl">
+                <div class="dropdown-menu-inner">
+                  <a href="#" class="media d-flex align-items-center">
+                    <div class="icon icon-shape bg-gradient-primary rounded-circle text-white">
+                      <i class="ni ni-spaceship"></i>
+                    </div>
+                    <div class="media-body ml-3">
+                      <h6 class="heading text-primary mb-md-1">Getting started</h6>
+                      <p class="description d-none d-md-inline-block mb-0">Learn how to use Argon compiling Scss, change brand colors and more.</p>
+                    </div>
+                  </a>
+                  <a href="#" class="media d-flex align-items-center">
+                    <div class="icon icon-shape bg-gradient-success rounded-circle text-white">
+                      <i class="ni ni-palette"></i>
+                    </div>
+                    <div class="media-body ml-3">
+                      <h6 class="heading text-primary mb-md-1">Foundation</h6>
+                      <p class="description d-none d-md-inline-block mb-0">Learn more about colors, typography, icons and the grid system we used for Argon.</p>
+                    </div>
+                  </a>
+                  <a href="#" class="media d-flex align-items-center">
+                    <div class="icon icon-shape bg-gradient-warning rounded-circle text-white">
+                      <i class="ni ni-ui-04"></i>
+                    </div>
+                    <div class="media-body ml-3">
+                      <h5 class="heading text-warning mb-md-1">Components</h5>
+                      <p class="description d-none d-md-inline-block mb-0">Browse our 50 beautiful handcrafted components offered in the Free version.</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </li>
+            <li class="nav-item dropdown">
+              <a href="#" class="nav-link" data-toggle="dropdown" href="#" role="button">
+                <i class="ni ni-collection d-lg-none"></i>
+                <span class="nav-link-inner--text">Examples</span>
+              </a>
+              <div class="dropdown-menu">
+                <a href="" class="dropdown-item">Dashboard</a>
+                <a href="" class="dropdown-item">Profile</a>
+                <a href="" class="dropdown-item">Login</a>
+                <a href="" class="dropdown-item">Register</a>
+              </div>
+            </li>
+          </ul>
+          <ul class="navbar-nav align-items-lg-center ml-lg-auto">
+            <li class="nav-item">
+              <a class="nav-link nav-link-icon" href="" target="_blank" data-toggle="tooltip" title="Like us on Facebook">
+                <i class="fa fa-facebook-square"></i>
+                <span class="nav-link-inner--text d-lg-none">Facebook</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link nav-link-icon" href="#" target="_blank" data-toggle="tooltip" title="Follow us on Instagram">
+                <i class="fa fa-instagram"></i>
+                <span class="nav-link-inner--text d-lg-none">Instagram</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link nav-link-icon" href="#" target="_blank" data-toggle="tooltip" title="Follow us on Twitter">
+                <i class="fa fa-twitter-square"></i>
+                <span class="nav-link-inner--text d-lg-none">Twitter</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link nav-link-icon" href="#" target="_blank" data-toggle="tooltip" title="Star us on Github">
+                <i class="fa fa-github"></i>
+                <span class="nav-link-inner--text d-lg-none">Github</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <section class="section section-shaped section-lg">
+      <div class="shape shape-style-1 shape-primary">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div class="container pt-lg-md">
+        <div class="row justify-content-center">
+          <div class="col-lg-6">
+            <div class="card bg-secondary shadow border-0">
+              <div class="card-header bg-gradient-default pb-0">
+                <div class="mb-md-1 text-center text-white">
+                  PLEASE SIGN UP
+                </div>
+              </div>
+              <!--<div class="card-body px-lg-5 py-lg-5">-->
+              <div class="card-body">
+                <!--<div class="text-center text-muted mb-4">-->
+                  <!--<small>Or sign in with credentials</small>-->
+                <!--</div>-->
+                <form role="form" method="post" novalidate>
+                    <small class="text-muted">
+                        Your school is using <a target="_blank" href="https://www.paypal.com/us/webapps/mpp/education">Paypal School Payment Solutions</a>
+                        to accept payments. <strong>Parents</strong> are requested to open a <a target="_blank" href="https://www.paypal.com/us/webapps/mpp/account-selection">PayPal account</a> to participate.
+                    </small>
+                    <hr>
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="{{ next }}">
+                  {% include 'includes/form.html' %}
 
+                  <div class="custom-control custom-control-alternative custom-checkbox">
+                    <input class="custom-control-input" id="customCheckLogin" type="checkbox">
+                    <label class="custom-control-label" for="customCheckLogin">
+                      <span>I accept the
+                        <a href="">privacy policy</a>
+                      </span>
+                    </label>
+                  </div>
+                  <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-block my-3">Create My Account</button>
+                  </div>
+                </form>
+
+                  Already have an account? <a href="{% url 'login' %}">Log in</a>
+
+              </div>
+
+              <!--<div class="card-footer">-->
+                <!--&lt;!&ndash;New to School Rewards?&ndash;&gt;-->
+                    <!--<a href="{% url 'new_school' %}" class="btn btn-sm" role="button" aria-pressed="true">-->
+                        <!--<strong>ADD MY SCHOOL</strong></a>-->
+                    <!--<a href="{% url 'parent_signup' %}" class="btn  btn-sm" role="button" aria-pressed="true">-->
+                    <!--<strong>SIGNUP AS PARENT</strong></a>-->
+                    <!--<a href="{% url 'teacher_signup' %}" class="btn btn-sm" role="button" aria-pressed="true">-->
+                    <!--<strong>SIGNUP AS TEACHER</strong></a>-->
+              <!--</div>-->
+              <!--</div>-->
+            </div>
+            <div class="row mt-3">
+              <div class="col-6">
+                <a href="{% url 'password_reset' %}" class="text-light">
+                  <small>Forgot password?</small>
+                </a>
+              </div>
+              <!--<div class="col-6 text-right">-->
+                <!--<a href="#" class="text-light">-->
+                  <!--<small>Create new account</small>-->
+                <!--</a>-->
+              <!--</div>-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="container">
+      <div class="row row-grid align-items-center mb-5">
+        <div class="col-lg-6">
+          <h3 class="text-primary font-weight-light mb-2">Thank you for supporting your school!</h3>
+          <h4 class="mb-0 font-weight-light">Let's get in touch on any of these platforms.</h4>
+        </div>
+        <div class="col-lg-6 text-lg-center btn-wrapper">
+          <a target="_blank" href="#" class="btn btn-neutral btn-icon-only btn-twitter btn-round btn-lg" data-toggle="tooltip" data-original-title="Follow us">
+            <i class="fa fa-twitter"></i>
+          </a>
+          <a target="_blank" href="#" class="btn btn-neutral btn-icon-only btn-facebook btn-round btn-lg" data-toggle="tooltip" data-original-title="Like us">
+            <i class="fa fa-facebook-square"></i>
+          </a>
+          <a target="_blank" href="#" class="btn btn-neutral btn-icon-only btn-dribbble btn-lg btn-round" data-toggle="tooltip" data-original-title="Follow us">
+            <i class="fa fa-dribbble"></i>
+          </a>
+          <a target="_blank" href="#" class="btn btn-neutral btn-icon-only btn-github btn-round btn-lg" data-toggle="tooltip" data-original-title="Star on Github">
+            <i class="fa fa-github"></i>
+          </a>
+        </div>
+      </div>
+      <hr>
+      <div class="row align-items-center justify-content-md-between">
+        <div class="col-md-6">
+          <div class="copyright">
+            &copy; 2018
+            <a href="#" target="_blank">School Rewards</a>.
+          </div>
+        </div>
+        <div class="col-md-6">
+          <ul class="nav nav-footer justify-content-end">
+            <li class="nav-item">
+              <a href="#" class="nav-link" target="_blank">School Rewards</a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" target="_blank">About Us</a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" target="_blank">Blog</a>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
-  </div>
-{% endblock %}
+  </footer>
+
+
+  <!-- Core -->
+    <script src="{% static '/assets/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static '/assets/vendor/bootstrap/bootstrap.min.js' %}"></script>
+    <script src="{% static '/assets/vendor/popper/popper.min.js' %}"></script>
+    <script src="{% static '/assets/vendor/headroom/headroom.min.js' %}"></script>
+
+    <!-- Theme JS -->
+    <script src="{% static '/assets/js/argon.js' %}"></script>
+
+</body>
+
+</html>
