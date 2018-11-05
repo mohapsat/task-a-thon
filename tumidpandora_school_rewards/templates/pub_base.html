@@ -1,0 +1,29 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html>
+
+    {% include 'includes/head.html' %}
+
+    <body>
+
+        {% include 'includes/header.html' %}
+
+        {% block main %}
+            <!-- main content goes here -->
+        {% endblock %}
+
+        {% include 'includes/footer.html' %}
+
+        <!-- Core -->
+        <script src="{% static '/assets/vendor/jquery/jquery.min.js' %}"></script>
+        <script src="{% static '/assets/vendor/popper/popper.min.js' %}"></script>
+        <script src="{% static '/assets/vendor/bootstrap/bootstrap.min.js' %}"></script>
+        <script src="{% static '/assets/vendor/headroom/headroom.min.js' %}"></script>
+        <!-- Argon JS -->
+        <script src="{% static '/assets/js/argon.js' %}"></script>
+
+    </body>
+
+</html>

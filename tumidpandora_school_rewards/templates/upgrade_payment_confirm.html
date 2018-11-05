@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Upgrade Confirmation{% endblock %}
+
+{% block school %}
+        {{school}}
+{% endblock %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb bg-transparent heading my-2">
+    <li class="breadcrumb-item"><a href="{% url 'tasks' %}">Tasks Dashboard</a></li>
+    <li class="breadcrumb-item active">Account Upgraded</li>
+</ol>
+{% endblock %}
+
+{% block upgradepaymentconfirm %}
+
+<div class="row my-3">
+        <div class="col col-xl-12 col-lg-12">
+            <div class="card shadow">
+                <div class="card-header bg-success border-0">
+                    <h5 class="text-neutral lead my-0">
+                        <img class="avatar avatar-sm bg-white" src="{% static '/assets/img/brand/players/bunny2_jump.png' %}">
+                        <span class="heading"><strong>Thank you!</strong> Please enjoy premium privileges.</span>
+                    </h5>
+                </div>
+                <div class="container my-3">
+                    <div class="table-responsive">
+                        <div class="my-2">
+                            <p>For questions, please send a request to
+                                <a href="mailto:{{ email_support }}">
+                                    <strong>{{ email_support }}</strong>
+                                </a>
+                            </p>
+                        </div>
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                                <th scope="col">Charge ID</th>
+                                <th scope="col">School</th>
+                                <th scope="col">Payee</th>
+                                <th scope="col">Paid on</th>
+                            </thead>
+                            <tbody>
+                                <tr scope="row" class="heading">
+                                        <td><small>{{ charge_id }}</small></td>
+                                        <td><small>{{ school }}</small></td>
+                                        <td><small>{{ created_by }}</small></td>
+                                        <td><small>{{ created_datetime }}</small></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                </div>
+            </div>
+                <div class="card-footer">
+                    <!--<button type="submit" class="btn btn-primary">Save</button>-->
+                    <a href="{% url 'tasks' %}" class="text text-primary" role="button" aria-pressed="true">
+                        <i class="fa fa-caret-left"></i>
+                        Go back to dashboard
+                    </a>
+                </div>
+            </div>
+        <!--</div>-->
+</div>
+
+{% endblock %}

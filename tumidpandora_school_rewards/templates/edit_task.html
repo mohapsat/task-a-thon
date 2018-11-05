@@ -1,20 +1,53 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Edit Task{% endblock %}
 
 {% block breadcrumb %}
-<ol class="breadcrumb bg-light my-2">
-    <li class="breadcrumb-item"><a href="{% url 'tasks' %}">Tasks</a></li>
-    <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'task_replies' task.pk %}">{{ task.name }}</a></li>
-    <li class="breadcrumb-item active">Edit task</li>
+<ol class="breadcrumb bg-transparent my-2">
+    <li class="breadcrumb-item"><a href="{% url 'tasks' %}">TASKS</a></li>
+    <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'task_replies' task.pk %}">
+        {{ task.starter.username|upper}}-T{{task.id}}
+    </a></li>
+    <li class="breadcrumb-item active">EDIT</li>
 </ol>
 {% endblock %}
 
 {% block edittask %}
-  <form method="post" class="mb-4" novalidate>
-    {% csrf_token %}
-    {% include 'includes/form.html' %}
-    <button type="submit" class="btn btn-success">Save changes</button>
-    <a href="{% url 'task_replies' task.pk %}" class="btn btn-outline-secondary" role="button">Cancel</a>
-  </form>
+
+    <div class="row justify-content-center">
+        <div class="col col-lg-7">
+            <div class="card shadow">
+                <div class="card-header bg-gradient-primary border-0">
+                    <h5 class="text-neutral my-0">
+                        <img class="avatar avatar-sm bg-white" src="{% static '/assets/img/brand/players/bunny1_jump.png' %}">
+                        EDIT TASK
+                    </h5>
+                </div>
+                <div class="container my-3">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        {% include 'includes/form.html' %}
+                        <button type="submit" class="btn btn-success">
+                            <i class="fa fa-cloud"></i>
+                            Save Changes
+                        </button>
+                            <a href="{% url 'tasks' %}" class="btn btn-secondary" role="button" aria-pressed="true">
+                                <i class="fa fa-times-circle"></i>
+                                Cancel
+                            </a>
+                        <!--TODO: Make expires on work along with the validations-->
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <!--<button type="submit" class="btn btn-primary">Save</button>-->
+                    <a href="{% url 'tasks' %}" class="text text-primary" role="button" aria-pressed="true">
+                        <i class="fa fa-caret-left"></i>
+                        TASKS DASHBOARD
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

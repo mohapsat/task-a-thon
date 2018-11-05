@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from django.contrib.messages import constants as messages
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -40,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',  # <-- added later
 
     'widget_tweaks',
+    'multiselectfield',
 
     'accounts',
     'rewards',
@@ -139,3 +142,24 @@ LOGIN_REDIRECT_URL = 'tasks'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 LOGIN_URL = 'login'
+
+# STRIPE
+
+
+STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_SECRET_KEY", "pk_test_GiynrCIrmW7a61YFpctiPJwk")
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "sk_test_bGf7Zxwky4eLni7mkpezTwSd")
+
+PREMIUM_MEMBERSHIP_COST = "299.99"
+STRIPE_PREMIUM_CHARGE = PREMIUM_MEMBERSHIP_COST.replace(".", "")  # replace period for stripe charge
+
+EMAIL_SUPPORT = "support@task-a-thon.com"
+
+# Messages
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'alert-info',
+    messages.INFO: 'alert-info',
+    messages.SUCCESS: 'alert-success',
+    messages.WARNING: 'alert-warning',
+    messages.ERROR: 'alert-danger',
+}

@@ -4,7 +4,8 @@ from django.urls import path
 
 from django.contrib.auth import views as auth_views
 from accounts import views as accounts_views
-from rewards import views
+from rewards import views, filters
+
 
 urlpatterns = [
     path('', views.home_view, name='home'),
@@ -14,6 +15,8 @@ urlpatterns = [
     path('signup/teacher/', accounts_views.teacher_signup_view, name='teacher_signup'),  # teacher_signup
 
     path('settings/account/', accounts_views.UserUpdateView.as_view(), name='my_account'),
+    path('settings/upgrade/', accounts_views.upgrade_account_view, name='upgrade_account'),
+    path('settings/upgrade/confirm', accounts_views.upgrade_account_confirm_view, name='upgrade_confirm'),
 
     path('settings/school/', accounts_views.my_school_view, name='my_school'),
     path('settings/school/activate/<pk>', accounts_views.ActivateUserView.as_view(), name='activate_user'),
@@ -58,6 +61,8 @@ urlpatterns = [
 
     path('tasks/', views.tasks_view, name='tasks'),
     path('tasks/new/', views.new_task_view, name='new_task'),
+
+    path('tasks/search/', views.tasks_view, name='search_tasks'),
 
     path('tasks/<pk>/', views.task_replies_view, name='task_replies'),
     path('tasks/<pk>/edit/', views.TaskUpdateView.as_view(), name='edit_task'),

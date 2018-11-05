@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
+{% load static %}
 {% load humanize %}
 
 {% block title %}My School{% endblock %}
@@ -11,154 +12,228 @@
 
 {% block users %}
 
-<h3 class="my-2">Teachers</h3>
-    <table class="table table-hover table-sm bg-white">
-        <thead class="thead thead-light">
-        <tr>
-            <th>Username</th>
-            <th>Status</th>
-            <th>Email</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Date Joined</th>
-            <th>Last Login</th>
-            <th>Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for teacher in teachers %}
-        <tr>
-                <td>{{ teacher.user.username }}</td>
-                <td>
-                    {% if teacher.user.is_active %}
-                        <span class="badge badge-success">Active</span>
+<div class="row my-3">
+    <div class="col col-lg-12">
+
+        <a class="btn my-2" href="{% url 'tasks' %}">
+            <i class="fa fa-long-arrow-left"></i>
+            BACK TO DASHBOARD
+        </a>
+        <div class="card shadow">
+            <div class="card-header bg-gradient-warning border-0">
+                <h5 class="text-neutral my-0">
+                        <img class="avatar avatar-md bg-white float-left mr-2" src="{% static '/assets/img/brand/players/bunny2_jump.png' %}">
+                    <div class="display-4">Teachers</div>
+                    <small>Only School Admins can activate, deactivate or remove <strong><u>teachers</u></strong> from your school.</small>
+                </h5>
+            </div>
+
+            <div class="card-body container my-0">
+                <table class="table table-hover table-sm bg-white">
+                    <thead class="thead thead-light">
+                        <tr>
+                            <th>Username</th>
+                            <th>Status</th>
+                            <th>Email</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Date Joined</th>
+                            <th>Last Login</th>
+                            <th></th><!-- Action  -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for teacher in teachers %}
+                        <tr>
+                            {% if user.username == teacher.user.username %}
+                                <td>
+                                    <span class="badge badge-success">YOU</span>
+                                    {{ teacher.user.username }}
+                                </td>
+                            {% else %}
+                                <td>{{ teacher.user.username }}</td>
+                            {% endif %}
+                            <td>
+                                {% if teacher.user.is_active %}
+                                    <span class="badge badge-success">
+                                    Active
+                                    </span>
+                                {% else %}
+                                    <span class="badge badge-danger">Inactive</span>
+                                {% endif %}
+
+                                {% if teacher.user.is_school_admin or parent.user.is_school_admin %}
+                                    <span class="badge badge-info">admin</span>
+                                {% endif %}
+
+                            </td>
+                            <td>{{ teacher.user.email }}</td>
+                            <td>{{ teacher.user.first_name }}</td>
+                            <td>{{ teacher.user.last_name }}</td>
+                            <td>{{ teacher.user.date_joined | date:"D, d M, Y" }}</td>
+                            <td>{{ teacher.user.last_login | naturaltime }}</td>
+                            <td>
+
+                            {% if user.teacher.is_school_admin or user.parent.is_school_admin %}
+                                <!-- only school admins can activate / deactivate or remove -->
+                                {% if teacher.user.is_active %}
+                                    <a href="{% url 'deactivate_user' teacher.user.pk %}" class="btn btn-outline-light btn-sm my-1" role="button">
+                                        <i class="fa fa-times"></i>
+                                        <!--Deactivate-->
+                                    </a>
+                                    <a href="{% url 'remove_user' teacher.user.pk %}" class="btn btn-outline-danger btn-sm my-1" role="button" aria-pressed="true">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'activate_user' teacher.user.pk %}" class="btn btn-outline-success btn-sm my-1" role="button" aria-pressed="true">
+                                        <i class="fa fa-check"></i>
+                                        <!--Activate-->
+                                    </a>
+                                    <a href="{% url 'remove_user' teacher.user.pk %}" class="btn btn-outline-danger btn-sm my-1" role="button" aria-pressed="true">
+                                        <i class="fa fa-trash"></i>
+                                        <!--Remove-->
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        <!--</div>-->
+            <!--<div class="card-footer my-0">-->
+
+                <!--START teachers pagination-->
+                {% if teachers.has_other_pages %}
+                <nav aria-label="Teachers pagination" class="mb-4">
+                    <ul class="pagination">
+                    {% if teachers.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?t_page={{ teachers.previous_page_number }}"> < </a>
+                        </li>
                     {% else %}
-                        <span class="badge badge-danger">Inactive</span>
+                        <li class="page-item disabled">
+                            <span class="page-link"> < </span>
+                        </li>
                     {% endif %}
-                </td>
-                <td>{{ teacher.user.email }}</td>
-                <td>{{ teacher.user.first_name }}</td>
-                <td>{{ teacher.user.last_name }}</td>
-                <td>{{ teacher.user.date_joined | date:"D, d M, Y" }}</td>
-                <td>{{ teacher.user.last_login | naturaltime }}</td>
-                <td>
-                    {% if teacher.user.is_active %}
-                        <a href="{% url 'deactivate_user' teacher.user.pk %}" class="btn btn-outline-dark btn-sm" role="button">
-                            Deactivate
-                        </a>
-                        <a href="{% url 'remove_user' teacher.user.pk %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">
-                            Remove
-                        </a>
+
+                    {% for page_num in teachers.paginator.page_range %}
+                        {% if teachers.number == page_num %}
+                        <li class="page-item active">
+                            <span class="page-link">
+                                {{ page_num }}
+                                <span class="sr-only">(current)</span>
+                            </span>
+                        </li>
                     {% else %}
-                        <a href="{% url 'activate_user' teacher.user.pk %}" class="btn btn-success btn-sm" role="button" aria-pressed="true">
-                            Activate
-                        </a>
-                        <a href="{% url 'remove_user' teacher.user.pk %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">
-                            Remove
-                        </a>
+                        <li class="page-item">
+                            <a class="page-link" href="?t_page={{ page_num }}">{{ page_num }}</a>
+                        </li>
                     {% endif %}
-                </td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+                {% endfor %}
 
-<!--START teachers pagination-->
-{% if teachers.has_other_pages %}
-<nav aria-label="Teachers pagination" class="mb-4">
-    <ul class="pagination">
-        {% if teachers.has_previous %}
-        <li class="page-item">
-            <a class="page-link" href="?t_page={{ teachers.previous_page_number }}"> << </a>
-        </li>
-        {% else %}
-        <li class="page-item disabled">
-            <span class="page-link"> << </span>
-        </li>
+                {% if teachers.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?t_page={{ teachers.next_page_number }}"> > </a>
+                        </li>
+                {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link"> > </span>
+                        </li>
+                {% endif %}
+                    </ul>
+                </nav>
         {% endif %}
-
-        {% for page_num in teachers.paginator.page_range %}
-        {% if teachers.number == page_num %}
-        <li class="page-item active">
-            <span class="page-link">
-              {{ page_num }}
-              <span class="sr-only">(current)</span>
-            </span>
-        </li>
-        {% else %}
-        <li class="page-item">
-            <a class="page-link" href="?t_page={{ page_num }}">{{ page_num }}</a>
-        </li>
-        {% endif %}
-        {% endfor %}
-
-        {% if teachers.has_next %}
-        <li class="page-item">
-            <a class="page-link" href="?t_page={{ teachers.next_page_number }}"> >> </a>
-        </li>
-        {% else %}
-        <li class="page-item disabled">
-            <span class="page-link"> >> </span>
-        </li>
-        {% endif %}
-    </ul>
-</nav>
-{% endif %}
 <!--END teachers pagination-->
+            </div>
+    </div>
+</div>
+</div>
 
 
-<h3 class="my-2">Parents</h3>
-    <table class="table table-hover table-sm bg-white">
-    <thead class="thead thead-light">
-        <tr>
-            <th>Username</th>
-            <th>Status</th>
-            <th>Email</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Date Joined</th>
-            <th>Last Login</th>
-            <th>Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for parent in parents %}
-        <tr>
-                <td>{{ parent.user.username }}</td>
-                <td>
-                    {% if parent.user.is_active %}
-                        <span class="badge badge-success">Active</span>
-                    {% else %}
-                        <span class="badge badge-danger">Inactive</span>
-                    {% endif %}
-                </td>
-                <td>{{ parent.user.email }}</td>
-                <td>{{ parent.user.first_name }}</td>
-                <td>{{ parent.user.last_name }}</td>
-                <td>{{ parent.user.date_joined| date:"D, d M, Y" }}</td>
-                <td>{{ parent.user.last_login | naturaltime }}</td>
-                <td>
-                    {% if parent.user.is_active %}
-                        <a href="{% url 'deactivate_user' parent.user.pk %}" class="btn btn-outline-dark btn-sm" role="button">
-                            Deactivate
-                        </a>
-                        <a href="{% url 'remove_user' parent.user.pk %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">
-                            Remove
-                        </a>
-                    {% else %}
-                        <a href="{% url 'activate_user' parent.user.pk %}" class="btn btn-success btn-sm" role="button" aria-pressed="true">
-                            Activate
-                        </a>
-                        <a href="{% url 'remove_user' parent.user.pk %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">
-                            Remove
-                        </a>
-                    {% endif %}
-                </td>
-        </tr>
-        {% endfor %}
-        </tbody>
+
+<div class="row my-3">
+    <div class="col col-lg-12">
+        <div class="card shadow">
+            <div class="card-header bg-gradient-info border-0">
+                <h5 class="text-neutral my-0">
+                        <img class="avatar avatar-md bg-white float-left mr-2" src="{% static '/assets/img/brand/players/bunny1_jump.png' %}">
+                    <div class="display-4">Parents</div>
+                    <small>Only School Admins can activate, deactivate or remove <strong><u>parents</u></strong> from your school.</small>
+                </h5>
+            </div>
+
+            <div class="card-body container my-0">
+                <table class="table table-hover table-sm bg-white">
+                    <thead class="thead thead-light">
+                        <tr>
+                            <th>Username</th>
+                            <th>Status</th>
+                            <th>Email</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Date Joined</th>
+                            <th>Last Login</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for parent in parents %}
+                        <tr>
+                            {% if user.username == parent.user.username %}
+                                <td>
+                                    <span class="badge badge-info"><strong>YOU</strong></span>
+                                    {{ parent.user.username }}
+                                </td>
+                            {% else %}
+                                <td>{{ parent.user.username }}</td>
+                            {% endif %}
+
+                            <td>
+                            {% if parent.user.is_active %}
+                                <span class="badge badge-success">Active</span>
+                            {% else %}
+                                <span class="badge badge-danger">Inactive</span>
+                            {% endif %}
+
+                            {% if parent.user.is_school_admin %}
+                                <span class="badge badge-success">admin</span>
+                            {% endif %}
+
+                            </td>
+                            <td>{{ parent.user.email }}</td>
+                            <td>{{ parent.user.first_name }}</td>
+                            <td>{{ parent.user.last_name }}</td>
+                            <td>{{ parent.user.date_joined| date:"D, d M, Y" }}</td>
+                            <td>{{ parent.user.last_login | naturaltime }}</td>
+                            <td>
+
+                            {% if user.teacher.is_school_admin or user.parent.is_school_admin %}
+                                <!-- only school admins can activate / deactivate or remove -->
+                                {% if parent.user.is_active %}
+                                    <a href="{% url 'deactivate_user' parent.user.pk %}" class="btn btn-outline-light btn-sm my-1" role="button">
+                                        <i class="fa fa-times"></i>
+                                        <!--Deactivate-->
+                                    </a>
+                                    <a href="{% url 'remove_user' parent.user.pk %}" class="btn btn-outline-danger btn-sm my-1" role="button" aria-pressed="true">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'activate_user' parent.user.pk %}" class="btn btn-outline-success btn-sm my-1" role="button" aria-pressed="true">
+                                        <i class="fa fa-check"></i>
+                                        <!--Activate-->
+                                    </a>
+                                    <a href="{% url 'remove_user' parent.user.pk %}" class="btn btn-outline-danger btn-sm my-1" role="button" aria-pressed="true">
+                                        <i class="fa fa-trash"></i>
+                                        <!--Remove-->
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                            </td>
+                        </tr>
+                {% endfor %}
+            </tbody>
     </table>
-
 
 <!--START parents pagination-->
 {% if parents.has_other_pages %}
@@ -166,11 +241,11 @@
     <ul class="pagination">
         {% if parents.has_previous %}
         <li class="page-item">
-            <a class="page-link" href="?p_page={{ parents.previous_page_number }}"> << </a>
+            <a class="page-link" href="?p_page={{ parents.previous_page_number }}"> < </a>
         </li>
         {% else %}
         <li class="page-item disabled">
-            <span class="page-link"> << </span>
+            <span class="page-link"> < </span>
         </li>
         {% endif %}
 
@@ -191,16 +266,21 @@
 
         {% if parents.has_next %}
         <li class="page-item">
-            <a class="page-link" href="?p_page={{ parents.next_page_number }}"> >> </a>
+            <a class="page-link" href="?p_page={{ parents.next_page_number }}"> > </a>
         </li>
         {% else %}
         <li class="page-item disabled">
-            <span class="page-link"> >> </span>
+            <span class="page-link"> > </span>
         </li>
         {% endif %}
     </ul>
 </nav>
 {% endif %}
 <!--END parents pagination-->
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
+

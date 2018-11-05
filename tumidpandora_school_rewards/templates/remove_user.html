@@ -3,20 +3,43 @@
 {% block title %}Remove User{% endblock %}
 
 {% block breadcrumb %}
-<ol class="breadcrumb bg-light my-2">
-    <li class="breadcrumb-item"><a href="{% url 'my_school' %}">My School</a></li>
-    <li class="breadcrumb-item">Remove</li>
-    <li class="breadcrumb-item active" aria-current="page">{{ user.username }}</a></li>
+<ol class="breadcrumb bg-transparent my-2">
+    <li class="breadcrumb-item"><a href="{% url 'my_school' %}">MY SCHOOL</a></li>
+    <li class="breadcrumb-item">REMOVE</li>
+    <li class="breadcrumb-item active" aria-current="page">{{ user.username | upper }}</a></li>
 
 </ol>
 {% endblock %}
 
 {% block removeuser %}
-  <form method="post" class="mb-4" novalidate>
-    {% csrf_token %}
-    {% include 'includes/form.html' %}
-      <p class="lead">Are you sure you would like to <strong><u>remove</u></strong> user: <kbd>{{ user.username }}</kbd> ?</p>
-    <button type="submit" class="btn btn-danger btn-sm">Yes, Remove</button>
-    <a href="{% url 'my_school' %}" class="btn btn-outline-secondary btn-sm" role="button">Cancel</a>
-  </form>
+
+<div class="row justify-content-center">
+    <div class="col col-lg-6">
+        <div class="card shadow">
+            <div class="card-header bg-gradient-warning border-0">
+                <h5 class="text-neutral my-0">
+                    <img class="avatar avatar-sm bg-white" src="/static/assets/img/brand/players/bunny1_jump.png">
+                    REMOVE USER - {{user.username | upper}}
+                </h5>
+            </div>
+            <div class="container">
+                <form method="post" class="mb-4" novalidate>
+                    {% csrf_token %}
+                    {% include 'includes/form.html' %}
+                    <p class="lead"><strong>Remove</strong> user <code>{{ user.username | upper }}</code> ?
+                        <br><small class="text-light">This action <u>cannot be undone</u>. Once removed, the impacted user will need register for a new account.</small></p>
+                    <button type="submit" class="btn btn-danger btn-lg">Remove</button>
+                    <a href="{% url 'my_school' %}" class="btn btn-secondary btn-lg" role="button">Cancel</a>
+                    </form>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'tasks' %}">
+                    <i class="fa fa-long-arrow-left"></i>
+                    TASKS DASHBOARD
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

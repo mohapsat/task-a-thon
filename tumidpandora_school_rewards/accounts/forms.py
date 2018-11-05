@@ -5,7 +5,9 @@ from django.db import transaction
 # from django.contrib.auth.models import User
 
 from rewards.models import (School, Task, Reward,
-                            Parent, Teacher, User)
+                            Parent, Teacher, User, UpgradeCharge)
+
+from django.forms import ModelForm, Textarea, CharField, MultiValueField, DateTimeInput, ChoiceField, TextInput, DateTimeField
 
 
 # UserCreationForm does not provide an email field. But we can extend it.
@@ -43,8 +45,6 @@ class ParentSignUpForm(UserCreationForm):
         model = User
         fields = ('school', 'first_name', 'last_name', 'username', 'email', 'password1', 'password2',)
         # TODO: set "---------" by default) with the empty_label attribute to "Select a School"
-
-
 
     @transaction.atomic
     def save(self):
@@ -86,3 +86,10 @@ class TeacherSignUpForm(UserCreationForm):
         # teacher = Teacher.objects.create(user=user)
         # teacher.t_schools.add(*self.cleaned_data.get('school'))
         return user
+
+
+class UpgradeAccountForm(ModelForm):
+
+    class Meta:
+        model = UpgradeCharge
+        fields = []  # can't create a ModelForm without the fields property, so add a blank one

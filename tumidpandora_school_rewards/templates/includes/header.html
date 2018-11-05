@@ -1,0 +1,143 @@
+{% load static %}
+<!-- included in pub_base -->
+
+<header class="header-global">
+   <nav id="navbar-main" class="navbar navbar-main navbar-expand-lg navbar-transparent navbar-light headroom">
+      <div class="container">
+         <a class="navbar-brand mr-lg-5" href="{% url 'home' %}">
+            <!--<img src="{% static '/assets/img/brand/logo.png' %}">-->
+            <img class="avatar avatar-sm bg-white" src="{% static '/assets/img/brand/players/bunny1_jump.png' %}">
+            <!--TODO: Replace with school rewards logo-->
+            Task-a-Thon
+         </a>
+         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar_global" aria-controls="navbar_global" aria-expanded="false" aria-label="Toggle navigation">
+         <span class="navbar-toggler-icon"></span>
+         </button>
+         <div class="navbar-collapse collapse" id="navbar_global">
+            <div class="navbar-collapse-header">
+               <div class="row">
+                  <div class="col-6 collapse-brand">
+                     <a href="{% static 'home' %}">
+                        <img class="avatar avatar-sm bg-transparent" src="{% static '/assets/img/brand/players/bunny1_jump.png' %}">
+                        <!--<img src="{%static '/assets/img/brand/blue.png' %}">-->
+                     </a>
+                  </div>
+                  <div class="col-6 collapse-close">
+                     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar_global" aria-controls="navbar_global" aria-expanded="false" aria-label="Toggle navigation">
+                     <span></span>
+                     <span></span>
+                     </button>
+                  </div>
+               </div>
+            </div>
+            <ul class="navbar-nav navbar-nav-hover align-items-lg-center">
+               <li class="nav-item dropdown">
+                  <a href="#" class="nav-link" data-toggle="dropdown" href="#" role="button">
+                     <!--<i class="ni ni-ui-04 d-lg-none"></i>-->
+                     <span class="nav-link-inner--text">Getting Started</span>
+                     <!--<i class="fa fa-sort-desc"></i>-->
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-xl">
+                     <div class="dropdown-menu-inner">
+                        <a href="#" class="media d-flex align-items-center">
+                           <div class="icon icon-shape bg-gradient-primary rounded-circle text-white">
+                              <i class="ni ni-spaceship"></i>
+                           </div>
+                           <div class="media-body ml-3">
+                              <h6 class="heading text-primary mb-md-1">Getting started</h6>
+                              <p class="description d-none d-md-inline-block mb-0">Learn how to use School Rewards, engage with and support your school.</p>
+                           </div>
+                        </a>
+                        <a href="#" class="media d-flex align-items-center">
+                           <div class="icon icon-shape bg-gradient-success rounded-circle text-white">
+                              <i class="ni ni-palette"></i>
+                           </div>
+                           <div class="media-body ml-3">
+                              <h6 class="heading text-success mb-md-1">Tasks and Rewards</h6>
+                              <p class="description d-none d-md-inline-block mb-0">Learn more about the intuitive tasks dashboard, and the simple workflow to raise funds for your school.</p>
+                           </div>
+                        </a>
+                        <a href="#" class="media d-flex align-items-center">
+                           <div class="icon icon-shape bg-gradient-warning rounded-circle text-white">
+                              <i class="ni ni-ui-04"></i>
+                           </div>
+                           <div class="media-body ml-3">
+                              <h5 class="heading text-warning mb-md-1">Welcome</h5>
+                              <p class="description d-none d-md-inline-block mb-0">Browse our 50 beautiful handcrafted components offered in the Free version.</p>
+                           </div>
+                        </a>
+                     </div>
+                  </div>
+               </li>
+               <!--<li class="nav-item dropdown">-->
+               <!--<a href="#" class="nav-link" data-toggle="dropdown" href="#" role="button">-->
+               <!--<i class="ni ni-collection d-lg-none"></i>-->
+               <!--<span class="nav-link-inner&#45;&#45;text">Join Us</span>-->
+               <!--</a>-->
+               <!--<div class="dropdown-menu">-->
+               <!--&lt;!&ndash;<a href="{% static '/examples/landing.html" class="dropdown-item">Landing</a>&ndash;&gt;-->
+               <!--&lt;!&ndash;<a href="{% static '/examples/profile.html" class="dropdown-item">Profile</a>&ndash;&gt;-->
+               <!--<a href="{% static '/examples/login.html" class="dropdown-item">Login</a>-->
+               <!--<a href="{% static '/examples/register.html" class="dropdown-item">Register</a>-->
+               <!--</div>-->
+               <!--</li>-->
+               <li class="nav-item dropdown">
+                  <a href="#" class="nav-link" data-toggle="dropdown" href="#" role="button">
+                     <!--<i class="ni ni-ui-04 d-lg-none"></i>-->
+                     <span class="nav-link-inner--text">Features</span>
+                     <!--<i class="fa fa-sort-desc"></i>-->
+                  </a>
+               </li>
+               <li class="nav-item dropdown">
+                  <a href="#" class="nav-link" data-toggle="dropdown" href="#" role="button">
+                     <!--<i class="ni ni-ui-04 d-lg-none"></i>-->
+                     <span class="nav-link-inner--text">Pricing</span>
+                     <!--<i class="fa fa-sort-desc"></i>-->
+                  </a>
+               </li>
+               <li class="nav-item dropdown">
+                  <a href="#" class="nav-link" data-toggle="dropdown" href="#" role="button">
+                     <!--<i class="ni ni-ui-04 d-lg-none"></i>-->
+                     <span class="nav-link-inner--text">Support</span>
+                     <!--<i class="fa fa-sort-desc"></i>-->
+                  </a>
+               </li>
+            </ul>
+            <ul class="navbar-nav align-items-lg-center ml-lg-auto">
+               <li class="nav-item">
+                  <a class="nav-link nav-link-icon" href="" target="_blank" data-toggle="tooltip" title="Like us on Facebook">
+                  <i class="fa fa-facebook-square"></i>
+                  <span class="nav-link-inner--text d-lg-none">Facebook</span>
+                  </a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link nav-link-icon" href="#" target="_blank" data-toggle="tooltip" title="Follow us on Instagram">
+                  <i class="fa fa-instagram"></i>
+                  <span class="nav-link-inner--text d-lg-none">Instagram</span>
+                  </a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link nav-link-icon" href="#" target="_blank" data-toggle="tooltip" title="Follow us on Twitter">
+                  <i class="fa fa-twitter-square"></i>
+                  <span class="nav-link-inner--text d-lg-none">Twitter</span>
+                  </a>
+               </li>
+               <!--<li class="nav-item">-->
+               <!--<a class="nav-link nav-link-icon" href="#" target="_blank" data-toggle="tooltip" title="Star us on Github">-->
+               <!--<i class="fa fa-github"></i>-->
+               <!--<span class="nav-link-inner&#45;&#45;text d-lg-none">Github</span>-->
+               <!--</a>-->
+               <!--</li>-->
+               <li class="nav-item d-none d-lg-block ml-lg-4">
+                  <a href="{% url 'login' %}" class="btn btn-primary btn-md">
+                  <span class="nav-link-inner--text">LOG IN</span>
+                  <span class="btn-inner--icon">
+                  <i class="fa fa-sign-in"></i>
+                  </span>
+                  </a>
+               </li>
+            </ul>
+         </div>
+      </div>
+   </nav>
+</header>

@@ -6,18 +6,31 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
-from .forms import SignUpForm, ParentSignUpForm, TeacherSignUpForm
+from .forms import SignUpForm, ParentSignUpForm, TeacherSignUpForm, UpgradeAccountForm
 
 from django.contrib.auth.decorators import login_required
 from django.views.generic import UpdateView, DeleteView, ListView
 
-from rewards.models import (User, School, Parent, Teacher, Reward, Task, Claim)
+from rewards.models import (User, School, Parent, Teacher, Reward, Task, Claim, UpgradeCharge)
+
+from tumidpandora_school_rewards import settings
 
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import UpdateView
 
 from django.http import HttpResponse
+
+import stripe
+import datetime
+
+
+from django.contrib.auth.signals import user_logged_out, user_logged_in
+from django.dispatch import receiver  # signal for tracking log out
+from django.contrib import messages
+
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 # Create your views here.
@@ -87,9 +100,9 @@ def my_school_view(request):
     except ObjectDoesNotExist:
         school = None  # TODO: Admin should see tasks for all schools
 
-    teachers = Teacher.objects.filter(school=school).filter(is_school_admin=False).order_by('user__last_login')
-    # teachers = Teacher.objects.filter(school=school).order_by('user__last_login')
-    # print("teachers = %s" % teachers)
+    # teachers = Teacher.objects.filter(school=school).filter(is_school_admin=False).order_by('user__last_login')
+    teachers = Teacher.objects.filter(school=school).order_by('user__last_login')
+    # TODO: Don't filter admin users from the list
 
     paginator = Paginator(teachers, 4)  # #teacher records seen at one page
     page = request.GET.get('t_page')
@@ -101,7 +114,7 @@ def my_school_view(request):
     except EmptyPage:
         teachers = paginator.page(paginator.num_pages)
 
-    print("teachers = %s" % teachers)
+    # print("teachers = %s" % teachers)
 
     # TODO: Add parents to admin view (if required)
     parents = Parent.objects.filter(school=school).order_by('user__last_login')
@@ -153,6 +166,7 @@ class ActivateUserView(UpdateView):
         # user.updated_by = self.request.user
         # claim.updated_at = timezone.now()
         user.save()
+        # messages.success(user, "Success! user activated successfully!")
         return redirect('my_school')
 
 
@@ -212,4 +226,138 @@ class RemoveUserView(DeleteView):
 
     def form_valid(self, form):
         user = form.delete()
+
+
+# TODO: Create a job to expire accounts daily
+@login_required
+def upgrade_account_view(request):
+
+    try:
+        if request.user.is_parent:
+            school = request.user.parent.school
+        else:
+            school = request.user.teacher.school
+    except ObjectDoesNotExist:
+        school = None  # TODO: Admin should see tasks for all schools
+
+    # teachers_count = Teacher.objects.filter(school=school).Count('id')
+    # parents_count = Parent.objects.filter(school=school).Count('id')
+    # tasks_count = Task.objects.filter(school=school).Count('id')
+    # claims_count =
+    # rewards_total =
+
+    teachers_count = 10
+    parents_count = 5
+    tasks_count = 45
+    claims_count = 23
+    rewards_total = 600
+
+    stripe_premium_charge = settings.PREMIUM_MEMBERSHIP_COST.replace(".", "")  # replace period for stripe charge
+
+    return render(request, 'upgrade_account.html', {"stripe_key": settings.STRIPE_PUBLISHABLE_KEY,
+                                                    "stripe_premium_charge": stripe_premium_charge,  # no need to change
+                                                    "premium_cost": settings.PREMIUM_MEMBERSHIP_COST,
+                                                    "email_support": settings.EMAIL_SUPPORT,
+                                                    "school": school,
+                                                    "teachers_count": teachers_count,
+                                                    "parents_count": parents_count,
+                                                    "tasks_count": tasks_count,
+                                                    "claims_count": claims_count,
+                                                    "rewards_total": rewards_total})
+
+
+@login_required
+def upgrade_account_confirm_view(request):
+
+# When a user submits the form (ie: pays), their bank account
+# information is sent to stripe for processing.
+# If the payment is accepted, stripe will issue a POST request
+# to the endpoint specified in the action attribute of the form.
+# The idea is to then capture that token and use it to charge the user’s card.
+
+# We create an upgradeCharge based on this post request from stripe
+
+    # amount = int(float(settings.PREMIUM_MEMBERSHIP_COST))
+    stripe_premium_charge = settings.PREMIUM_MEMBERSHIP_COST.replace(".", "")  # replace period for stripe charge
+
+    now = datetime.datetime.now()  # used to store charge time
+
+    try:
+        if request.user.is_parent:
+            school = request.user.parent.school
+        else:
+            school = request.user.teacher.school
+    except ObjectDoesNotExist:
+        school = None  # TODO: Admin should see tasks for all schools
+
+    if request.method == 'POST':
+
+        form = UpgradeAccountForm(request.POST)
+        if form.is_valid():
+
+            token = request.POST.get("stripeToken")
+
+            try:
+                charge = stripe.Charge.create(
+                    amount=stripe_premium_charge,
+                    currency="usd",
+                    source=token,
+                    description="")
+
+                if school is not None:
+                    School.objects.filter(id=school.id).update(is_paid=True)  # enable premium
+                # TODO: Daily job to check for premium status expiring
+
+                # create charge
+                upgrade_charge = form.save(commit=False)
+                upgrade_charge.save()
+
+                payee = request.user
+                charge_id = charge.id  # from stripe charge object
+
+                upgrade_charge = UpgradeCharge.objects.create(
+                    charge_success=True,
+                    school=school,
+                    created_by=payee,
+                    amount=299.99,  # settings.PREMIUM_MEMBERSHIP_COST
+                    charge_id=charge_id,
+                    created_at=now
+                    )
+                return render(request, 'upgrade_payment_confirm.html', {"email_support": settings.EMAIL_SUPPORT,
+                                                                        "school": school,
+                                                                        "charge_id": charge_id,
+                                                                        "created_by": payee,
+                                                                        "created_datetime": now})
+
+            except stripe.error.CardError as ce:
+                # return False, ce
+                # TODO: add failure notification
+                return render(request, 'upgrade_account.html', {"form": form,
+                                                                "email_support": settings.EMAIL_SUPPORT,
+                                                                "school": school})
+    else:
+        form = UpgradeAccountForm()
+        return render(request, 'upgrade_account.html', {"form": form,
+                                                        "email_support": settings.EMAIL_SUPPORT,
+                                                        "school": school})
+
+
+@receiver(user_logged_in)
+def on_user_logged_in(sender, request, user, **kwargs):
+        if user:
+            msg = 'WELCOME! YOU HAVE SECURELY LOGGED IN.'
+        else:
+            msg = 'WELCOME! YOU HAVE SECURELY LOGGED IN.'
+        messages.success(request, msg)
+
+
+# @receiver(user_logged_out)
+# def on_user_logged_out(sender, request, user, **kwargs):
+#         # if user:
+#         msg = 'You have securely logged out. Thank you.'
+#         # else:
+#             # msg = 'You have securely logged out of here. Thank you'
+#         messages.success(request, msg)
+
+
 

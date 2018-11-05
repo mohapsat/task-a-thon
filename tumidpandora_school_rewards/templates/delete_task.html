@@ -3,19 +3,68 @@
 {% block title %}Delete Task{% endblock %}
 
 {% block breadcrumb %}
-<ol class="breadcrumb bg-light my-2">
-    <li class="breadcrumb-item"><a href="{% url 'tasks' %}">Tasks</a></li>
-    <li class="breadcrumb-item" aria-current="page"><a href="{% url 'task_replies' task.pk %}">{{ task.name }}</a></li>
-    <li class="breadcrumb-item active">Delete task</li>
+<ol class="breadcrumb bg-transparent my-2">
+    <li class="breadcrumb-item"><a href="{% url 'tasks' %}">TASKS</a></li>
+    <li class="breadcrumb-item" aria-current="page"><a href="{% url 'task_replies' task.pk %}">
+         {{ task.starter.username|upper}}-T{{task.id}}
+    </a></li>
+    <li class="breadcrumb-item active">DELETE</li>
 </ol>
 {% endblock %}
 
 {% block deletetask %}
-  <form method="post" class="mb-4" novalidate>
-    {% csrf_token %}
-    {% include 'includes/form.html' %}
-      <p class="lead">Are you sure you would like to <strong>delete</strong> this task ?</p>
-    <button type="submit" class="btn btn-danger btn-sm">Yes, Delete</button>
-    <a href="{% url 'tasks' %}" class="btn btn-outline-secondary btn-sm" role="button">Cancel</a>
-  </form>
+
+<div class="row justify-content-center">
+    <div class="col col-lg-6">
+        <div class="card shadow">
+            <div class="card-header bg-danger border-0">
+                <h5 class="text-neutral my-0">
+                    <img class="avatar avatar-sm bg-white mr-2" src="/static/assets/img/brand/players/bunny2_jump.png">
+                    DELETE TASK
+                </h5>
+            </div>
+
+            <div class="container">
+                <form method="post" class="mb-4" novalidate>
+                    {% csrf_token %}
+                    {% include 'includes/form.html' %}
+                <p class="lead">
+                    <small>
+                    <strong>TASK : </strong>{{task.name}}
+                    </small>
+                </p>
+                    <hr>
+                <p class="lead text-muted">
+                    <small>
+                        Are you sure you'd like to <strong>remove</strong> this task ?
+                    </small>
+                </p>
+                <p>
+                    <button type="submit" class="btn btn-danger btn-md my-1">
+                        <i class="fa fa-check-square"></i>
+                        Delete
+                    </button>
+                    <a href="{% url 'task_replies' task.pk %}" class="btn btn-secondary btn-md my-1" role="button">
+                        <i class="fa fa-times-circle"></i>
+                        Cancel
+                    </a>
+                </p>
+            </form>
+
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'task_replies' task.pk %}">
+                    <i class="fa fa-long-arrow-left"></i>
+                    BACK TO TASK
+                </a>
+                <a href="{% url 'tasks' %}" class="float-right">
+                    DASHBOARD
+                    <i class="fa fa-long-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 {% endblock %}

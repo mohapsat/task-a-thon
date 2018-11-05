@@ -7,22 +7,52 @@
 {% endblock %}
 
 {% block breadcrumb %}
-<ol class="breadcrumb bg-light my-2">
-    <li class="breadcrumb-item"><a href="{% url 'tasks' %}">Tasks</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'task_replies' task.pk %}">{{ task.name }}</a></li>
-    <li class="breadcrumb-item active" aria-current="page">New Reply</li>
+<ol class="breadcrumb bg-transparent my-2">
+    <li class="breadcrumb-item"><a href="{% url 'tasks' %}">TASKS</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'task_replies' task.pk %}">{{ task.starter.username|upper}}-{{task.id}}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">NEW REPLY</li>
 </ol>
 {% endblock %}
 
 {% block newreplytotask %}
 
-  <form method="post" novalidate>
-    {% csrf_token %}
-    {% include 'includes/form.html' %}
-      <button type="submit" class="btn btn-success btn-sm">Save</button>
-      <a href="{% url 'task_replies' task.pk %}" class="btn btn-outline-secondary btn-sm" role="button"
-         aria-pressed="true">
-          Cancel</a>
-  </form>
+<div class="row justify-content-center">
+    <div class="col col-lg-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary border-0">
+                <h5 class="text-neutral my-0">
+                    <img class="avatar avatar-sm bg-white mr-2" src="/static/assets/img/brand/players/bunny2_jump.png">
+                    REPLY OR REQUEST INFORMATION
+                </h5>
+            </div>
 
+            <div class="container">
+                <p></p>
+                <p class="text-muted"><strong>ASSIGNMENT</strong> : {{task.name}}</p>
+                <form method="post" class="mb-4" novalidate>
+                    {% csrf_token %}
+                    {% include 'includes/form.html' %}
+                    <button type="submit" class="btn btn-success btn-md my-1">
+                        <i class="fa fa-check-square"></i>
+                        Reply
+                    </button>
+                    <a href="{% url 'task_replies' task.pk %}" class="btn btn-secondary btn-md my-1" role="button">
+                        <i class="fa fa-times-circle"></i>
+                        Cancel
+                    </a>
+                    </form>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'task_replies' task.pk %}">
+                    <i class="fa fa-long-arrow-left"></i>
+                    BACK TO TASK
+                </a>
+                <a href="{% url 'tasks' %}" class="float-right">
+                    DASHBOARD
+                    <i class="fa fa-long-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

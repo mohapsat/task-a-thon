@@ -7,20 +7,61 @@
 {% endblock %}
 
 {% block breadcrumb %}
-<ol class="breadcrumb bg-light my-2">
-    <li class="breadcrumb-item"><a href="{% url 'tasks' %}">Tasks</a></li>
-    <li class="breadcrumb-item" aria-current="page"><a href="{% url 'task_replies' claim.task.pk %}">{{ claim.task.name }}</a></li>
-    <li class="breadcrumb-item" aria-current="page"><a href="{% url 'task_replies' claim.task.pk %}">{{ claim.message }}</a></li>
-    <li class="breadcrumb-item active">Approve claim</li>
+<ol class="breadcrumb bg-transparent my-2">
+    <li class="breadcrumb-item"><a href="{% url 'tasks' %}">TASKS</a></li>
+    <li class="breadcrumb-item" aria-current="page"><a href="{% url 'task_replies' claim.task.pk %}">
+            <!--{{ claim.task.name }}-->
+        {{claim.task.starter|upper}}-T{{claim.task.id}}
+        </a>
+    </li>
+    <li class="breadcrumb-item" aria-current="page"><a href="{% url 'task_replies' claim.task.pk %}">
+            <!--{{ claim.message }}-->
+        {{claim.task.starter|upper}}-T{{claim.task.id}}-C{{claim.id}}
+        </a>
+    </li>
+    <li class="breadcrumb-item active">APPROVE CLAIM</li>
 </ol>
 {% endblock %}
 
 {% block approveclaim %}
-  <form method="post" class="mb-4" novalidate>
-    {% csrf_token %}
-    {% include 'includes/form.html' %}
-      <p class="lead">Are you sure you would like to <strong>approve</strong> this claim ?</p>
-    <button type="submit" class="btn btn-success btn-sm">Yes, Approve</button>
-    <a href="{% url 'task_replies' claim.task.pk %}" class="btn btn-secondary btn-sm" role="button">Cancel</a>
-  </form>
+<div class="row justify-content-center">
+    <div class="col col-lg-6">
+        <div class="card shadow">
+            <div class="card-header bg-gradient-info border-0">
+                <h5 class="text-neutral my-0">
+                    <img class="avatar avatar-sm bg-white" src="/static/assets/img/brand/players/bunny1_jump.png">
+                    Approve Reward Claim
+                </h5>
+            </div>
+            <div class="container">
+                <form method="post" class="mb-4" novalidate>
+                    {% csrf_token %}
+                    {% include 'includes/form.html' %}
+                    <p class="lead"><strong>Approve</strong> the reward claim submitted by user {{ claim.created_by | upper }}?
+                    <div class="text-muted">Approved claims cannot be unapproved. Please use Request Info to request for more details prior to approval.</div>
+                        <hr>
+                    </p>
+                    <button type="submit" class="btn btn-success btn-md my-1">
+                        <i class="fa fa-check-square"></i>
+                        Approve
+                    </button>
+                    <a href="{% url 'task_replies' claim.task.pk %}" class="btn btn-secondary btn-md my-1" role="button">
+                        <i class="fa fa-times-circle"></i>
+                        Cancel
+                    </a>
+                    <a href="{% url 'new_reply_to_task' claim.task.pk %}" class="btn btn-warning btn-md my-1" role="button">
+                        <i class="fa fa-info-circle"></i>
+                        Request Info
+                    </a>
+                    </form>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'task_replies' claim.task.pk %}">
+                    <i class="fa fa-long-arrow-left"></i>
+                    GO BACK TO TASK
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

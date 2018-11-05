@@ -1,23 +1,27 @@
 from datetime import datetime, timedelta
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.utils.html import escape, mark_safe
 from localflavor.us.models import USStateField
+from tumidpandora_school_rewards import settings
+from multiselectfield import MultiSelectField
+
+
+# Ref: https://simpleisbetterthancomplex.com/tutorial/2017/02/06/how-to-implement-case-insensitive-username.html
+class CustomUserManager(UserManager):
+    def get_by_natural_key(self, username):
+        case_insensitive_username_field = '{}__iexact'.format(self.model.USERNAME_FIELD)
+        return self.get(**{case_insensitive_username_field: username})
 
 
 # Ref: https://simpleisbetterthancomplex.com/tutorial/2018/01/18/how-to-implement-multiple-user-types-with-django.html
 class User(AbstractUser):
+    objects = CustomUserManager()  # for case insensitive username
     is_parent = models.BooleanField(default=False)
     is_teacher = models.BooleanField(default=False)
 
 
 class School(models.Model):
-
-    STATE_CHOICES = (
-        ('California', 'CA'),
-        ('Texas', 'TX'),
-        ('Arizona', 'AZ'),
-    )
 
     name = models.CharField(max_length=128)
     street_address = models.CharField(max_length=100)
@@ -25,10 +29,16 @@ class School(models.Model):
     state = USStateField(null=True, blank=True)
     zip_code = models.CharField(max_length=32)
     paypal_account = models.CharField(max_length=128, null=True)
+    is_paid = models.BooleanField(default=False)  # to check for subscription
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True)
     created_by = models.ForeignKey(User, related_name='schools', on_delete=models.CASCADE, null=True)
     updated_by = models.ForeignKey(User, related_name='+', on_delete=models.CASCADE, null=True)
+
+    # TODO: add is_premium_expiring flag to schools and throw a warning on tasks dashboard
+
+    # class Meta:
+    #     unique_together = (("city", "zip_code", "paypal_account"),)
 
     def __str__(self):
         # return self.name
@@ -39,9 +49,14 @@ class Parent(models.Model):
     user = models.OneToOneField(User, related_name='parent', on_delete=models.CASCADE, primary_key=True)
     # school = models.ForeignKey(School, related_name='p_school', on_delete=models.CASCADE, null=True)
     school = models.ForeignKey(School, related_name='t_school', on_delete=models.CASCADE, null=True)
+    is_school_admin = models.BooleanField(default=False)  # to indicate if parent is school admin
 
     def __str__(self):
         return "%s" % self.user
+
+    def email_masked(self):
+        return str(self.user.email)
+    # TODO: Mask (not hash) user emails in my school view
 
 
 class Teacher(models.Model):
@@ -82,10 +97,33 @@ class Status(models.Model):
         return str(self.get_status_display())
 
     def get_html_badge(self):
+
         name = escape(self.get_status_display())
-        color = escape(self.color)
+        progress_percentage = 0
+        if name == 'Open':
+            progress_percentage = 20
+            color = 'warning'
+        elif name == 'In Progress':
+            progress_percentage = 40
+            color = 'info'
+        elif name == 'Pending Approval':
+            progress_percentage = 50
+            color = 'primary'
+        elif name == 'Pending Payment':
+            progress_percentage = 80
+            color = 'danger'
+        else:
+            progress_percentage = 100
+            color = 'success'
+        # color = escape(self.color)
         # html = '<span class="badge badge-primary" style="background-color: %s">%s</span>' % (color, name)
-        html = '<span class="badge badge-primary" >%s</span>' % name
+        # if name != 'Open':
+        #     html = '<i class="fa fa-lock text-light mr-1"></i> <span class="badge badge-info text-default">%s</span>' % name
+        # else:
+        #     html = '<i class="fa fa-unlock-alt text-success mr-1"></i><span class="badge badge-primary text-default">%s</span>' % name
+        # html = '<span class="progress-label progress-info">%s</span>' % name
+
+        html = '<div class="progress-wrapper"> <div class="progress-info"> <div class="progress-label"> <span class="text-default">%s</span> </div><div class="progress-percentage"><small>%s%%</small> </div></div><div class="progress"> <div class="progress-bar bg-%s" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="100" style="width: %s%%;"></div></div></div>' % (name, progress_percentage, color, progress_percentage, progress_percentage)
         return mark_safe(html)
 
 
@@ -116,19 +154,44 @@ class Task(models.Model):
 
     DAYS_TO_EXPIRE_TASK = 30  # default expiration date
 
-    name = models.CharField(max_length=50, unique=False)
-    success_criteria = models.CharField(max_length=4000)
+    GRADE_CHOICES = (
+        # ('ALL', 'ALL'),
+        ('PS', 'PRESCHOOL'),
+        ('TK', 'TK'),
+        ('K', 'KINDERGARTEN'),
+        ('1', 'FIRST'),
+        ('2', 'SECOND'),
+        ('3', 'THIRD'),
+        ('4', 'FOURTH'),
+        ('5', 'FIFTH'),
+        ('6', 'SIXTH'),
+        ('7', 'SEVENTH'),
+        ('8', 'EIGHTH'),
+        ('9', 'FRESHMAN'),
+        ('10', 'SOPHOMORE'),
+        ('11', 'JUNIOR'),
+        ('12', 'SENIOR'),
+    )
+
+    name = models.CharField(max_length=125, unique=False)
+    success_criteria = models.CharField(max_length=500)
     last_updated = models.DateTimeField(auto_now_add=True)
     expires_on = models.DateTimeField(default=datetime.now()+timedelta(days=DAYS_TO_EXPIRE_TASK))  # defaulted to +30 days
     status = models.ForeignKey(Status, related_name='tasks', on_delete=models.CASCADE, null=True, default=Status.OPEN)
     school = models.ForeignKey(School, related_name='school', on_delete=models.CASCADE, null=True)
     starter = models.ForeignKey(User, related_name='tasks', on_delete=models.CASCADE, null=True)
     reward = models.ForeignKey(Reward, related_name='tasks', on_delete=models.CASCADE, null=True, default='GOLD')
+    grade = MultiSelectField(choices=GRADE_CHOICES, max_choices=6, max_length=64)
+
+
     # TODO: Remove default reward hard coding
     pass
 
     def __str__(self):
         return self.name[:10]
+
+    def grade_display(self):
+        return str(self.get_grade_display())
 
     def snippet_criteria(self):
         if len(self.success_criteria) > 30:
@@ -147,12 +210,12 @@ class Task(models.Model):
         return self.expires_on.date() < datetime.now().date()
 
     def avatar_text(self):
-        return "%s%s" % (self.starter.first_name[:1],self.starter.last_name[:1])
+        return "%s%s" % (self.starter.first_name[:1], self.starter.last_name[:1])
 
 
 class Post(models.Model):
 
-    message = models.CharField(max_length=4000)
+    message = models.CharField(max_length=480)
     task = models.ForeignKey(Task, related_name='posts', on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True)
@@ -179,7 +242,7 @@ class Post(models.Model):
 
 class Claim(models.Model):
 
-    message = models.CharField(max_length=4000, null=False)
+    message = models.CharField(max_length=400, null=False)
     status = models.ForeignKey(Status, related_name='claims', on_delete=models.CASCADE, null=True, default=Status.OPEN)
     task = models.ForeignKey(Task, related_name='claims', on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -209,3 +272,16 @@ class Payment(models.Model):
 
     def __str__(self):
         return self.task
+
+
+class UpgradeCharge(models.Model):
+
+    charge_success = models.BooleanField(default=False)
+    amount = models.IntegerField(default=settings.STRIPE_PREMIUM_CHARGE)
+    school = models.ForeignKey(School, related_name='upgradeCharges', on_delete=models.CASCADE, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, related_name='upgradeCharges', on_delete=models.CASCADE, null=True)
+    charge_id = models.CharField(max_length=256, null=True)  # to store stripe_charge_id
+
+    def __str__(self):
+        return "%s" % self.charge_id

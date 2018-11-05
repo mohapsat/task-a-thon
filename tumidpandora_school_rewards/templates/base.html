@@ -23,21 +23,25 @@
 
     <!-- APP CSS -->
     <link type="text/css" href="{% static '/assets/css/argon.css' %}" rel="stylesheet">
+    <!--<link type="text/css" href="{% static '/assets/css/app.css' %}" rel="stylesheet">-->
 
     {% block stylesheet %} {% endblock %}
 
 </head>
 
-<body>
-
-    <div class="container">
-
+<body class="bg-gradient-secondary">
     {% block body %}
+<!--<div class="container">-->
 
-<nav class="navbar navbar-horizontal navbar-expand navbar-dark bg-primary">
-<!--<nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white">-->
+<nav class="navbar navbar-horizontal navbar-expand bg-secondary border-bottom border-secondary">
+<!--<nav class="navbar navbar-main navbar-expand-lg navbar-transparent navbar-light headroom headroom&#45;&#45;top headroom&#45;&#45;not-bottom">-->
   <div class="container">
-    <a class="navbar-brand" href="{% url 'tasks' %}">School Rewards</a>
+    <a class="navbar-brand mr-lg-5 text-default" href="{% url 'tasks' %}">
+        <!--<img src="{% static '/assets/img/brand/logo.png' %}">-->
+        <img class="avatar avatar-sm bg-transparent mr-1 shadow" src="{% static '/assets/img/brand/players/bunny1_jump.png' %}">
+        TASK-A-THON
+    </a>
+
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -49,33 +53,62 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <!--TODO: switch user label to first_name instead of username-->
-                Hello, {{ user.username|title }}
+                <i class="fa fa-user-circle-o text-muted"></i>
+                <!--<i class="fa fa-id-badge"></i>-->
+                <!--<i class="fa fa-id-card-o"></i>-->
+                HELLO, {{ user.username|upper }}
                 <!--TODO: Add salutation-->
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
-                <a class="dropdown-item" href="{% url 'my_account' %}">My Account</a>
-                <a class="dropdown-item" href="{% url 'password_change' %}">Change Password</a>
+                <a class="dropdown-item" href="{% url 'my_account' %}">
+                    <i class="fa fa-user-circle-o"></i>
+                    My Account
+                </a>
+                <a class="dropdown-item" href="{% url 'password_change' %}">
+                    <i class="fa fa-cog"></i>
+                    Change Password
+                </a>
 
                 <!--TODO: make my_school available to all users?-->
-                {% if user.teacher.is_school_admin %}
                 <!--only teachers who're school admins can see this menu item-->
-                <a class="dropdown-item active" href="{% url 'my_school' %}">My School</a>
-                {% endif %}
+                <a class="dropdown-item active" href="{% url 'my_school' %}">
+                    <i class="fa fa-star text-purple"></i>
+                    MY SCHOOL
+                </a>
+
+                <!--START: Check for premium membership-->
+                    {% if user.teacher.school.is_paid or user.parent.school.is_paid %}
+                        <a class="dropdown-item text-primary" href="#">
+                            <i class="fa fa-angle-double-up"></i>
+                            Premium Account
+                        </a>
+                    {% else %}
+                        <a class="dropdown-item text-primary" href="{% url 'upgrade_account' %}">
+                            <i class="fa fa-arrow-circle-up"></i>
+                            Upgrade to Premium
+                        </a>
+                    {% endif %}
+                <!--END: Check for premium membership-->
 
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
+
+                <a class="dropdown-item" href="{% url 'logout' %}">
+                    <i class="fa fa-power-off text-danger"></i>
+                    Log Out
+                </a>
             </div>
           </li>
         </ul>
       {% else %}
         <form class="form-inline ml-auto">
-          <a href="{% url 'login' %}" class="btn btn-outline-secondary">Log in</a>
-          <a href="{% url 'signup' %}" class="btn btn-primary ml-2">Sign up</a>
+          <!--<a href="{% url 'login' %}" class="btn btn-outline-secondary">Log in</a>-->
+          <!--<a href="{% url 'signup' %}" class="btn btn-primary ml-2">Sign up</a>-->
         </form>
       {% endif %}
     </div>
   </div>
 </nav>
+<!--</div>-->
 
 
 <!--<div class="container">-->
@@ -91,123 +124,92 @@
     </div>
     {% endif %}
 -->
+<div class="container">
 
-    <div class="collapse show" id="collapseCharts">
-        <!--to show  charts by default you need collapse show-->
-        <div class="row">
-            <div class="col-4">
-                <div id="chart_left"></div>
-                <script src="{% static 'js/highcharts.src.js' %}"></script>
-                    <script>
-                        Highcharts.chart('chart_left', {{ chart_left|safe }});
-                    </script>
-            </div>
-            <div class="col-4">
-                <div id="chart_middle"></div>
-                    <script>
-                        Highcharts.chart('chart_middle', {{ chart_middle|safe }});
-                    </script>
-            </div>
-            <div class="col-4">
-                <div id="chart_right"></div>
-                    <script>
-                        Highcharts.chart('chart_right', {{ chart_right|safe }});
-                    </script>
-            </div>
-	    </div>
-    </div>
 
+    {% include 'includes/messages.html' %}
 
     {% block breadcrumb %}
     {% endblock %}
 
+    {% block highcharts %}
+    {% endblock %}
+
+    {% block accounttype %}
+    {% endblock %}
 
     {% block users %}
     {% endblock %}
 
-    <div class="tasks my-2">
-        {% block tasks %}
-        {% endblock %}
-    </div>
+    {% block tasks %}
+    {% endblock %}
 
-    <div class="newtask">
-        {% block newtask %}
-        {% endblock %}
-    </div>
+    {% block newtask %}
+    {% endblock %}
 
-    <div class="replies">
-        {% block replies %}
-        {% endblock %}
-    </div>
+    {% block replies %}
+    {% endblock %}
 
-    <div class="replytotask">
-        {% block newreplytotask %}
-        {% endblock %}
-    </div>
+    {% block newreplytotask %}
+    {% endblock %}
 
-    <div class="changepassword">
-        {% block changepassword %}
-        {% endblock %}
-    </div>
+    {% block changepassword %}
+    {% endblock %}
 
-    <div class="passwordchangedone">
-        {% block passwordchangedone %}
-        {% endblock %}
-    </div>
+    {% block passwordchangedone %}
+    {% endblock %}
 
-    <div class="edittask">
-        {% block edittask %}
-        {% endblock %}
-    </div>
+    {% block edittask %}
+    {% endblock %}
 
-    <div class="editreply">
-        {% block editreply %}
-        {% endblock %}
-    </div>
+    {% block editreply %}
+    {% endblock %}
 
-    <div class="deletereply">
-        {% block deletereply %}
-        {% endblock %}
-    </div>
+    {% block deletereply %}
+    {% endblock %}
 
-    <div class="deletetask">
-        {% block deletetask %}
-        {% endblock %}
-    </div>
+    {% block deletetask %}
+    {% endblock %}
 
-    <div class="myaccount">
-        {% block myaccount %}
-        {% endblock %}
-    </div>
+    {% block myaccount %}
+    {% endblock %}
 
-    <div class="newclaimtotask">
-        {% block newclaimtotask %}
-        {% endblock %}
-    </div>
-    <div class="approveclaim">
-        {% block approveclaim %}
-        {% endblock %}
-    </div>
+    {% block newclaimtotask %}
+    {% endblock %}
+
+    {% block approveclaim %}
+    {% endblock %}
 
     {% block removeuser %}
     {% endblock %}
 
-
     {% block newpaymenttotask %}
     {% endblock %}
 
+    {% block upgradeaccount %}
+    {% endblock %}
+
+    {% block upgradepaymentconfirm %}
+    {% endblock %}
 
 </div>
 {% endblock %} <!--body-->
 
     <!-- Core -->
     <script src="{% static '/assets/vendor/jquery/jquery.min.js' %}"></script>
-    <script src="{% static '/assets/vendor/bootstrap/bootstrap.min.js' %}"></script>
     <script src="{% static '/assets/vendor/popper/popper.min.js' %}"></script>
+    <script src="{% static '/assets/vendor/bootstrap/bootstrap.min.js' %}"></script>
+
 
 
     <!-- Optional plugins -->
     <!--<script src="{% static '/assets/vendor/PLUGIN_FOLDER/PLUGIN_SCRIPT.js' %}"></script>-->
+    <script src="{% static '/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+        $('.datepicker').datepicker();
+        });
+    </script>
 
     <!-- Theme JS -->
     <script src="{% static '/assets/js/argon.js' %}"></script>

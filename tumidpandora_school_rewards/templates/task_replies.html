@@ -1,21 +1,22 @@
 {% extends 'base.html' %}
 
 {% load humanize %}
+{% load static %}
 
 {% block school %}
         {{school}}
 {% endblock %}
 
 {% block breadcrumb %}
-<ol class="breadcrumb  bg-white my-2">
-    <li class="breadcrumb-item"><a href="{% url 'tasks' %}">Tasks</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{{ task.name }}</li>
+<ol class="breadcrumb  bg-transparent my-2">
+    <li class="breadcrumb-item"><a href="{% url 'tasks' %}">TASKS</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ task.starter.username|upper}}-{{task.id}}</li>
 </ol>
 {% endblock %}
 
 
 {% block tasks  %}
-<div class="row my-3">
+<div class="row my-2">
     <div class="col">
         <div class="card bg-white shadow">
             <!--<div class="card-header bg-transparent border-0">-->
@@ -30,18 +31,33 @@
                             <th>Success Criteria</th>
                             <th>Starter</th>
                             <th>Status</th>
-                            <th>Expires</th>
+                            <!--<th>Expires</th>-->
                             <!--<th>Last Update</th>-->
                             <th></th><!--actions-->
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{{ task.name }}</td>
-                            <td class="text-muted">{{ task.success_criteria }}</td>
+                            <td class="heading">
+                                <p>
+                                {% if task.is_expired %}
+                                    <small class="text-muted">Expired {{ task.expires_on | date:"D, d M, Y" }} : </small>
+                                {% else %}
+                                    <small class="text-muted">Expires {{ task.expires_on | date:"D, d M, Y" }} :</small>
+                                {% endif %}
+                                </p>
+                                <p>
+                                    {{ task.name }}
+                                </p>
+                            </td>
+                            <td>
+                                <p>
+                                    {{ task.success_criteria }}
+                                </p>
+                            </td>
                             <!--<td class="align-middle">{{ task.starter.username|title }}</td>-->
                             <td class="align-middle">
-                                <span class="avatar avatar-sm bg-purple">
+                                <span class="avatar avatar-sm bg-purple shadow rounded">
                                     {{ task.avatar_text| upper }}
                                 </span>
                             </td>
@@ -49,19 +65,9 @@
                             <td class="align-middle">
                                 {{ task.status.get_html_badge }} <!-- TODO: update task status once claimed -->
                             </td>
-                        {% if task.is_expired %}
-                            <td class="align-middle"><span class="text-muted">Expired {{task.expires_on |naturaltime }}</span></td>
-                        {% else %}
-                            <td class="align-middle">{{ task.expires_on | date:"D, d M, Y" }}
-                                <br><small class="text-muted">({{ task.expires_on |naturaltime }})</small>
-                            </td>
-                        {% endif %}
-                            <!--<td class="align-middle">{{ task.expires_on | date:"D, d M, Y" }}-->
-                                <!--<small class="text-muted">[<i>{{ task.expires_on |naturaltime }}</i>]</small>-->
-                            <!--</td>-->
-                            <!--<td class="align-middle">{{ task.expires_on|naturaltime }}</td>-->
-                            <!--<td class="align-middle">{{ task.last_updated }}</td>-->
-                            <td class="align-middle"></td>
+
+                            <!--<td></td>-->
+                            <!--<td class="align-middle"></td>-->
                         </tr>
                     </tbody>
                 </table>
@@ -72,9 +78,11 @@
                     {% if task.starter == user and task.claims.count < 1 and user.is_parent and task.status|upper != "PENDING PAYMENT" and task.status|upper != "PAID" %}
                     <!--prevent task edit and delete if a claim exists-->
                         <a href="{% url 'edit_task' task.pk %}" class="btn btn-info btn-sm" role="button" aria-pressed="true">
+                            <i class="fa fa-pencil-square"></i>
                             Edit
                         </a>
                         <a href="{% url 'delete_task' task.pk %}" class="btn btn-danger btn-sm" role="button" aria-pressed="true">
+                            <i class="fa fa-trash"></i>
                             Delete
                         </a>
                     {% endif %}
@@ -87,6 +95,11 @@
                         </a>
                     {% endif %}
                 {% endif %}
+
+                {% for x in task.grade %}
+                    <span class="badge badge-info float-right mr-1 my-1">Grade {{x}}</span>
+                {% endfor %}
+
             </div>
         </div>
     </div>
@@ -96,26 +109,34 @@
 <!--claims card-->
 
 
-<div class="row">
+<div class="row my-2">
     <div class="col">
-        <div class="card bg-secondary">
+        <div class="card bg-secondary shadow">
             <div class="card-header bg-transparent border-0">
 
-                <h4 class="text-primary">
-                    Claim Reward
+                <h5 class="text-primary">
+                    <!--<i class="fa fa-trophy"></i>-->
+                    <img class="bg-transparent avatar avatar-sm rounded"
+                        src="{% static '/assets/img/brand/carrot_gold.png' %}">
+                    Reward Claim
+
                     <span class="badge badge-pill badge-info">{{ task.claims.count }}</span>
 
                     <div class="float-right">
                         {% if task.starter != user and user.is_teacher and task.claims.count < 1 %}
                             <!--parents cannot raise a claim , only teachers can-->
                             <a href="{% url 'new_claim_to_task' task.pk %}" class="btn btn-icon btn-3 btn-primary btn-md" role="button" aria-pressed="true">
-                                <span class="btn-inner--icon"><i class="ni ni-atom"></i></span>
+                                <span class="btn-inner--icon">
+                                    <!--<i class="ni ni-atom"></i>-->
+                                    <img class="bg-transparent"
+                                        src="{% static '/assets/img/brand/flagGreen2.png' %}">
+                                </span>
                                 Claim
                             </a>
                             <!--TODO: prevent a user from claiming the same task more than once-->
                         {% endif %}
                     </div>
-                </h4>
+                </h5>
 
                 <div class="table-responsive my-1">
 
@@ -124,40 +145,59 @@
                         <table class="table align-items-center table-white table-flush">
                             <thead class="thead-light">
                                 <tr>
-                                    <th scope="col">Claimed By</th>
+                                    <th scope="col">Teacher</th>
+                                    <th scope="col"></th>
                                     <th scope="col">Message</th>
                                     <th scope="col">Claim Status</th>
-                                    <th scope="col">Claimed</th>
+                                    <!--<th scope="col">Claimed</th>-->
                                     <th scope="col">Actions</th>
+                                    <!--<th scope="col"></th>-->
+
                                 </tr>
                             </thead>
                             <tbody>
                             {% for claim in task.claims.all %}
                                 <tr>
-                                    <td class="align-middle">
-                                        {{ claim.created_by.username}}
-                                        <small>(Claimed: {{ claim.created_by.claims.count }} )</small>
-                                        <!--TODO: Add Karma or UserType based on # posts. If else-->
+                                    <td class="align-middle" colspan="2">
+                                        <small>
+                                            <img class="avatar avatar-sm" src="/static/assets/img/brand/players/bunny1_jump.png">
+                                            {{ claim.created_by.username}}
+                                            <br><strong>Claims:</strong> {{ claim.created_by.claims.count }}
+                                            <br>{{ claim.created_at |naturaltime }}
+                                            <!--TODO: Add Karma or UserType based on # posts. If else-->
+                                        </small>
                                     </td>
-                                    <td class="align-middle">{{ claim.message_snippet }} </td>
+                                    <td class="align-middle">
+                                        <small>
+                                            {{ claim.message }}
+                                        </small>
+                                    </td>
                                     <td class="align-middle">
                                         {{ claim.status.get_html_badge }}
                                     </td>
-                                    <td class="align-middle">{{ claim.created_at |naturaltime }}</td>
-                                    <td class="align-middle">
+                                    <!--<td class="align-middle">{{ claim.created_at |naturaltime }}</td>-->
+                                    <td class="align-middle justify-content-end">
 
                                 {% if claim.created_by == user %}
-                                    <a href="{% url 'edit_claim' claim.task.pk claim.pk %}" class="btn btn-info btn-sm" role="button" aria-pressed="true">
-                                    Edit</a>
+                                    <a href="{% url 'edit_claim' claim.task.pk claim.pk %}" class="btn btn-info btn-sm my-1" role="button" aria-pressed="true">
+                                        <i class="fa fa-pencil-square"></i>
+                                        Edit
+                                    </a>
                                     <a href="{% url 'delete_claim' claim.task.pk claim.pk %}" class="btn btn-danger btn-sm" role="button" aria-pressed="true">
-                                    Delete</a>
+                                        <i class="fa fa-trash"></i>
+                                        Delete
+                                    </a>
                                 {% endif %}
                                 {% if task.starter == user %}
 
-                                    <a href="{% url 'new_reply_to_task' task.pk %}" class="btn btn-warning btn-sm" role="button" aria-pressed="true">
-                                        Request more info</a>
-                                    <a href="{% url 'approve_claim' claim.task.pk claim.pk %}" class="btn btn-success btn-sm" role="button" aria-pressed="true">
-                                        Approve</a>
+                                    <a href="{% url 'new_reply_to_task' task.pk %}" class="btn btn-warning btn-sm my-1" role="button" aria-pressed="true">
+                                        <i class="fa fa-info-circle"></i>
+                                        Request Info
+                                    </a>
+                                    <a href="{% url 'approve_claim' claim.task.pk claim.pk %}" class="btn btn-success btn-sm my-1" role="button" aria-pressed="true">
+                                        <i class="fa fa-check-square"></i>
+                                        Approve
+                                    </a>
                                     <!--<a href="#" class="btn btn-danger btn-sm" role="button" aria-pressed="true">-->
                                         <!--Reject</a>-->
                                     <!--No rejections allowed-->
@@ -196,21 +236,28 @@
 
     <div class="row">
         <div class="col">
-            <div class="card bg-secondary">
+            <div class="card bg-secondary shadow">
 
                 <div class="card-header bg-transparent border-0">
 
-                    <h4 class="text-primary mb-3">
+                    <h5 class="text-primary mb-3">
+                        <!--<i class="fa fa-comments-o"></i>-->
+                        <img class="bg-transparent avatar avatar-sm rounded"
+                            src="{% static '/assets/img/brand/head_focus.png' %}">
                         Replies
                         <span class="badge badge-pill badge-info">{{ task.posts.count }}</span>
 
                         <div class="float-right">
-                            <a href="{% url 'new_reply_to_task' task.pk %}" class="btn btn-icon btn-3 btn-primary btn-md" role="button" aria-pressed="true">
-                            <span class="btn-inner--icon"><i class="ni ni-atom"></i></span>
+                            <a href="{% url 'new_reply_to_task' task.pk %}" class="btn btn-icon btn-3 btn-primary btn-md my-1" role="button" aria-pressed="true">
+                            <span class="btn-inner--icon">
+                                <!--<i class="ni ni-atom"></i>-->
+                                <img class="bg-transparent"
+                                    src="{% static '/assets/img/brand/mushroom_red.png' %}">
+                            </span>
                                 Reply
                             </a>
                         </div>
-                    </h4>
+                    </h5>
 
                     <div class="table-responsive">
                     {% if task.posts.count > 0 %}
@@ -218,26 +265,33 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th scope="col">User</th>
-                                    <th scope="col">Message</th>
-                                    <th scope="col">Replied</th>
                                     <th scope="col"></th>
+                                    <th scope="col">Message</th>
+                                    <th scope="col">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                             {% for post in posts %}
                                 <tr>
-                                    <td class="align-middle">{{ post.created_by.username}}
-                                        <small>(Posts: {{ post.created_by.posts.count }})</small>
+                                    <td class="align-middle" colspan="2">
+                                        <img class="avatar avatar-sm" src="/static/assets/img/brand/players/bunny2_jump.png">
+                                        {{ post.created_by.username}}
+                                        <br><small><strong>Posts: </strong>{{ post.created_by.posts.count }}</small>
+                                        <br><small><strong>Replied: </strong>{{ post.created_at |naturaltime }}</small>
                                     <!--TODO: Add Karma or UserType based on # posts. If else-->
                                     </td>
-                                    <td class="align-middle">{{ post.message }}</td>
-                                    <td class="align-middle">{{ post.created_at |naturaltime }}</td>
-                                    <td class="align-middle">
+                                    <td class="align-middle"><small>{{ post.message }}</small></td>
+                                    <!--<td class="align-middle">{{ post.created_at |naturaltime }}</td>-->
+                                    <td class="align-middle justify-content-end">
                                     {% if post.created_by == user %}
-                                        <a href="{% url 'edit_post' post.task.pk post.pk %}" class="btn btn-info btn-sm" role="button" aria-pressed="true">
-                                            Edit</a>
+                                        <a href="{% url 'edit_post' post.task.pk post.pk %}" class="btn btn-info btn-sm my-1" role="button" aria-pressed="true">
+                                            <i class="fa fa-pencil"></i>
+                                            <!--Edit-->
+                                        </a>
                                         <a href="{% url 'delete_post' post.task.pk post.pk %}" class="btn btn-danger btn-sm" role="button" aria-pressed="true">
-                                            Delete</a>
+                                            <i class="fa fa-trash"></i>
+                                            <!--Delete-->
+                                        </a>
                                     {% endif %}
                                         <!--<a href="#" class="btn btn-secondary btn-sm active" role="button" aria-pressed="true">-->
                                         <!--Reply</a>-->

@@ -3,19 +3,67 @@
 {% block title %}Edit Claim{% endblock %}
 
 {% block breadcrumb %}
-<ol class="breadcrumb bg-light my-2">
-    <li class="breadcrumb-item"><a href="{% url 'tasks' %}">Tasks</a></li>
-    <li class="breadcrumb-item" aria-current="page"><a href="{% url 'task_replies' claim.task.pk %}">{{ claim.task.name }}</a></li>
-    <li class="breadcrumb-item" aria-current="page"><a href="{% url 'task_replies' claim.task.pk %}">{{ claim.message }}</a></li>
-    <li class="breadcrumb-item active">Edit claim</li>
+<ol class="breadcrumb bg-transparent my-2">
+    <li class="breadcrumb-item"><a href="{% url 'tasks' %}">TASKS</a></li>
+    <li class="breadcrumb-item" aria-current="page"><a href="{% url 'task_replies' claim.task.pk %}">
+        <!--{{ claim.task.name }}-->
+        {{ claim.task.starter.username|upper}}-T{{claim.task.id}}
+    </a></li>
+    <li class="breadcrumb-item" aria-current="page"><a href="{% url 'task_replies' claim.task.pk %}">
+        <!--{{ claim.message }}-->
+        {{ claim.task.starter.username|upper}}-T{{claim.task.id}}-C{{claim.id}}
+    </a></li>
+    <li class="breadcrumb-item active">EDIT REWARD CLAIM</li>
 </ol>
 {% endblock %}
 
 {% block editreply %}
-  <form method="post" class="mb-4" novalidate>
-    {% csrf_token %}
-    {% include 'includes/form.html' %}
-    <button type="submit" class="btn btn-success btn-sm">Save changes</button>
-    <a href="{% url 'task_replies' claim.task.pk %}" class="btn btn-outline-secondary btn-sm" role="button">Cancel</a>
-  </form>
+
+<div class="row justify-content-center">
+    <div class="col col-lg-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary border-0">
+                <h5 class="text-neutral my-0">
+                    <img class="avatar avatar-sm bg-white mr-2" src="/static/assets/img/brand/players/bunny2_jump.png">
+                    Edit my reward claim
+                </h5>
+            </div>
+
+            <div class="container">
+                <form method="post" class="mb-4" novalidate>
+                    {% csrf_token %}
+                    {% include 'includes/form.html' %}
+                    <button type="submit" class="btn btn-success btn-md my-1">
+                        <i class="fa fa-check-square"></i>
+                        Save Changes
+                    </button>
+                    <a href="{% url 'task_replies' claim.task.pk %}" class="btn btn-secondary btn-md my-1" role="button">
+                        <i class="fa fa-times-circle"></i>
+                        Cancel
+                    </a>
+                </form>
+                <p class="lead">
+                    <small>
+                    <strong>TASK : </strong>{{claim.task.name}}
+                    </small>
+                </p>
+                <p class="lead">
+                    <small>
+                        <strong>SUCCESS CRITERIA : </strong>{{claim.task.success_criteria}}
+                    </small>
+                </p>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'task_replies' claim.task.pk %}">
+                    <i class="fa fa-long-arrow-left"></i>
+                    BACK TO TASK
+                </a>
+                <a href="{% url 'tasks' %}" class="float-right">
+                    DASHBOARD
+                    <i class="fa fa-long-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

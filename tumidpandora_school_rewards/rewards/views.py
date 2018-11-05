@@ -12,11 +12,14 @@ from django.utils import timezone
 from django.utils.decorators import method_decorator
 
 from .models import Task, Post, Reward, Status, Claim, Parent, Teacher, User, School, Payment
-from .forms import NewTaskForm, NewReplyForm, NewClaimForm, ClaimApprovalForm, NewSchoolForm, NewPaymentForm
+from .forms import (NewTaskForm, NewReplyForm, NewClaimForm, ClaimApprovalForm, NewSchoolForm, NewPaymentForm,
+                    TaskUpdateForm, ClaimUpdateForm)
 
 
 from django.core.exceptions import ObjectDoesNotExist
 
+from django.contrib import messages
+from .filters import TaskFilter
 import json
 
 
@@ -35,14 +38,20 @@ def tasks_view(request):
         else:
             school = request.user.teacher.school
     except ObjectDoesNotExist:
-        school = None  # TODO: Admin should see tasks for all schools
+        school = None
+        # TODO: Admin should see tasks for all schools
 
     # TODO: Filter tasks by school - DONE.
     tasks = Task.objects.filter(school=school).order_by('-last_updated')
+    task_filter = TaskFilter(request.GET, queryset=tasks)
 
     page = request.GET.get('page', 1)
 
-    paginator = Paginator(tasks, 4)
+    page_size = 5  # shows #tasks in one page
+
+    paginator = Paginator(task_filter.qs, page_size)
+    # paginator = Paginator(tasks, 1)
+    # changed from tasks to task_filter.qs
 
     try:
         tasks = paginator.page(page)
@@ -60,10 +69,13 @@ def tasks_view(request):
 
     # TODO: For pie to work, it needs {name:, y:} for series data
 
-    chart_height = 200  # applies to all charts
+    chart_height = 175  # applies to all charts
 
     # REF: https://simpleisbetterthancomplex.com/tutorial/2016/12/06/how-to-create-group-by-queries.html
-    chart_left_data = Task.objects.filter(school=school).values('reward__name').annotate(Sum('reward__amount'))
+    # status 7 is 'PAID'
+    chart_left_data = Task.objects.filter(school=school).filter(status=7).values('reward__name')\
+        .annotate(Sum('reward__amount'))
+    # paid_rewards_total = chart_left_data[0]['reward__amount__sum']
     chart_left_categories = list()
     chart_left_counts_series = list()
 
@@ -84,7 +96,7 @@ def tasks_view(request):
 
     chart_left = {
         'chart': {'type': 'pie', 'height': chart_height},  # column, pie, area, line
-        'title': {'text': '$ Rewards'},
+        'title': {'text': '$ Rewards Paid YTD'},
         'tooltip': {
             'pointFormat': '{series.name}: <b>${point.y}</b>'
         },
@@ -151,7 +163,7 @@ def tasks_view(request):
 
     chart_middle = {
         'chart': {'type': 'bar', 'height': chart_height},  # column, pie, area, line
-        'title': {'text': '# Task Statuses'},
+        'title': {'text': '# Task Statuses YTD'},
         'tooltip': {
             'pointFormat': '{series.name}: <b>{point.y}</b>'
         },
@@ -209,7 +221,7 @@ def tasks_view(request):
 
     chart_right = {
         'chart': {'type': 'column', 'height': chart_height},  # column, pie, area, line
-        'title': {'text': '# Reward Claims'},
+        'title': {'text': '# Reward Claims YTD'},
         'tooltip': {
             'pointFormat': '{series.name}: <b>{point.y}</b>'
         },
@@ -234,31 +246,12 @@ def tasks_view(request):
     dump_middle = json.dumps(chart_middle)
     dump_right = json.dumps(chart_right)
 
-    return render(request, 'tasks.html', {'tasks': tasks, 'school': school,
-                                          'chart_left': dump_left,
+    return render(request, 'tasks.html', {'tasks': tasks, 'school': school, 'task_filter': task_filter,
+                                          'chart_left': dump_left, #"paid_rewards_total": paid_rewards_total,
                                           'chart_middle': dump_middle,
                                           'chart_right': dump_right
                                           })
     # pass
-
-
-'''
-@login_required
-class TaskListView(ListView):
-    model = Task
-    context_object_name = 'tasks'
-    template_name = 'tasks.html'
-    paginated_by = 20
-
-    def get_context_data(self, **kwargs):
-        kwargs['tasks'] = self.tasks
-        return super().get_context_data(**kwargs)
-
-    def get_queryset(self):
-        self.tasks = get_object_or_404(Task)
-        queryset = self.tasks.order_by('-last_updated').annotate(replies=Count('tasks') - 1)
-        return queryset
-'''
 
 
 @login_required
@@ -286,7 +279,7 @@ def task_replies_view(request, pk):  # task detail view
 
     page = request.GET.get('page', 1)
 
-    paginator = Paginator(queryset, 2)
+    paginator = Paginator(queryset, 10)
 
     try:
         posts = paginator.page(page)
@@ -329,9 +322,14 @@ def new_task_view(request):  # create new task form
                 starter=request.user,
                 school=school,
                 status=status,
-                reward=reward
+                reward=reward,
+                grade=form.cleaned_data.get('grade')
             )
+            messages.success(request, 'Your task was created successfully!', extra_tags='alert-success')
             return redirect('tasks')
+        else:
+            messages.error(request, 'Please fix the errors and retry.', extra_tags='alert-warning')
+
     else:
         form = NewTaskForm()
     return render(request, 'new_task.html', {"form": form, "school": school})
@@ -364,7 +362,10 @@ def new_reply_to_task_view(request, pk):  # new reply / post to task
                 task=task,
                 created_by=request.user
             )
+            messages.success(request, 'Thank you! Your reply was created successfully.')
             return redirect('task_replies', pk=task.pk)
+        else:
+            messages.warning(request, 'Apologies, please fix the errors and retry.')
     else:
         form = NewReplyForm()
     return render(request, 'new_reply_to_task.html', {"task": task, "form": form,
@@ -405,7 +406,10 @@ def new_claim_to_task_view(request, pk):  # new reply / post to task
                 created_by=request.user
                 # TODO: Update task.status to IN PROGRESS
             )
+            messages.success(request, 'Thank you! Your reward claim # %s was created successfully.' % claim.id)
             return redirect('task_replies', pk=task.pk)
+        else:
+            messages.info(request, 'Please fix any errors below and retry.')
     else:
         form = NewClaimForm()
     return render(request, 'new_claim_to_task.html', {"task": task, "form": form,
@@ -428,8 +432,11 @@ def new_claim_to_task_view(request, pk):  # new reply / post to task
 class TaskUpdateView(UpdateView):
 
     model = Task
-    fields = ('name', 'success_criteria', 'expires_on', 'reward')
+
     # TODO: Edit / Update from fields need to look better
+    # Ref: https://stackoverflow.com/questions/42046636/change-widget-from-select-to-check-box-in-generic-class-based-view
+    # fields = ('name', 'grade', 'success_criteria', 'expires_on', 'reward')
+    form_class = TaskUpdateForm
 
     template_name = 'edit_task.html'
     pk_url_kwarg = 'pk'
@@ -446,6 +453,7 @@ class TaskUpdateView(UpdateView):
         task.updated_by = self.request.user
         task.updated_at = timezone.now()
         task.save()
+        messages.warning(self.request, "Task updated successfully!")
         return redirect('task_replies', pk=task.pk)
 
 
@@ -481,6 +489,10 @@ class PostUpdateView(UpdateView):
     template_name = 'edit_reply.html'
     pk_url_kwarg = 'post_pk'
     context_object_name = 'post'
+
+    def get_form(self):
+        form = super(PostUpdateView, self).get_form()
+        return form
 
     # TODO: fix for other users editing any posts / replies problem
     def get_queryset(self):
@@ -523,7 +535,12 @@ class PostDeleteView(DeleteView):
 class ClaimUpdateView(UpdateView):
 
     model = Claim
-    fields = ('message', )
+
+    # TODO: Edit / Update from fields need to look better
+    # Ref: https://stackoverflow.com/questions/42046636/change-widget-from-select-to-check-box-in-generic-class-based-view
+    # fields = ('message', )
+    form_class = ClaimUpdateForm
+
     template_name = 'edit_claim.html'
     pk_url_kwarg = 'claim_pk'
     context_object_name = 'claim'
@@ -539,6 +556,7 @@ class ClaimUpdateView(UpdateView):
         claim.updated_by = self.request.user
         claim.updated_at = timezone.now()
         claim.save()
+        messages.warning(self.request, "Reward Claim updated successfully!")
         return redirect('task_replies', pk=claim.task.pk)  # , post_pk=post.pk)
 
 
@@ -648,7 +666,10 @@ def new_school_view(request):  # create new school
                 zip_code=form.cleaned_data.get('zip_code'),
                 paypal_account=form.cleaned_data.get('paypal_account'),
             )
+            # messages.success(request, 'Your school was registered successfully!')
             return redirect('login')
+        # else:
+        #     messages.warning(request, 'Please correct the errors below')
     else:
         form = NewSchoolForm()
     return render(request, 'new_school.html', {"form": form})
