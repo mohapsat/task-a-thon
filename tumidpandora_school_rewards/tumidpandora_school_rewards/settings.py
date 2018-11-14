@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 from django.contrib.messages import constants as messages
+from decouple import config, Csv  # will search for a local file named .env to set the configuration variables and will fall back to the environment variables
+import dj_database_url
+
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -22,13 +25,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '$&cfx&r84&k3#k)bv%7%1dzcx59$&cosi18r8*688)#=73%yfc'
+SECRET_KEY = config('SECRET_KEY')
+# check in .env
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
-
+# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
 # Application definition
 
@@ -84,13 +89,18 @@ WSGI_APPLICATION = 'tumidpandora_school_rewards.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
+DATABASES = {
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL')
+    )
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -145,9 +155,8 @@ LOGIN_URL = 'login'
 
 # STRIPE
 
-
-STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_SECRET_KEY", "pk_test_GiynrCIrmW7a61YFpctiPJwk")
-STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "sk_test_bGf7Zxwky4eLni7mkpezTwSd")
+STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY')
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
 
 PREMIUM_MEMBERSHIP_COST = "299.99"
 STRIPE_PREMIUM_CHARGE = PREMIUM_MEMBERSHIP_COST.replace(".", "")  # replace period for stripe charge
