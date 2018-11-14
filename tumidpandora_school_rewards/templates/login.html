@@ -16,6 +16,13 @@
         <span></span>
       </div>
       <div class="container pt-lg-md">
+
+        <div class="row justify-content-center">
+            <div class="col-lg-5">
+            {% include 'includes/messages.html' %}
+            </div>
+        </div>
+
         <div class="row justify-content-center">
           <div class="col-lg-5">
             <div class="card bg-secondary shadow border-0">
@@ -27,6 +34,29 @@
               </div>
               <!--<div class="card-body px-lg-5 py-lg-5">-->
               <div class="card-body">
+            <!--<div>-->
+                <!--&lt;!&ndash;<div class="row">&ndash;&gt;-->
+                  <!--<div class="col-lg-12 my-1">-->
+                    <!--<a href="{% url 'parent_signup' %}" class="btn btn-light btn-md btn-block" role="button" aria-pressed="true">-->
+                      <!--<i class="fa fa-user-circle-o"></i>-->
+                      <!--<strong>PARENTS SIGNUP</strong>-->
+                    <!--</a>-->
+                  <!--</div>-->
+                  <!--<div class="col-lg-12 my-1">-->
+                    <!--<a href="{% url 'teacher_signup' %}" class="btn btn-white btn-md btn-block" role="button" aria-pressed="true">-->
+                      <!--<i class="fa fa-user-circle-o"></i>-->
+                      <!--<strong>TEACHERS SIGNUP</strong></a>-->
+                  <!--</div>-->
+                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                    <!--<div class="col-lg-12 my-1">-->
+                      <!--<a href="{% url 'new_school' %}" class="btn btn-info btn-md btn-block" role="button" aria-pressed="true">-->
+                        <!--<i class="fa fa-book"></i>-->
+                        <!--<strong>REGISTER MY SCHOOL</strong>-->
+                      <!--</a>-->
+                    <!--</div>-->
+            <!--</div>-->
+
+
                 <!--<div class="text-center text-muted mb-4">-->
                   <!--<small>Or sign in with credentials</small>-->
                 <!--</div>-->
@@ -35,14 +65,23 @@
                   <input type="hidden" name="next" value="{{ next }}">
                   {% include 'includes/form.html' %}
 
-                  <div class="custom-control custom-control-alternative custom-checkbox">
-                    <input class="custom-control-input" id="customCheckLogin" type="checkbox"> <!--checked="checked"-->
-                    <label class="custom-control-label" for="customCheckLogin">
-                      <span>Remember me</span>
-                    </label>
-                  </div>
+                  <!--<div class="custom-control custom-control-alternative custom-checkbox">-->
+                    <!--<input class="custom-control-input" id="customCheckLogin" type="checkbox"> &lt;!&ndash;checked="checked"&ndash;&gt;-->
+                    <!--<label class="custom-control-label" for="customCheckLogin">-->
+                      <!--<span>Remember me</span>-->
+                    <!--</label>-->
+                  <!--</div>-->
+
+                  <p class="required">
+                    <i class="fa fa-exclamation-circle"></i>
+                    By submitting this information, you agree to our <a href="#" target="_blank">terms</a> and have
+                    read and accept our <a href="#" target="_blank">privacy policies.</a></p>
+
                   <div class="text-center">
-                    <button type="submit" class="btn btn-primary my-3">Log In</button>
+                    <button type="submit" class="btn btn-primary my-1">
+                      <i class="fa fa-lock"></i>
+                      Log In
+                    </button>
                   </div>
                 </form>
 

@@ -22,9 +22,24 @@ from django.contrib import messages
 from .filters import TaskFilter
 import json
 
+from tumidpandora_school_rewards import settings
+
 
 def home_view(request):
     return render(request, 'home.html')
+
+
+def aboutus_view(request):
+    return render(request, 'about_us.html')
+
+
+def privacy_view(request):
+    return render(request, 'privacy.html')
+
+
+def pricing_view(request):
+    return render(request, 'pricing.html', {"email_support": settings.EMAIL_SUPPORT,
+                                            "premium_cost": settings.PREMIUM_MEMBERSHIP_COST})
 
 
 # FnBasedVw implementation - refer to ClsBsdVw below
@@ -35,6 +50,7 @@ def tasks_view(request):
     try:
         if request.user.is_parent:
             school = request.user.parent.school
+        # elif request.user.is_teacher and request.school.is_active:
         else:
             school = request.user.teacher.school
     except ObjectDoesNotExist:
@@ -288,6 +304,7 @@ def task_replies_view(request, pk):  # task detail view
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
 
+    # messages.info(request, 'THIS SCREEN HAS MORE DETAILS ON THE ASSIGNMENT.')
     return render(request, 'task_replies.html', {"task": task, 'posts': posts,
                                                  'claims': claims, 'school': school})
 
@@ -325,7 +342,7 @@ def new_task_view(request):  # create new task form
                 reward=reward,
                 grade=form.cleaned_data.get('grade')
             )
-            messages.success(request, 'Your task was created successfully!', extra_tags='alert-success')
+            messages.success(request, 'AWESOME! YOUR ASSIGNMENT WAS CREATED SUCCESSFULLY!')
             return redirect('tasks')
         else:
             messages.error(request, 'Please fix the errors and retry.', extra_tags='alert-warning')
@@ -362,7 +379,7 @@ def new_reply_to_task_view(request, pk):  # new reply / post to task
                 task=task,
                 created_by=request.user
             )
-            messages.success(request, 'Thank you! Your reply was created successfully.')
+            messages.success(request, 'AWESOME! YOUR REPLY WAS CREATED SUCCESSFULLY!')
             return redirect('task_replies', pk=task.pk)
         else:
             messages.warning(request, 'Apologies, please fix the errors and retry.')
@@ -614,11 +631,13 @@ def claim_approve_view(request, pk, claim_pk):  # new reply / post to task
             Claim.objects.filter(task=task).update(status=Status.APPROVED)  # i.e. update task status to in progress
 
             # claim.save()
+            messages.success(request, 'COOL! THANK YOU FOR APPROVING THE CLAIM!')
             return redirect('task_replies', pk=pk)
     else:
         claim = Claim.objects.get(pk=claim_pk)
         form = ClaimApprovalForm()
-    return render(request, 'approve_claim.html', {"claim": claim, "form": form, "school": school})
+    return render(request, 'approve_claim.html', {"claim": claim, "form": form,
+                                                  "school": school})
     pass
 
 
@@ -641,6 +660,7 @@ def new_payment_to_task_view(request, pk):
             payment = form.save(commit=False)
             payment.created_by = request.user
             payment.save()
+            messages.success(request, 'THANKS! YOUR PAYMENT WAS RECORDED SUCCESSFULLY!.')
             return redirect('task_replies', pk=pk)
     else:
         # payment = Payment.objects.get(pk=payment_pk)
@@ -656,8 +676,8 @@ def new_school_view(request):  # create new school
         form = NewSchoolForm(request.POST)
 
         if form.is_valid():
-            school = form.save(commit=False)
-            school.save()  # TODO: Enable after migrating , added null=True for FKs
+            # school = form.save(commit=False)
+            # school.save()  # TODO: Enable after migrating , added null=True for FKs
             school = School.objects.create(
                 name=form.cleaned_data.get('name'),
                 street_address=form.cleaned_data.get('street_address'),
@@ -665,9 +685,10 @@ def new_school_view(request):  # create new school
                 state=form.cleaned_data.get('state'),
                 zip_code=form.cleaned_data.get('zip_code'),
                 paypal_account=form.cleaned_data.get('paypal_account'),
+                requested_by_email=form.cleaned_data.get('requested_by_email')
             )
-            # messages.success(request, 'Your school was registered successfully!')
-            return redirect('login')
+            messages.info(request, 'SUCCESS! NEW SCHOOL REQUEST SUBMITTED.')
+            return redirect('new_school')
         # else:
         #     messages.warning(request, 'Please correct the errors below')
     else:

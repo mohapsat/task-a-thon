@@ -9,7 +9,9 @@
 {% block breadcrumb %}
 <ol class="breadcrumb bg-transparent my-2">
     <li class="breadcrumb-item"><a href="{% url 'tasks' %}">TASKS</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'task_replies' task.pk %}">{{ task.starter.username|upper}}-{{task.id}}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'task_replies' task.pk %}">
+        {{ task.starter.username|upper}}-{{task.id}}
+    </a></li>
     <li class="breadcrumb-item active" aria-current="page">NEW REPLY</li>
 </ol>
 {% endblock %}

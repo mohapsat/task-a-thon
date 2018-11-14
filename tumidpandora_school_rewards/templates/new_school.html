@@ -15,14 +15,21 @@
         <span></span>
         <span></span>
       </div>
-      <div class="container pt-lg-md">
+      <div class="container">
+
         <div class="row justify-content-center">
-          <div class="col-lg-6">
+            <div class="col-lg-7">
+            {% include 'includes/messages.html' %}
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-lg-7">
             <div class="card bg-secondary shadow border-0">
-              <div class="card-header bg-gradient-primary pb-0">
+              <div class="card-header bg-primary pb-0">
                 <div class="mb-md-1 text-center text-white">
                   <img class="avatar avatar-sm bg-white" src="{% static '/assets/img/brand/players/bunny1_jump.png' %}">
-                  WELCOME, PLEASE ADD YOUR SCHOOL
+                  WELCOME, PLEASE <strong><u>FIND</u></strong> OR <strong><u>REQUEST TO ADD</u></strong> YOUR SCHOOL
                 </div>
               </div>
               <!--<div class="card-body px-lg-5 py-lg-5">-->
@@ -36,16 +43,23 @@
                   <input type="hidden" name="next" value="{{ next }}">
                   {% include 'includes/form.html' %}
 
-                  <div class="custom-control custom-control-alternative custom-checkbox">
-                    <input class="custom-control-input" id="customCheckLogin" type="checkbox" required>
-                    <label class="custom-control-label" for="customCheckLogin">
-                      <span>I accept the
-                        <a href="">privacy policy</a>
-                      </span>
-                    </label>
-                  </div>
+                  <p class="required">
+                    <i class="fa fa-exclamation-circle"></i>
+                    By submitting this information, you agree to our <a href="#" target="_blank">terms</a> and have
+                    read and accept our <a href="#" target="_blank">privacy policies.</a></p>
+                  <!--<div class="custom-control custom-control-alternative custom-checkbox">-->
+                    <!--<input class="custom-control-input" id="customCheckLogin" type="checkbox" required>-->
+                    <!--<label class="custom-control-label" for="customCheckLogin">-->
+                      <!--<span>I accept the-->
+                        <!--<a href="">privacy policy</a>-->
+                      <!--</span>-->
+                    <!--</label>-->
+                  <!--</div>-->
                   <div class="text-center">
-                    <button type="submit" class="btn btn-primary btn-block my-3">Add My School</button>
+                    <button type="submit" class="btn btn-primary btn-block my-3">
+                      <i class="fa fa-check-circle"></i>
+                      SUBMIT REQUEST TO ADD SCHOOL
+                    </button>
                   </div>
                 </form>
 

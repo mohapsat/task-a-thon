@@ -136,7 +136,7 @@ STATICFILES_DIRS = [
 
 AUTH_USER_MODEL = 'rewards.User'
 
-LOGOUT_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'login'
 LOGIN_REDIRECT_URL = 'tasks'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

@@ -18,6 +18,7 @@ from tumidpandora_school_rewards import settings
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import UpdateView
+from django.contrib import messages
 
 from django.http import HttpResponse
 
@@ -50,7 +51,7 @@ def signup_view(request):
 @method_decorator(login_required, name='dispatch')
 class UserUpdateView(UpdateView):
     model = User
-    fields = ('first_name', 'last_name', 'email', 'username', )
+    fields = ('first_name', 'last_name', 'email', 'username')
     template_name = 'my_account.html'
     success_url = reverse_lazy('tasks')
 
@@ -66,6 +67,7 @@ def parent_signup_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
+            messages.warning(request, "WELCOME! NEW PARENT ACCOUNT CREATED!")
             return redirect('tasks')
     else:
         form = ParentSignUpForm()
@@ -81,6 +83,7 @@ def teacher_signup_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
+            messages.warning(request, "WELCOME! NEW TEACHER ACCOUNT CREATED!")
             return redirect('tasks')
     else:
         form = TeacherSignUpForm()
@@ -351,13 +354,13 @@ def on_user_logged_in(sender, request, user, **kwargs):
         messages.success(request, msg)
 
 
-# @receiver(user_logged_out)
-# def on_user_logged_out(sender, request, user, **kwargs):
-#         # if user:
-#         msg = 'You have securely logged out. Thank you.'
-#         # else:
-#             # msg = 'You have securely logged out of here. Thank you'
-#         messages.success(request, msg)
+@receiver(user_logged_out)
+def on_user_logged_out(sender, request, user, **kwargs):
+        if user:
+            msg = 'YOU HAVE SUCCESSFULLY LOGGED OUT'
+        else:
+            msg = None  # TODO: Msg shows up on login as well for some reason
+        messages.info(request, msg)
 
 
-
+user_logged_out.connect(on_user_logged_out)

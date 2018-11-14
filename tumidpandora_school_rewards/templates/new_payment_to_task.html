@@ -8,54 +8,78 @@
 
 {% block breadcrumb %}
 <ol class="breadcrumb bg-transparent my-2">
-    <li class="breadcrumb-item"><a href="{% url 'tasks' %}">Tasks</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'task_replies' task.pk %}">{{ task.name }}</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Payment</li>
+    <li class="breadcrumb-item"><a href="{% url 'tasks' %}">TASKS</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'task_replies' task.pk %}">
+        {{ task.starter.username|upper}}-{{task.id}}
+    </a></li>
+    <li class="breadcrumb-item active" aria-current="page">PAYMENT</li>
 </ol>
 {% endblock %}
 
 {% block newpaymenttotask %}
 
+<div class="row justify-content-center">
+    <div class="col col-lg-12">
+        <div class="card shadow">
+            <div class="card-header bg-primary border-0">
+                <h5 class="text-neutral my-0">
+                    <img class="avatar avatar-sm bg-white mr-2" src="/static/assets/img/brand/players/bunny2_jump.png">
+                    MAKE A PAYMENT
+                </h5>
+            </div>
 
+            <div class="container">
 
+                <p class="my-4 display-4 font-weight-light text-uppercase"> Thank you for supporting your school!</p>
+                <p>
+                    Please
+                    <a target="_blank" href="{{task.school.paypal_account}}/{{task.reward.amount}}" class="btn btn-warning btn-sm">
+                        <i class="fa fa-external-link-square"></i>
+                        click here
+                    </a> to open your school's paypal wallet on a new tab and
+                    make a payment of ${{task.reward.amount}} for a job well done on completing the assignment - <span class="text-uppercase">{{task.name}}</span>.
+                    <!--<span class="text-muted">For your convenience, the reward amount will be pre-populated in Paypal.</span></p>-->
 
+                <p><span>
+                    <i class="fa fa-info-circle"></i>
+                    Once done, please come back and confirm your payment here. This step is
+                    important, since <span class="text-primary">we don't keep any portion of the payment, store your card information or track your payments on Paypal.</span>
+                    </span>
+                </p>
+                <hr>
+                <p class="lead mr-3">
+                    <i class="fa fa-check-square-o"></i>
+                    I have paid the reward amount of <strong>${{task.reward.amount}}</strong> for this task.
+                </p>
 
+                <form method="post" class="mb-4" novalidate>
+                    {% csrf_token %}
+                    {% include 'includes/form.html' %}
 
-
-  <form id="checkout" method="post"  action="" novalidate>
-    {% csrf_token %}
-    {% include 'includes/form.html' %}
-    <hr>
-      <p class="display-4 my-4"> Thank you for supporting your school!</p>
-      <p class="lead my-4">
-          Please <a target="_blank" href="{{task.school.paypal_account}}/{{task.reward.amount}}" class="badge badge-primary">click here</a> to go to your school's paypal.me page and
-          make a payment of ${{task.reward.amount}} for the task - <strong>{{task.name}}</strong>. <span class="text-muted">For your convenience, the reward amount will be pre-populated in Paypal.</span></p>
-
-      <p class="lead"> Once done, please come back and confirm your payment here. This is
-          <strong>important</strong>, since <span class="text-info font-weight-light">we don't keep any portion of the payment, store your card information or track your payments on Paypal.</span>
-      </p>
-      <p class="lead my-4">
-          I have paid the reward amount of <strong>$<u>{{task.reward.amount}}</u></strong> for this task.
-      </p>
-
-        <div class="my-4"></div>
-      <button class="btn btn-success" type="submit">
-          <strong>Confirm</strong>
-      </button>
-      <a href="{% url 'task_replies' task.pk %}" class="btn btn-secondary" role="button"
-         aria-pressed="true">
-          <strong>Cancel</strong>
-      </a>
-      <hr>
-      <!--<p class="text-muted ">Can't see the paypal tab ? <a target="_blank" href="{{task.school.paypal_account}}/{{task.reward.amount}}" class="badge badge-primary">CLICK HERE</a></p>-->
-  </form>
+                    <button class="btn btn-success" type="submit">
+                        <i class="fa fa-check"></i>
+                        <strong>Confirm</strong>
+                    </button>
+                    <a href="{% url 'task_replies' task.pk %}" class="btn btn-secondary" role="button"
+                        aria-pressed="true">
+                        <i class="fa fa-times"></i>
+                        <strong>Cancel</strong>
+                    </a>
+                </form>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'task_replies' task.pk %}">
+                    <i class="fa fa-long-arrow-left"></i>
+                    BACK TO TASK
+                </a>
+                <a href="{% url 'tasks' %}" class="float-right">
+                    DASHBOARD
+                    <i class="fa fa-long-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
 
-{%block paymentiframe%}
-
-<div class="embed-responsive embed-responsive-1by1">
-        <iframe class="embed-responsive-item" src="{{ task.school.paypal_account }}/{{task.reward.amount}}" allowfullscreen></iframe>
-</div>
-
-{%endblock%}

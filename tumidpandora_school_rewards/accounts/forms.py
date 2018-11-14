@@ -31,7 +31,7 @@ class ParentSignUpForm(UserCreationForm):
     email = forms.CharField(max_length=254, required=True, widget=forms.EmailInput())
     # salutation = forms.ChoiceField(choices=SALUTATION_CHOICES)
     school = forms.ModelChoiceField(
-        queryset=School.objects.all(),
+        queryset=School.objects.filter(is_active=True),  # display only schools that are active
         widget=forms.Select(),
         required=True,
         label=_("Select School"),

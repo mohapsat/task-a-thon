@@ -9,6 +9,9 @@ from rewards import views, filters
 
 urlpatterns = [
     path('', views.home_view, name='home'),
+    path('about/', views.aboutus_view, name='about_us'),
+    path('pricing/', views.pricing_view, name='pricing'),
+    path('privacy/', views.privacy_view, name='privacy'),
     path('signup/', accounts_views.signup_view, name='signup'),
 
     path('signup/parent/', accounts_views.parent_signup_view, name='parent_signup'),  # parent_signup

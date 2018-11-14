@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser, UserManager
 from django.utils.html import escape, mark_safe
 from localflavor.us.models import USStateField
 from tumidpandora_school_rewards import settings
-from multiselectfield import MultiSelectField
+from multiselectfield import MultiSelectField  # <-- used for multiselect in Task > grade
 
 
 # Ref: https://simpleisbetterthancomplex.com/tutorial/2017/02/06/how-to-implement-case-insensitive-username.html
@@ -28,17 +28,20 @@ class School(models.Model):
     city = models.CharField(max_length=64)
     state = USStateField(null=True, blank=True)
     zip_code = models.CharField(max_length=32)
-    paypal_account = models.CharField(max_length=128, null=True)
+    paypal_account = models.CharField(max_length=128)
     is_paid = models.BooleanField(default=False)  # to check for subscription
+    is_active = models.BooleanField(default=False)  # display in school's drop-down only if True
+    requested_by_email = models.CharField(max_length=254, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True)
     created_by = models.ForeignKey(User, related_name='schools', on_delete=models.CASCADE, null=True)
     updated_by = models.ForeignKey(User, related_name='+', on_delete=models.CASCADE, null=True)
 
+
     # TODO: add is_premium_expiring flag to schools and throw a warning on tasks dashboard
 
     # class Meta:
-    #     unique_together = (("city", "zip_code", "paypal_account"),)
+    #     unique_together = (("name", "city"),)
 
     def __str__(self):
         # return self.name
@@ -82,7 +85,7 @@ class Status(models.Model):
     STATUS_CHOICES = (
         (OPEN, 'Open'),
         (CLOSED, 'Closed'),
-        (IN_PROGRESS, 'In Progress'),
+        (IN_PROGRESS, 'Reward Claim In Progress'),
         (PENDING_APPROVAL, 'Pending Approval'),
         (APPROVED, 'Approved'),
         (PENDING_PAYMENT, 'Pending Payment'),
@@ -103,7 +106,7 @@ class Status(models.Model):
         if name == 'Open':
             progress_percentage = 20
             color = 'warning'
-        elif name == 'In Progress':
+        elif name == 'Reward Claim In Progress':
             progress_percentage = 40
             color = 'info'
         elif name == 'Pending Approval':
@@ -174,7 +177,9 @@ class Task(models.Model):
     )
 
     name = models.CharField(max_length=125, unique=False)
+
     success_criteria = models.CharField(max_length=500)
+
     last_updated = models.DateTimeField(auto_now_add=True)
     expires_on = models.DateTimeField(default=datetime.now()+timedelta(days=DAYS_TO_EXPIRE_TASK))  # defaulted to +30 days
     status = models.ForeignKey(Status, related_name='tasks', on_delete=models.CASCADE, null=True, default=Status.OPEN)
@@ -271,7 +276,7 @@ class Payment(models.Model):
     created_by = models.ForeignKey(User, related_name='payments', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.task
+        return "PID-"+str(self.id)
 
 
 class UpgradeCharge(models.Model):

@@ -118,7 +118,7 @@
                     <!--<i class="fa fa-trophy"></i>-->
                     <img class="bg-transparent avatar avatar-sm rounded"
                         src="{% static '/assets/img/brand/carrot_gold.png' %}">
-                    Reward Claim
+                    Rewards
 
                     <span class="badge badge-pill badge-info">{{ task.claims.count }}</span>
 
@@ -131,7 +131,7 @@
                                     <img class="bg-transparent"
                                         src="{% static '/assets/img/brand/flagGreen2.png' %}">
                                 </span>
-                                Claim
+                                TASK COMPLETED
                             </a>
                             <!--TODO: prevent a user from claiming the same task more than once-->
                         {% endif %}
@@ -148,7 +148,7 @@
                                     <th scope="col">Teacher</th>
                                     <th scope="col"></th>
                                     <th scope="col">Message</th>
-                                    <th scope="col">Claim Status</th>
+                                    <th scope="col">Reward Status</th>
                                     <!--<th scope="col">Claimed</th>-->
                                     <th scope="col">Actions</th>
                                     <!--<th scope="col"></th>-->
@@ -188,7 +188,7 @@
                                         Delete
                                     </a>
                                 {% endif %}
-                                {% if task.starter == user %}
+                                {% if task.starter == user and not claim.status|upper == 'APPROVED' %}
 
                                     <a href="{% url 'new_reply_to_task' task.pk %}" class="btn btn-warning btn-sm my-1" role="button" aria-pressed="true">
                                         <i class="fa fa-info-circle"></i>
@@ -212,7 +212,7 @@
                         </table>
                         {% else %}
                         <div class="lead text-default my-1">
-                            Reward has not been claimed yet.
+                            Reward can be claimed once the task is completed.
                         </div>
 
                 {% endif %}

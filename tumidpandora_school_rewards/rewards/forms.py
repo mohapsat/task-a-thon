@@ -1,5 +1,5 @@
 from django.utils.translation import gettext_lazy as _
-from django.forms import ModelForm, Textarea, CharField, MultiValueField, DateTimeInput, ChoiceField, TextInput, DateTimeField, MultipleChoiceField
+from django.forms import ModelForm, Textarea, CharField, MultiValueField, DateTimeInput, ChoiceField, TextInput, DateTimeField, MultipleChoiceField, ModelChoiceField, Select, EmailInput
 from .models import Task, Post, Claim, School, Payment
 
 # ref: https://docs.djangoproject.com/en/dev/topics/forms/modelforms/#overriding-the-default-fields
@@ -73,9 +73,34 @@ class NewClaimForm(ModelForm):  # Post
 
 class NewSchoolForm(ModelForm):  # School
 
+    requested_by_email = CharField(max_length=254, required=True, widget=EmailInput(), label="Your Email Address",
+                      help_text="To send confirmation and request information (if needed).")
+    school = ModelChoiceField(
+        queryset=School.objects.filter(is_active=True),  # display only schools that are active
+        widget=Select(),
+        required=False,
+        label=_("Find your school from the list of available schools"),
+        help_text=_("<p>"
+                    "<i class=\"fa fa-question-circle mr-1\"></i>"
+                    "FOUND YOUR SCHOOL ?"
+                    "<a href=\"/signup/parent/\" class=\"btn btn-sm btn-warning ml-2 mt-1\">"
+                    "<i class=\"fa fa-plus-circle mr-1\"></i>"
+                    "SIGNUP AS PARENT"
+                    "</a>"
+                    "<a href=\"/signup/teacher/\" class=\"btn btn-sm btn-info ml-2 mt-1\">"
+                    "<i class=\"fa fa-plus-circle mr-1\"></i>"
+                    "SIGNUP AS TEACHER"
+                    "</a></p>"
+                    "<p class=\"text-uppercase\">Can't find your school ? Submit a request below to add one.</p>"
+                    "<hr>"
+                    "<p><small class=\"text-uppercase text-primary\">"
+                    "<i class=\"fa fa-info-circle mr-1\"></i>"
+                    "Your school will appear in list above in 48 Hrs.</small></p>",)
+    )
+
     class Meta:
         model = School
-        fields = ('name', 'paypal_account', 'street_address', 'city', 'state', 'zip_code', )
+        fields = ('school', 'requested_by_email', 'name', 'paypal_account', 'street_address', 'city', 'state', 'zip_code', )
         # 'expires_on' is inside the new_task.html
 
         widgets = {
@@ -87,7 +112,7 @@ class NewSchoolForm(ModelForm):  # School
         }
         help_texts = {
             'name': _("Enter your school's name (e.g. Little Angels Elementary)"),
-            'paypal_account': _("Your school will receive payments into their Paypal account directly."
+            'paypal_account': _("Your school will receive payments into this Paypal account directly."
                                 " Please create one here: <a target=\"_blank\" href=\"https://www.paypal.com/us/webapps/mpp/education\">"
                                 "School Payment Solutions with PayPal</a>"),
         }

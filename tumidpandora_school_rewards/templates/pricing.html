@@ -1,0 +1,272 @@
+{% extends 'pub_base.html' %}
+
+{% load static %}
+
+{% block main %}
+
+  <main>
+    <div class="position-relative"></div>
+
+    <section class="section section-lg section-shaped">
+      <div class="shape shape-style-1 shape-default">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <!--<span></span>-->
+        <span></span>
+      </div>
+      <div class="container pb-150 py-md">
+
+<div class="row">
+        <div class="col col-xl-12 col-lg-12">
+            <div class="card shadow border-0">
+                <div class="card-header bg-gradient-info border-0">
+                    <span class="text-neutral my-0 display-4 font-weight-light">
+                        <img class="avatar avatar-lg bg-white" src="{% static '/assets/img/brand/players/bunny2_jump.png' %}">
+                        Simple, transparent pricing.
+
+                        <!--<a href="#" class="btn btn-icon btn-md btn-neutral float-right">-->
+                            <!--<span class="btn-inner&#45;&#45;icon">-->
+                                <!--<i class="fa fa-arrow-circle-up"></i>-->
+                            <!--</span>-->
+                            <!--<span class="btn-inner&#45;&#45;text">-->
+                                <!--Upgrade My School Account-->
+                            <!--</span>-->
+                        <!--</a>-->
+
+                    </span>
+                </div>
+                <div class="container my-3">
+                    <div class="table-responsive">
+                        <span class="heading">{{ school }}</span>
+                        <div class="my-2">
+                            <p>For questions or alternate payment arrangements, please send a request to
+                                <a href="mailto:{{ email_support }}" class="text-default">
+                                    <strong>{{ email_support }}</strong>
+                                </a>
+                            </p>
+                        </div>
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                                <th scope="col"></th>
+                                <th scope="col">
+                                    <span class="heading">Basic (Free)</span>
+                                </th>
+                                <th class="text text-primary" scope="col">
+
+                                <span class="heading">
+                                    Premium ( ${{ premium_cost }} / Year / School)
+                                </span>
+
+                                </th>
+                            </thead>
+                            <tbody>
+                                <tr scope="row">
+                                    <td>
+                                        Number of tasks, reward claims and replies.
+                                        <i class="fa fa-question-circle-o"></i>
+                                    </td>
+
+                                    <td>
+                                        <i class="fa fa-check-circle text-success"></i>
+                                        Unlimited
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-check-circle text-success"></i>
+                                        Unlimited
+                                    </td>
+                                </tr>
+                                <tr scope="row">
+                                    <td>
+                                        $ Funds generated per school account.
+                                        <i class="fa fa-question-circle-o"></i>
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-check-circle text-default"></i>
+                                        Up to $10,000 / Year
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-check-circle text-success"></i>
+                                        Unlimited
+                                    </td>
+                                </tr>
+                                <tr scope="row">
+                                    <td>
+                                        Number of Parent Users per school account
+                                        <i class="fa fa-question-circle-o"></i>
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-check-circle text-default"></i>
+                                        25
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-check-circle text-success"></i>
+                                        Unlimited
+                                    </td>
+                                </tr>
+                                <tr scope="row">
+                                    <td>
+                                        Number of Teacher Users per school account
+                                        <i class="fa fa-question-circle-o"></i>
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-check-circle text-default"></i>
+                                        5
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-check-circle text-success"></i>
+                                        Unlimited
+                                    </td>
+                                </tr>
+                                <tr scope="row">
+                                    <td>
+                                        Number of <abbr title="School Admins are account(s) with super user privileges. They have access to the MY SCHOOLs dashboard. They can activate, deactivate or remove PARENT and TEACHER accounts">School Admins</abbr> per school account
+                                    </td>
+                                    <td>
+                                        <!--<i class="fa fa-check-circle text-default"></i>-->
+                                        <i class="fa fa-times-circle text-danger"></i>
+                                       0
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-check-circle text-success"></i>
+                                        Unlimited
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <a href="{% url 'login' %}" class="btn btn-default btn-md">
+                                            <span class="btn-inner--icon">
+                                                <i class="fa fa-chevron-circle-up"></i>
+                                            </span>
+                                            <span class="btn-inner--text">
+                                                FREE
+                                            </span>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'login' %}" class="btn btn-success btn-md">
+                                            <span class="btn-inner--icon">
+                                                <i class="fa fa-chevron-circle-up"></i>
+                                            </span>
+                                            <span class="btn-inner--text">
+                                                Upgrade
+                                            </span>
+                                        </a>
+                                        <!--<form action="{%url 'upgrade_confirm' %}" method="POST" novalidate>-->
+                                            <!--{% csrf_token %}-->
+                                            <!--<script src="https://checkout.stripe.com/checkout.js" class="stripe-button"-->
+                                                <!--data-key="{{ stripe_key }}"-->
+                                                <!--data-amount="{{ stripe_premium_charge }}"-->
+                                                <!--data-name="School Rewards"-->
+                                                <!--data-description="1 Year Premium Membership"-->
+                                                <!--data-image="{% static '/assets/img/brand/players/bunny1_jump.png' %}"-->
+                                                <!--data-currency="usd">-->
+                                            <!--</script>-->
+                                    <!--</form>-->
+
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                </div>
+            </div>
+            <div class="card-footer">
+              <div class="row">
+                <div class="col-lg-3">
+                  <a href="{% url 'parent_signup' %}" class="btn btn-outline-info btn-md btn-block  my-1">
+                    <i class="fa fa-plus-circle"></i>
+                    PARENTS SIGNUP
+                  </a>
+                </div>
+                <div class="col-lg-3">
+                <a href="{% url 'teacher_signup' %}" class="btn btn-outline-warning btn-md  btn-block my-1">
+                  <i class="fa fa-plus-circle"></i>
+                  TEACHERS SIGNUP
+                </a>
+                </div>
+                <div class="col-lg-3">
+                <a href="{% url 'new_school' %}" class="btn btn-white btn-md btn-block  my-1">
+                    <i class="fa fa-plus-circle"></i>
+                    REGISTER YOUR SCHOOL
+                </a>
+                </div>
+                <div class="col-lg-3">
+                <a href="{% url 'pricing' %}" class="btn btn-outline-primary btn-md btn-block my-1">
+                  <i class="fa fa-question-circle"></i>
+                  PREMIUM FEATURES
+                </a>
+                </div>
+              </div>
+            </div>
+            </div>
+        </div>
+</div>
+
+
+
+
+
+
+      </div>
+       <!--SVG separator-->
+      <div class="separator separator-bottom separator-skew">
+        <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
+          <polygon class="fill-white" points="2560 0 2560 100 0 100"></polygon>
+        </svg>
+      </div>
+
+    </section>
+
+    <!--<section class="section section-lg section-shaped"></section>-->
+
+
+    <!--<section class="section section-lg bg-primary">-->
+      <!--<div class="container pt-lg pb-300">-->
+        <!--<div class="row text-center justify-content-center">-->
+          <!--<div class="col-lg-10">-->
+            <!--<h2 class="display-3 text-white">Connect with Parents. Fundraise Year Round.</h2>-->
+            <!--<p class="lead text-white">-->
+              <!--Task-a-Thon provides a unique platform for parents and teachers to interact-->
+              <!--and mutually benefit. Parents actively participate by creating assignments which-->
+              <!--are rewarded once completed by the grades.-->
+            <!--</p>-->
+          <!--</div>-->
+        <!--</div>-->
+        <!--<div class="row row-grid mt-5">-->
+          <!--<div class="col-lg-4">-->
+            <!--<div class="icon icon-lg icon-shape bg-gradient-white shadow rounded-circle text-primary">-->
+              <!--<i class="ni ni-settings text-primary"></i>-->
+            <!--</div>-->
+            <!--<h5 class="text-white mt-3">Building tools</h5>-->
+            <!--<p class="text-white mt-3">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+          <!--</div>-->
+          <!--<div class="col-lg-4">-->
+            <!--<div class="icon icon-lg icon-shape bg-gradient-white shadow rounded-circle text-primary">-->
+              <!--<i class="ni ni-ruler-pencil text-primary"></i>-->
+            <!--</div>-->
+            <!--<h5 class="text-white mt-3">Grow your market</h5>-->
+            <!--<p class="text-white mt-3">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+          <!--</div>-->
+          <!--<div class="col-lg-4">-->
+            <!--<div class="icon icon-lg icon-shape bg-gradient-white shadow rounded-circle text-primary">-->
+              <!--<i class="ni ni-atom text-primary"></i>-->
+            <!--</div>-->
+            <!--<h5 class="text-white mt-3">Launch time</h5>-->
+            <!--<p class="text-white mt-3">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--&lt;!&ndash; SVG separator &ndash;&gt;-->
+      <!--<div class="separator separator-bottom separator-skew zindex-100">-->
+        <!--<svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">-->
+          <!--<polygon class="fill-white" points="2560 0 2560 100 0 100"></polygon>-->
+        <!--</svg>-->
+      <!--</div>-->
+    <!--</section>-->
+
+</main>
+
+{% endblock %}
