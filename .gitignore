@@ -3,7 +3,6 @@ __pycache__/
 .env
 venv/
 
-
 # SQLite database files
 
 *.sqlite3
