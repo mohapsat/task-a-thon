@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.conf.urls import handler404
 from django.contrib import admin
 from django.urls import path
 
@@ -85,3 +85,9 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
 ]
+
+# ERROR VIEWS
+handler400 = views.error_400_view  # Bad Request
+handler403 = views.error_403_view  # HTTP Forbidden
+handler404 = views.error_404_view  # Page not found
+handler500 = views.error_500_view  # Server Error

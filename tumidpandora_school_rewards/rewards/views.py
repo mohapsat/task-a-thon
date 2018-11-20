@@ -698,3 +698,24 @@ def new_school_view(request):  # create new school
     # TODO: Show success message, after creating school. Don't switch to login quickly!!
 
     pass
+
+# REF: https://docs.djangoproject.com/en/2.1/ref/views/#error-views
+
+
+def error_400_view(request, exception):  # Bad Request
+    return render(request, '404.html')
+
+
+def error_403_view(request, exception):  # HTTP Forbidden
+    return render(request, '404.html')
+
+
+def error_404_view(request, exception):  # Page not found
+    return render(request, '404.html')
+
+
+def error_500_view(request, exception):   # Server Error
+    return render(request, '404.html')
+
+
+
