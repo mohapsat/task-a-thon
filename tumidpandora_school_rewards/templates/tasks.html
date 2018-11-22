@@ -95,26 +95,6 @@
                         {{school|upper}}
                     </span>
 
-                    <small>
-                    <kbd class="bg-yellow text-default ml-2 my-1">
-                        {% if user.teacher.school.is_paid or user.parent.school.is_paid %}
-                            <a class="text-default ml-2" href="#">
-                                <!--<img class="bg-transparent" src="{% static '/assets/img/brand/gold_1.png' %}">-->
-                                <i class="fa fa-star-o"></i>
-                                Premium
-                            </a>
-                        {% else %}
-                            <a class="text-default ml-2 my-1" href="{% url 'upgrade_account' %}">
-                                <i class="fa fa-arrow-circle-up"></i>
-
-                                <span class="btn-inner--text">
-                                    Upgrade to Premium
-                                </span>
-                            </a>
-                        {% endif %}
-                    </kbd>
-                    </small>
-
                     <div class="float-right">
                     {% if user.is_parent %}
                             <!--<a href="{% url 'new_task' %}" class="btn btn-success btn-lg" role="button" aria-pressed="true">-->
