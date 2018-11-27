@@ -19,7 +19,6 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import UpdateView
 from django.contrib import messages
-
 from django.http import HttpResponse
 
 import stripe
@@ -30,7 +29,11 @@ from django.contrib.auth.signals import user_logged_out, user_logged_in
 from django.dispatch import receiver  # signal for tracking log out
 from django.contrib import messages
 
+from django.template import Context
+from django.template.loader import render_to_string, get_template
+from django.core.mail import EmailMessage
 
+from_email = "noreply@task-a-thon.com"
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 

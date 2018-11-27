@@ -25,6 +25,12 @@ import json
 from tumidpandora_school_rewards import settings
 
 
+from django.template import Context
+from django.template.loader import render_to_string, get_template
+from django.core.mail import EmailMessage
+
+from_email = "noreply@task-a-thon.com"
+
 def home_view(request):
     return render(request, 'home.html')
 
@@ -678,16 +684,50 @@ def new_school_view(request):  # create new school
         if form.is_valid():
             # school = form.save(commit=False)
             # school.save()  # TODO: Enable after migrating , added null=True for FKs
+
+            name = form.cleaned_data.get('name')
+            street_address = form.cleaned_data.get('street_address')
+            city = form.cleaned_data.get('city')
+            state = form.cleaned_data.get('state')
+            zip_code = form.cleaned_data.get('zip_code')
+            paypal_account = form.cleaned_data.get('paypal_account')
+            requested_by_email = form.cleaned_data.get('requested_by_email')
+
             school = School.objects.create(
-                name=form.cleaned_data.get('name'),
-                street_address=form.cleaned_data.get('street_address'),
-                city=form.cleaned_data.get('city'),
-                state=form.cleaned_data.get('state'),
-                zip_code=form.cleaned_data.get('zip_code'),
-                paypal_account=form.cleaned_data.get('paypal_account'),
-                requested_by_email=form.cleaned_data.get('requested_by_email')
+                name=name,
+                street_address=street_address,
+                city=city,
+                state=state,
+                zip_code=zip_code,
+                paypal_account=paypal_account,
+                requested_by_email=requested_by_email
             )
             messages.info(request, 'SUCCESS! NEW SCHOOL REQUEST SUBMITTED.')
+
+        # EMAIL ALERT START
+            subject = "New School Request Submitted."
+            preheader = "Thank you, we have received your request"
+            em = requested_by_email
+            to_email = list()
+            to_email.append(em)
+            ctx = {"name": name,
+                   "requested_by_email": requested_by_email,
+                   "street_address": street_address,
+                   "city": city,
+                   "state": state,
+                   "zip_code": zip_code,
+                   "paypal_account": paypal_account,
+                   "preheader": preheader  # for email preheader var defined in email_header.html
+                   }
+
+            # print("ctx = %s" % ctx)
+
+            message = get_template('emails/new_school_request.html').render(ctx)
+            msg = EmailMessage(subject, message, to=to_email, from_email=from_email)
+            msg.content_subtype = 'html'
+            msg.send()
+        # EMAIL ALERT END
+
             return redirect('new_school')
         # else:
         #     messages.warning(request, 'Please correct the errors below')

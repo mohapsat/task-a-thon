@@ -91,9 +91,9 @@ class NewSchoolForm(ModelForm):  # School
                     "<i class=\"fa fa-plus-circle mr-1\"></i>"
                     "SIGNUP AS TEACHER"
                     "</a></p>"
-                    "<p class=\"text-uppercase\">Can't find your school ? Submit a request below to add one.</p>"
                     "<hr>"
-                    "<p><small class=\"text-uppercase text-primary\">"
+                    "<p class=\"text-uppercase text-primary heading\"><strong>Can't find your school ?</strong><small> Submit a request here to add one.</small></p>"
+                    "<p><small class=\"text-uppercase text-light\">"
                     "<i class=\"fa fa-info-circle mr-1\"></i>"
                     "Your school will appear in list above in 48 Hrs.</small></p>",)
     )
@@ -112,8 +112,9 @@ class NewSchoolForm(ModelForm):  # School
         }
         help_texts = {
             'name': _("Enter your school's name (e.g. Little Angels Elementary)"),
-            'paypal_account': _("Your school will receive payments into this Paypal account directly."
-                                " Please create one here: <a target=\"_blank\" href=\"https://www.paypal.com/us/webapps/mpp/education\">"
+            'paypal_account': _("Your school will receive payments into this Paypal account directly. If you already have an "
+                                "account, please add that here or "
+                                "create a new one at: <a target=\"_blank\" href=\"https://www.paypal.com/us/webapps/mpp/education\">"
                                 "School Payment Solutions with PayPal</a>"),
         }
         error_messages = {

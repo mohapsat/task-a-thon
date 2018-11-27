@@ -61,7 +61,7 @@ class TeacherSignUpForm(UserCreationForm):
     email = forms.CharField(max_length=254, required=True, widget=forms.EmailInput())
 
     school = forms.ModelChoiceField(
-        queryset=School.objects.all(),
+        queryset=School.objects.filter(is_active=True),
         widget=forms.Select(),
         required=True,
         label=_("Select School"),
