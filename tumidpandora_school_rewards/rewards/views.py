@@ -710,6 +710,7 @@ def new_school_view(request):  # create new school
             em = requested_by_email
             to_email = list()
             to_email.append(em)
+            bcc_email = "support@task-a-thon.com"
             ctx = {"name": name,
                    "requested_by_email": requested_by_email,
                    "street_address": street_address,
@@ -723,7 +724,7 @@ def new_school_view(request):  # create new school
             # print("ctx = %s" % ctx)
 
             message = get_template('emails/new_school_request.html').render(ctx)
-            msg = EmailMessage(subject, message, to=to_email, from_email=from_email)
+            msg = EmailMessage(subject, message, to=to_email, from_email=from_email, bcc=[bcc_email])
             msg.content_subtype = 'html'
             msg.send()
         # EMAIL ALERT END
