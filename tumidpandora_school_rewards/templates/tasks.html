@@ -91,16 +91,16 @@
                                 src="{% static '/assets/img/brand/grass2.png' %}">
                     {% endif %}
 
-                    <span class="badge bg-white border-bottom border-right shadow">
-                        {{school|upper}}
-                    </span>
+                    <code class="text-default">
+                        {{school.name}}
+                    </code>
 
                     <div class="float-right">
                     {% if user.is_parent %}
                             <!--<a href="{% url 'new_task' %}" class="btn btn-success btn-lg" role="button" aria-pressed="true">-->
                                 <!--<strong>+ New Task</strong>-->
                             <!--</a>-->
-                                <a href="{% url 'new_task' %}" class="btn btn-icon btn-md btn-success my-1">
+                                <a href="{% url 'new_task' %}" class="btn btn-icon btn-sm btn-success">
 	                                <span class="btn-inner--icon">
                                         <!--<i class="fa fa-pencil"></i>-->
                                         <!--<i class="fa fa-magic"></i>-->
@@ -109,7 +109,7 @@
 
                                     </span>
                                     <span class="btn-inner--text">
-                                        New Assignment
+                                        Create A New Task
                                     </span>
                             </a>
                     {% endif %}
@@ -123,12 +123,11 @@
                         <tr>
                             <th scope="col" class="lead">
                                 <!--<i class="fa fa-tasks"></i>-->
-
-                            <div class="row">
-                                <div class="col col-lg-6">
-                                    <strong>Task</strong>
+                                <div class="row">
+                                    <div class="col col-lg-6">
+                                        <strong>Task</strong>
+                                    </div>
                                 </div>
-                            </div>
                             </th>
                             <th scope="col" class="lead">
                                 <!--<i class="fa fa-bolt"></i>-->
@@ -164,7 +163,7 @@
                             <form method="get">
                                 <div class="input-group mb-0 my-0">
                                     <!--<input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-">-->
-                                    {% render_field task_filter.form.name class="form-control" placeholder="Search" aria-label="Search Assignments" aria-describedby="button-search"%}
+                                    {% render_field task_filter.form.name class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-search"%}
                                     <div class="input-group-append">
                                         <button class="btn btn-outline-info" type="submit" id="button-search">
                                             <i class="fa fa-search"></i>
@@ -234,14 +233,14 @@
 
                             </td>
                             <td class="align-middle">
-                                    <span class="avatar avatar-sm bg-light rounded shadow">
+                                    <span class="avatar avatar-sm rounded shadow">
                                         {{ task.avatar_text| upper }}
                                     </span>
                             </td>
                             <!--<td class="align-middle">-->
                                 <!--{{ task.posts.count }}-->
                             <!--</td>-->
-                            <td class="align-middle text-primary heading justify-content-center">
+                            <td class="align-middle justify-content-center">
                                 <code><strong>
                                     ${{task.reward.amount}}
                                 </strong></code>

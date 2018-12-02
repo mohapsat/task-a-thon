@@ -34,8 +34,8 @@
             <ul class="navbar-nav navbar-nav-hover align-items-lg-center">
                <li class="nav-item dropdown">
                   <a href="#" class="nav-link" data-toggle="dropdown" href="#" role="button">
-                     <!--<i class="ni ni-ui-04 d-lg-none"></i>-->
-                     <span class="nav-link-inner--text">GETTING STARTED</span>
+                     <i class="fa fa-caret-right text-primary d-lg-none"></i>
+                     <span class="nav-link-inner--text">Getting Started</span>
                      <!--<i class="fa fa-sort-desc"></i>-->
                   </a>
                   <div class="dropdown-menu dropdown-menu-xl">
@@ -82,18 +82,19 @@
 
                <li class="nav-item dropdown">
                   <a href="{% url 'pricing' %}" class="nav-link" role="button">
-                     <!--<i class="ni ni-ui-04 d-lg-none"></i>-->
-                     <span class="nav-link-inner--text">PLANS</span>
+                     <i class="fa fa-caret-right text-warning  d-lg-none"></i>
+                     <span class="nav-link-inner--text text-heading">Pricing</span>
                      <!--<i class="fa fa-sort-desc"></i>-->
                   </a>
                </li>
                <li class="nav-item dropdown">
                   <a href="{% url 'about_us' %}" class="nav-link" role="button">
-                     <!--<i class="ni ni-ui-04 d-lg-none"></i>-->
-                     <span class="nav-link-inner--text">ABOUT US</span>
+                     <i class="fa fa-caret-right text-info  d-lg-none"></i>
+                     <span class="nav-link-inner--text">About Us</span>
                      <!--<i class="fa fa-sort-desc"></i>-->
                   </a>
                </li>
+
             </ul>
             <ul class="navbar-nav align-items-lg-center ml-lg-auto">
                <!--<li class="nav-item">-->
@@ -120,7 +121,7 @@
                <!--<span class="nav-link-inner&#45;&#45;text d-lg-none">Github</span>-->
                <!--</a>-->
                <!--</li>-->
-               <li class="nav-item d-none d-lg-block ml-lg-4">
+               <li class="nav-item d-lg-block ml-lg-4">
                   <a href="{% url 'login' %}" class="btn btn-primary btn-md">
                   <span class="nav-link-inner--text">LOG IN</span>
                   <span class="btn-inner--icon">
