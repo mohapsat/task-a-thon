@@ -122,6 +122,7 @@
 
                     <span class="badge badge-pill badge-info">{{ task.claims.count }}</span>
 
+                    {% if not task.is_expired %}
                     <div class="float-right">
                         {% if task.starter != user and user.is_teacher and task.claims.count < 1 %}
                             <!--parents cannot raise a claim , only teachers can-->
@@ -131,11 +132,28 @@
                                     <img class="bg-transparent"
                                         src="{% static '/assets/img/brand/flagGreen2.png' %}">
                                 </span>
-                                TASK COMPLETED
+                                MARK AS COMPLETE
                             </a>
                             <!--TODO: prevent a user from claiming the same task more than once-->
                         {% endif %}
                     </div>
+                    {%else%}
+                    <div class="float-right">
+                        {% if task.starter != user and user.is_teacher and task.claims.count < 1 %}
+                            <!--parents cannot raise a claim , only teachers can-->
+                            <a href="{% url 'new_claim_to_task' task.pk %}" class="btn btn-icon btn-3 btn-primary btn-md disabled" role="button" aria-pressed="true">
+                                <span class="btn-inner--icon">
+                                    <!--<i class="ni ni-atom"></i>-->
+                                    <img class="bg-transparent"
+                                        src="{% static '/assets/img/brand/flagRed2.png' %}">
+                                </span>
+                                TASK EXPIRED
+                            </a>
+                            <!--TODO: prevent a user from claiming the same task more than once-->
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
                 </h5>
 
                 <div class="table-responsive my-1">
@@ -247,6 +265,8 @@
                         Replies
                         <span class="badge badge-pill badge-info">{{ task.posts.count }}</span>
 
+
+                        {% if not task.is_expired %}
                         <div class="float-right">
                             <a href="{% url 'new_reply_to_task' task.pk %}" class="btn btn-icon btn-3 btn-primary btn-md my-1" role="button" aria-pressed="true">
                             <span class="btn-inner--icon">
@@ -257,6 +277,18 @@
                                 Reply
                             </a>
                         </div>
+                        {% else %}
+                        <div class="float-right">
+                            <a href="{% url 'new_reply_to_task' task.pk %}" class="btn btn-icon btn-3 btn-primary btn-md my-1 disabled" role="button" aria-pressed="true">
+                            <span class="btn-inner--icon">
+                                <!--<i class="ni ni-atom"></i>-->
+                                <img class="bg-transparent"
+                                    src="{% static '/assets/img/brand/mushroom_red.png' %}">
+                            </span>
+                                Task Expired
+                            </a>
+                        </div>
+                        {% endif %}
                     </h5>
 
                     <div class="table-responsive">

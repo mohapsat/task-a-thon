@@ -363,7 +363,7 @@ def on_user_logged_out(sender, request, user, **kwargs):
             msg = 'YOU HAVE SUCCESSFULLY LOGGED OUT'
         else:
             msg = None  # TODO: Msg shows up on login as well for some reason
-        messages.info(request, msg)
+        messages.success(request, msg)
 
 
 user_logged_out.connect(on_user_logged_out)

@@ -28,6 +28,7 @@ from tumidpandora_school_rewards import settings
 from django.template import Context
 from django.template.loader import render_to_string, get_template
 from django.core.mail import EmailMessage
+import datetime
 
 from_email = "noreply@task-a-thon.com"
 
@@ -52,6 +53,9 @@ def pricing_view(request):
 @login_required
 def tasks_view(request):
 
+    today = datetime.datetime.now()  # to filter tasks by year / month etc
+    # ref: https://stackoverflow.com/questions/28101480/how-can-i-query-for-objects-in-current-year-current-month-in-django
+
     # TODO: Determine if view is the best place to filter tasks or pass all tasks and schools to template
     try:
         if request.user.is_parent:
@@ -64,7 +68,10 @@ def tasks_view(request):
         # TODO: Admin should see tasks for all schools
 
     # TODO: Filter tasks by school - DONE.
-    tasks = Task.objects.filter(school=school).order_by('-last_updated')
+    # TODO: Hide closed tasks from previous year
+
+    tasks = Task.objects.filter(school=school).order_by('-last_updated')  # .exclude(status__in=[7,6])
+
     task_filter = TaskFilter(request.GET, queryset=tasks)
 
     page = request.GET.get('page', 1)
@@ -95,7 +102,10 @@ def tasks_view(request):
 
     # REF: https://simpleisbetterthancomplex.com/tutorial/2016/12/06/how-to-create-group-by-queries.html
     # status 7 is 'PAID'
-    chart_left_data = Task.objects.filter(school=school).filter(status=7).values('reward__name')\
+
+    # TODO: Filter tasks by current year
+
+    chart_left_data = Task.objects.filter(school=school).filter(expires_on__year=today.year).filter(status=7).values('reward__name')\
         .annotate(Sum('reward__amount'))
     # paid_rewards_total = chart_left_data[0]['reward__amount__sum']
     chart_left_categories = list()
@@ -139,7 +149,7 @@ def tasks_view(request):
         'series': [chart_left_counts_series]
     }
 
-    chart_middle_data = Task.objects.filter(school=school).values('status')\
+    chart_middle_data = Task.objects.filter(school=school).filter(expires_on__year=today.year).values('status')\
         .annotate(Count('id'))
 
     chart_middle_categories = list()
@@ -207,7 +217,7 @@ def tasks_view(request):
     }
 
     # chart_right_data = chart_left_data
-    chart_right_data = Task.objects.filter(school=school). \
+    chart_right_data = Task.objects.filter(school=school).filter(expires_on__year=today.year). \
         filter(claims__status__in=[4, 5]).\
         values('claims__status').annotate(Count('id'))
     chart_right_categories = list()
@@ -603,8 +613,9 @@ class ClaimDeleteView(DeleteView):
 
     def form_valid(self, form):
         # TODO: Reset task status to OPEN
-        post = form.delete()
-        Task.object.filter(pk=post.task.pk).update(status=Status.OPEN)
+        Task.objects.filter(pk=self.task.pk).update(status=Status.OPEN)
+        messages.warning(self.request, "Reward Claim deleted successfully!")
+        claim = form.delete()
 
 
 @login_required
