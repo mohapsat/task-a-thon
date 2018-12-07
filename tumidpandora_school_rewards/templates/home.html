@@ -46,6 +46,17 @@
                 </span>
             </a>
 
+            <a href="{% url 'login' %}" class="btn btn-icon btn-outline-white mt-5 shadow-lg">
+              <span class="btn-inner--icon">
+                  <!--<i class="fa fa-sign-in mr-2"></i>-->
+                  <img class="bg-transparent" src="{% static '/assets/img/brand/keyGreen.png' %}">
+              </span>
+              <span class="nav-link-inner--text">
+                LOG IN
+              </span>
+            </a>
+
+
           </div>
           <div class="col-lg-6 mb-lg-auto">
             <div class="rounded shadow-lg overflow-hidden">
@@ -122,11 +133,11 @@
               <!--<div class="card-body px-lg-5 py-lg-5">-->
                 <div class="card-body">
 
-                    <p class="lead"><strong>Task-a-Thon&copy;</strong> platform allows parents to engage with
-                    classroooms by creating assignments. Parents pay rewards once the assignments are
-                completed and approved by the assigned grades.</p>
+                    <p class="lead"><strong>Task-a-Thon&copy;</strong> enables parents to engage with
+                    their school by creating assignments. Parents pay rewards once the assignments are
+                completed by the assigned classrooms and approved by the parent(s) who created the task.</p>
 
-                    <p class="lead">Here's an overview of the users and the <strong>assignment-to-reward</strong> workflow:</p>
+                    <p class="lead">Here's an overview of the users and the <strong>task-to-reward</strong> workflow:</p>
                 <img class="img-fluid my-md" src="{% static '/assets/img/tt-wf.png' %}">
 
 

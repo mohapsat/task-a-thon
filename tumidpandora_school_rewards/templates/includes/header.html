@@ -121,12 +121,16 @@
                <!--</a>-->
                <!--</li>-->
                <li class="nav-item d-lg-block ml-lg-4">
-                  <a href="{% url 'login' %}" class="btn btn-primary btn-md">
-                  <span class="nav-link-inner--text">LOG IN</span>
-                  <span class="btn-inner--icon">
-                  <i class="fa fa-sign-in"></i>
-                  </span>
+                  <a href="{% url 'login' %}" class="btn btn-icon btn-white shadow-lg">
+                     <span class="btn-inner--icon">
+                        <!--<i class="fa fa-sign-in mr-2"></i>-->
+                        <img class="bg-transparent" src="{% static '/assets/img/brand/keyGreen.png' %}">
+                     </span>
+                     <span class="nav-link-inner--text">
+                        LOG IN
+                     </span>
                   </a>
+
                </li>
             </ul>
          </div>
