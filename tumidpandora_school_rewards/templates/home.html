@@ -179,9 +179,48 @@
               <!--<div class="card-body px-lg-5 py-lg-5">-->
                 <div class="card-body">
 
-                    <p class="lead"><strong>Task-a-Thon&copy;</strong> enables parents to engage with
-                    their school by creating tasks / assignments. Parents pay rewards once the tasks are
-                completed by the assigned classrooms and approved by the parent(s) who created the task.</p>
+                    <p class="lead">
+                      <strong>Task-a-Thon&copy;</strong> enables parents to engage with classroooms by creating tasks and assigning them to one or more grades.
+                      Teachers create a reward claim by marking the task as complete.
+                      Parents then approve and make a payment to the school against that task.
+
+
+                    <p class="lead">
+                      Task-a-Thon uses
+                  <a href="https://www.paypal.com/us/webapps/mpp/education" target="_blank"><strong>School Fundraising and School Payment Solutions from PayPal</strong></a> under the hood.
+                      Each school is requested to provide a paypal.me account while registering. This enables parents
+                      to pay directly to their school's account. We <span class="bg-white rounded">&nbsp;do not keep any portion of the payment.&nbsp;</span>.
+                    </p>
+
+                  <h4 class="bg-white rounded">&nbsp;Steps to getting started&nbsp;</h4>
+                  <ol class="lead bg-white rounded">
+                    <li>Go to <a href="{% url 'new_school' %}">"Find My School"</a> from the Homepage</li>
+                        <li>Find your school on the drop-down</li>
+                        <li>If your school <span class="text-info">does not exist</span>:</li>
+                            <ul>
+                              <li>Submit a <a href="{% url 'new_school' %}">new request</a> to add your school</li>
+                              <li>Check back after 24-48 hours or wait for to be notified that your school was added.</li>
+                            </ul>
+                    <li>If your school <span class="text-info">exists:</span></li>
+                          <ul>
+                            <li>Sign up as a <a href="{% url 'parent_signup' %}">parent</a></li>
+                            <li>Sign up as a <a href="{% url 'teacher_signup' %}">teacher</a></li>
+                          </ul>
+                        <li>Parents:</li>
+                          <ul>
+                            <li><a href="{% url 'new_task' %}">Create a new task</a> from the dashboard</li>
+                            <li>Discuss task on the task detail screen</li>
+                            <li>Wait for teachers to mark the task as complete</li>
+                            <li>Approve the reward</li>
+                            <li>Pay the Reward</li>
+                          </ul>
+                        <li>Teachers:</li>
+                          <ul>
+                            <li><a href="{% url 'tasks' %}">Review all tasks on your dashboard</a></li>
+                            <li>Discuss task on the task detail screen</li>
+                            <li>Mark Task(s) as complete</li>
+                          </ul>
+                  </ol>
 
                     <p class="lead">Here's an overview of the users and the <strong>task-to-reward</strong> workflow:</p>
                 <img class="img-fluid my-md" src="{% static '/assets/img/tt-wf.png' %}">
