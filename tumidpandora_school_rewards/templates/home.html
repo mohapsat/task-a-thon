@@ -28,21 +28,25 @@
 
         <div class="row justify-content-between align-items-center">
           <div class="col-lg-6 mb-5 mb-lg-0">
-            <span class="display-3 text-white font-weight-light">
+            <span class="display-3 text-white font-weight-light ">
               <strong>Task-a-Thon<sup>&copy;</sup> Fundraiser</strong>
             </span>
-            <p class="text-uppercase text-white mt-4">
-                <strong>Built for Parents, Teachers and Schools.</strong>
+            <p class="text-uppercase text-info mt-4 text-monospace">
+                <!--<strong>Built for Parents, Teachers and Schools.</strong>-->
+              <strong> Simple Fundraising solution for schools</strong>
             </p>
-              <p class="lead text-white"><code><strong>Task-a-Thon</strong><sup>&copy;</sup> allows parents to support classroom development by
-                creating tasks and paying $ rewards upon completion, enabling schools to <kbd> fundraise all year round. </kbd></code></p>
+              <p class="text-white text-monospace"><strong>
+                The lack of funds is one of the <u>biggest stresses</u> for schools!
+
+                Task-a-Thon</strong><sup>&copy;</sup> empowers parents to support classroom development by
+                creating tasks and paying $ rewards upon completion, enabling schools to <kbd> fundraise all year round. </kbd></p>
 
             <a href="{% url 'new_school' %}" class="btn btn-icon btn-outline-white mt-5 shadow-lg">
               <span class="btn-inner--icon">
                 <img class="bg-transparent" src="{% static '/assets/img/brand/carrot.png' %}">
               </span>
                 <span class="btn-inner--text">
-                FIND YOUR SCHOOL
+                FIND MY SCHOOL
                 </span>
             </a>
 
@@ -61,15 +65,6 @@
           <div class="col-lg-6 mb-lg-auto">
             <div class="rounded shadow-lg overflow-hidden">
 
-                <!--<div class="embed-responsive embed-responsive-1by1">-->
-                    <!--&lt;!&ndash;REF: https://getbootstrap.com/docs/4.1/utilities/embed/&ndash;&gt;-->
-                    <!--<iframe width="560" height="315" src="https://www.youtube.com/embed/brUPtJpId2g" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>-->
-                <!--</div>-->
-
-                <!--<img src="{% static 'assets/img/brand/tt.png' %}" class="img-fluid" alt="...">-->
-
-
-
         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
           <ol class="carousel-indicators">
             <li data-target="#carouselExampleIndicators" data-slide-to="0" class=""></li>
@@ -87,7 +82,7 @@
                 <div class="carousel-caption d-none d-md-block">
                   <!--<h5 class="text-dark bg-yellow rounded shadow">Tasks Dashboard</h5>-->
                   <small class="text-white bg-success rounded shadow">
-                    &nbsp; Manage all the <u>tasks</u> and <u>earnings</u> for your school in one place using the Tasks Dashboard.&nbsp;
+                    &nbsp; <b>1.</b> Manage all the <u>tasks</u> and <u>earnings</u> for your school in one place using the Tasks Dashboard.&nbsp;
                   </small>
                 </div>
             </div>
@@ -96,7 +91,7 @@
                 <div class="carousel-caption d-none d-md-block">
                   <!--<h5 class="text-dark bg-yellow rounded shadow">Tasks Dashboard</h5>-->
                   <small class="text-white bg-success rounded shadow">
-                    &nbsp; Create a <u>new task</u>, add a reward, success criteria and assign it to one or more grades.&nbsp;
+                    &nbsp; &nbsp;  <b>2.</b> Create a <u>new task</u>, add a reward, success criteria and assign it to one or more grades.&nbsp;
                   </small>
                 </div>
             </div>
@@ -105,7 +100,7 @@
                   <div class="carousel-caption d-none d-md-block">
                   <!--<h5 class="text-dark bg-yellow rounded shadow">Tasks Dashboard</h5>-->
                   <small class="text-white bg-success rounded shadow">
-                    &nbsp; This screen shows <u>details on a task</u> including <u>reward claims</u> and <u>discussions</u>.&nbsp;
+                    &nbsp; &nbsp;  <b>3.</b> This screen shows <u>details on a task</u> including <u>reward claims</u> and <u>discussions</u>.&nbsp;
                   </small>
                 </div>
             </div>
@@ -114,7 +109,7 @@
                 <div class="carousel-caption d-none d-md-block">
                   <!--<h5 class="text-dark bg-yellow rounded shadow">Tasks Dashboard</h5>-->
                   <small class="text-white bg-success rounded shadow">
-                    &nbsp; Parents can <u>approve the reward</u> once the task is marked as complete.
+                    &nbsp;  <b>4.</b> Parents can <u>approve the reward</u> once the task is marked as complete.
                   </small>
                 </div>
             </div>
@@ -123,7 +118,7 @@
                 <div class="carousel-caption d-none d-md-block">
                   <!--<h5 class="text-dark bg-yellow rounded shadow">Tasks Dashboard</h5>-->
                   <small class="text-white bg-success rounded shadow">
-                    &nbsp; Parents can <u>approve</u> or <u>request more details</u> once the task is marked as complete.&nbsp;
+                    &nbsp; &nbsp;<b>5.</b> Parents can <u>approve</u> or <u>request more details</u> once the task is marked as complete.&nbsp;
                   </small>
                 </div>
             </div>
@@ -132,7 +127,7 @@
                 <div class="carousel-caption d-none d-md-block">
                   <!--<h5 class="text-dark bg-yellow rounded shadow">Tasks Dashboard</h5>-->
                   <small class="text-white bg-success rounded shadow">
-                    &nbsp; Once the reward is approved, it's time to <u>pay the reward</u> to your school.&nbsp;
+                    &nbsp; &nbsp;<b>6.</b> Once the reward is approved, it's time to <u>pay the reward</u> to your school.&nbsp;
                   </small>
                 </div>
             </div>
@@ -165,18 +160,27 @@
         </div>
 
 
-        <div class="card bg-secondary shadow border-0 my-md">
-                <div class="card-header bg-gradient-primary pb-0">
+        <div class="card bg-secondary shadow border-0 mt-lg">
+                <div class="card-header bg-primary pb-0">
                     <div class="mb-md-1 text-white display-4 font-weight-light">
-                        <img class="avatar avatar-lg mr-2" src="{% static '/assets/img/brand/players/bunny1_jump.png' %}">
-                        About <strong>Task-a-Thon&copy; Fundraisers</strong>
+                        <img class="avatar avatar-lg mr-2 bg-white" src="{% static '/assets/img/brand/players/bunny1_jump.png' %}">
+                      <!--<strong>The journey of a thousand rewards begins with one Task !</strong>-->
+                      <strong>More Tasks
+                        &nbsp;
+                        <i class="fa fa-long-arrow-right"></i>
+                        &nbsp;
+                        More Rewards
+                        &nbsp;
+                        <i class="fa fa-long-arrow-right"></i>
+                        &nbsp;
+                        Academic Excellence</strong>
                     </div>
                 </div>
               <!--<div class="card-body px-lg-5 py-lg-5">-->
                 <div class="card-body">
 
                     <p class="lead"><strong>Task-a-Thon&copy;</strong> enables parents to engage with
-                    their school by creating assignments. Parents pay rewards once the assignments are
+                    their school by creating tasks / assignments. Parents pay rewards once the tasks are
                 completed by the assigned classrooms and approved by the parent(s) who created the task.</p>
 
                     <p class="lead">Here's an overview of the users and the <strong>task-to-reward</strong> workflow:</p>
