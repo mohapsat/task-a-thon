@@ -43,11 +43,12 @@
                   <input type="hidden" name="next" value="{{ next }}">
                   {% include 'includes/form.html' %}
 
-                  <p class="required">
+                <p class="required">
                     <i class="fa fa-exclamation-circle"></i>
-                    By submitting this information, you agree to our <a href="#" target="_blank">terms</a> and have
-                    read and accept our <a href="#" target="_blank">privacy policies.</a></p>
-                  <!--<div class="custom-control custom-control-alternative custom-checkbox">-->
+                    &nbsp;By adding my school, I consent to Task-a-Thon<sup>&copy;</sup> <a href="{% url 'privacy' %}" target="_blank">privacy policy</a>
+                </p>
+
+                 <!--<div class="custom-control custom-control-alternative custom-checkbox">-->
                     <!--<input class="custom-control-input" id="customCheckLogin" type="checkbox" required>-->
                     <!--<label class="custom-control-label" for="customCheckLogin">-->
                       <!--<span>I accept the-->
