@@ -188,7 +188,6 @@ class Task(models.Model):
     reward = models.ForeignKey(Reward, related_name='tasks', on_delete=models.CASCADE, null=True, default='GOLD')
     grade = MultiSelectField(choices=GRADE_CHOICES, max_choices=6, max_length=64)
 
-
     # TODO: Remove default reward hard coding
     pass
 

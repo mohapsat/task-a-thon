@@ -12,21 +12,23 @@
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Dear {{first_name}} {{last_name}},</p>
 
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
-                            Welcome to the <a href="https://www.task-a-thon.com">Task-a-Thon&copy;</a>! We're excited you're here.
+                            Thank you for creating a task. Please find a summary of your task below
                         </p>
 
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
-                          Your sign up details for future reference:<br><br>
-                            <strong>School</strong>: {{school}}<br>
-                            <strong>Username</strong>: {{username}}<br>
+                            <strong>Task</strong>: {{task_name}}<br>
+                            <strong>Success Criteria</strong>: {{success_criteria}}<br>
+                            <strong>Reward</strong>: {{reward}}
                         </p>
+
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
 
-                            If you've received this mail in error, it's likely that another user entered
-                            your email address by mistake while trying to request for an account. If you didn't
-                            initiate the request, please contact us at support@task-a-thon.com.
+                            You can edit or delete your task anytime by logging into your
+                            account and clicking EDIT / DELETE icons next to the Task.
+                            Please note that once a Teacher has marked your task as COMPLETE, you won't be able to edit the task.
 
                         </p>
+
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
                             Sincerely,<br>
                             Task-A-Thon&nbsp;&copy; Support
@@ -62,6 +64,5 @@
               </tr>
 
             <!-- END MAIN CONTENT AREA -->
-
 
 {% endblock %}

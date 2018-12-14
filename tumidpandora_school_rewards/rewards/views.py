@@ -358,7 +358,30 @@ def new_task_view(request):  # create new task form
                 reward=reward,
                 grade=form.cleaned_data.get('grade')
             )
-            messages.success(request, 'AWESOME! YOUR ASSIGNMENT WAS CREATED SUCCESSFULLY!')
+            messages.success(request, 'THANK YOU! YOUR TASK WAS CREATED SUCCESSFULLY!')
+
+            # EMAIL ALERT START
+            subject = "New Task Created."
+            preheader = "Thank you for creating a new task."
+            em = request.user.email     # task owner
+            to_email = list()
+            to_email.append(em)
+            bcc_email = "support@task-a-thon.com"
+            ctx = {"task_name": form.cleaned_data.get('name'),
+                   # "school": school,
+                   "success_criteria": form.cleaned_data.get('success_criteria'),
+                   "reward": reward,
+                   "preheader": preheader  # for email pre-header var defined in email_header.html
+                   }
+
+            # print("ctx = %s" % ctx)
+
+            message = get_template('emails/new_task_email.html').render(ctx)
+            msg = EmailMessage(subject, message, to=to_email, from_email=from_email)
+            msg.content_subtype = 'html'
+            msg.send()
+            # EMAIL ALERT END
+
             return redirect('tasks')
         else:
             messages.error(request, 'Please fix the errors and retry.', extra_tags='alert-warning')
@@ -439,10 +462,38 @@ def new_claim_to_task_view(request, pk):  # new reply / post to task
                 created_by=request.user
                 # TODO: Update task.status to IN PROGRESS
             )
-            messages.success(request, 'Thank you! Your reward claim # %s was created successfully.' % claim.id)
+            messages.success(request, 'THANK YOU! YOUR REWARD CLAIM # %s WAS CREATED SUCCESSFULLY!' % claim.id)
+
+
+            # EMAIL ALERT START
+            subject = "YAY! Your task is complete. Time to Approve!"
+            preheader = "Thank you for completing a task."
+            em = request.user.email     # task owner
+            to_email = [request.user.email, task.starter.email]  # to task and claim owners
+            # to_email = list()
+            # to_email.append(em)
+            bcc_email = "support@task-a-thon.com"
+            ctx = {"task_name": task.name,
+                   'task_starter_first_name': task.starter.first_name,
+                   'task_starter_last_name': task.starter.last_name,
+                   'claim_message': claim.message,
+                   'created_on': claim.created_at,
+                   'claim_status': claim.status,
+                   "reward": task.reward,
+                   "preheader": preheader  # for email pre-header var defined in email_header.html
+                   }
+
+            # print("ctx = %s" % ctx)
+
+            message = get_template('emails/new_claim_email.html').render(ctx)
+            msg = EmailMessage(subject, message, to=to_email, from_email=from_email)
+            msg.content_subtype = 'html'
+            msg.send()
+            # EMAIL ALERT END
+
             return redirect('task_replies', pk=task.pk)
         else:
-            messages.info(request, 'Please fix any errors below and retry.')
+            messages.info(request, 'OOPS! Please fix errors below and retry.')
     else:
         form = NewClaimForm()
     return render(request, 'new_claim_to_task.html', {"task": task, "form": form,
