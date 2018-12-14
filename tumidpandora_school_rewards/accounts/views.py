@@ -123,7 +123,7 @@ def teacher_signup_view(request):
             ctx = {"last_name": user.last_name,
                    "first_name": user.first_name,
                    "email": user.email,
-                   "school": user.parent.school,
+                   "school": user.teacher.school,
                    "username": user.username,
                    "role": 'teacher',
                    "preheader": preheader  # for email preheader var defined in email_header.html
