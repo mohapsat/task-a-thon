@@ -71,6 +71,33 @@ def parent_signup_view(request):
             user = form.save()
             login(request, user)
             messages.warning(request, "WELCOME! NEW PARENT ACCOUNT CREATED!")
+
+            # EMAIL ALERT START
+            subject = "Welcome to Task-a-Thon!"
+            preheader = "Thank you for creating an account"
+            em = user.email
+            to_email = list()
+            to_email.append(em)
+            bcc_email = "support@task-a-thon.com"
+            ctx = {"last_name": user.last_name,
+                   "first_name": user.first_name,
+                   "email": user.email,
+                   "school": user.parent.school,
+                   "username": user.username,
+                   "password": user.password,
+                   "role": 'parent',
+                   "preheader": preheader  # for email preheader var defined in email_header.html
+                   }
+
+            # print("ctx = %s" % ctx)
+
+            message = get_template('emails/new_parent_signup.html').render(ctx)
+            msg = EmailMessage(subject, message, to=to_email, from_email=from_email, bcc=[bcc_email])
+            msg.content_subtype = 'html'
+            msg.send()
+            # EMAIL ALERT END
+
+
             return redirect('tasks')
     else:
         form = ParentSignUpForm()
