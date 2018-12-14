@@ -474,8 +474,8 @@ def new_claim_to_task_view(request, pk):  # new reply / post to task
             # to_email.append(em)
             bcc_email = "support@task-a-thon.com"
             ctx = {"task_name": task.name,
-                   'task_starter_first_name': task.starter.first_name,
-                   'task_starter_last_name': task.starter.last_name,
+                   # 'task_starter_first_name': task.starter.first_name,
+                   # 'task_starter_last_name': task.starter.last_name,
                    'claim_message': claim.message,
                    'created_on': claim.created_at,
                    'claim_status': claim.status,
