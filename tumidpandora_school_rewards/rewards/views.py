@@ -105,7 +105,7 @@ def tasks_view(request):
 
     # TODO: Filter tasks by current year
 
-    chart_left_data = Task.objects.filter(school=school).filter(expires_on__year=today.year).filter(status=7).values('reward__name')\
+    chart_left_data = Task.objects.filter(school=school).filter(last_updated__year=today.year).filter(status=7).values('reward__name')\
         .annotate(Sum('reward__amount'))
     # paid_rewards_total = chart_left_data[0]['reward__amount__sum']
     chart_left_categories = list()
@@ -149,7 +149,7 @@ def tasks_view(request):
         'series': [chart_left_counts_series]
     }
 
-    chart_middle_data = Task.objects.filter(school=school).filter(expires_on__year=today.year).values('status')\
+    chart_middle_data = Task.objects.filter(school=school).filter(last_updated__year=today.year).values('status')\
         .annotate(Count('id'))
 
     chart_middle_categories = list()
@@ -217,7 +217,7 @@ def tasks_view(request):
     }
 
     # chart_right_data = chart_left_data
-    chart_right_data = Task.objects.filter(school=school).filter(expires_on__year=today.year). \
+    chart_right_data = Task.objects.filter(school=school).filter(last_updated__year=today.year). \
         filter(claims__status__in=[4, 5]).\
         values('claims__status').annotate(Count('id'))
     chart_right_categories = list()
