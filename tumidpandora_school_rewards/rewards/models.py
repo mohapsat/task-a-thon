@@ -5,6 +5,7 @@ from django.utils.html import escape, mark_safe
 from localflavor.us.models import USStateField
 from tumidpandora_school_rewards import settings
 from multiselectfield import MultiSelectField  # <-- used for multiselect in Task > grade
+from django.urls import reverse
 
 
 # Ref: https://simpleisbetterthancomplex.com/tutorial/2017/02/06/how-to-implement-case-insensitive-username.html
@@ -46,6 +47,9 @@ class School(models.Model):
     def __str__(self):
         # return self.name
         return "%s - %s, %s" % (self.name, self.city, self.state)
+
+    def get_absolute_url(self):
+        return reverse('my_school')
 
 
 class Parent(models.Model):
@@ -216,6 +220,9 @@ class Task(models.Model):
     def avatar_text(self):
         return "%s%s" % (self.starter.first_name[:1], self.starter.last_name[:1])
 
+    def get_absolute_url(self):
+        return reverse('tasks')
+
 
 class Post(models.Model):
 
@@ -235,6 +242,9 @@ class Post(models.Model):
             return self.message[:50] + '...'
         else:
             return self.message
+
+    def get_absolute_url(self):
+        return reverse('new_reply_to_task', args=[str(self.task.id)])  # get task id
 
 
 # ref: https://docs.djangoproject.com/en/dev/topics/db/examples/one_to_one/
@@ -265,6 +275,9 @@ class Claim(models.Model):
         else:
             return self.message
 
+    def get_absolute_url(self):
+        return reverse('new_claim_to_task', args=[str(self.task.id)])  # get task id
+
 
 class Payment(models.Model):
 
@@ -276,6 +289,9 @@ class Payment(models.Model):
 
     def __str__(self):
         return "PID-"+str(self.id)
+
+    def get_absolute_url(self):
+        return reverse('new_payment_to_task', args=[str(self.task.id)])  # get task id
 
 
 class UpgradeCharge(models.Model):

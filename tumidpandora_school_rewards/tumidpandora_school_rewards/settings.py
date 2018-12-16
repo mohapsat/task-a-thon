@@ -44,7 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.humanize',  # <-- added later
+    'django.contrib.humanize',  # <-- added later for dates
+    'django.contrib.sites',  # <-- added later for sitemaps
+    'django.contrib.sitemaps',  # <-- added later for sitemaps
 
     'widget_tweaks',
     'multiselectfield',
@@ -52,6 +54,9 @@ INSTALLED_APPS = [
     'accounts',
     'rewards',
 ]
+
+# Ref: https://www.youtube.com/watch?v=U1f4QTyJBTs [how to add sitemaps]
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

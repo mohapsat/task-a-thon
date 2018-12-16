@@ -1,13 +1,31 @@
-from django.conf.urls import handler404
 from django.contrib import admin
 from django.urls import path
 
 from django.contrib.auth import views as auth_views
-from accounts import views as accounts_views
-from rewards import views, filters
+from django.contrib.sitemaps.views import sitemap
 
+from accounts import views as accounts_views
+from rewards import views
+
+from rewards.sitemaps import SchoolSitemap, TaskSitemap, ClaimSitemap, PostSitemap, StaticViewSitemap  # , PaymentSitemap
+
+
+sitemaps = {
+    'static_pages': StaticViewSitemap,
+
+    'tasks': TaskSitemap,
+    'posts': PostSitemap,
+    'claims': ClaimSitemap,
+    'my_schools': SchoolSitemap,
+    # 'payments': PaymentSitemap,
+
+    # 'status': StatusSitemap,
+}
 
 urlpatterns = [
+
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}),
+
     path('', views.home_view, name='home'),
     path('about/', views.aboutus_view, name='about_us'),
     path('pricing/', views.pricing_view, name='pricing'),
