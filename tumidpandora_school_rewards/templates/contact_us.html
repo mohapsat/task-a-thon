@@ -1,0 +1,240 @@
+{% extends 'pub_base.html' %}
+
+{% load static %}
+
+{% block main %}
+
+  <main>
+    <div class="position-relative"></div>
+
+    <section class="section section-lg section-shaped">
+      <div class="shape shape-style-1 shape-primary">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <!--<span></span>-->
+        <span></span>
+      </div>
+      <div class="container pb-150">
+
+      <div class="row justify-content-center">
+            <div class="col-lg-12">
+            {% include 'includes/messages.html' %}
+            </div>
+    </div>
+
+      <div class="row justify-content-center">
+        <div class="col-lg-9">
+
+             <div class="card bg-secondary shadow border-0 mt-sm">
+                <div class="card-header bg-primary pb-0">
+                    <div class="mb-md-1 text-white display-4 font-weight-light">
+                        <img class="avatar avatar-lg mr-2 bg-white" src="{% static '/assets/img/brand/players/bunny1_jump.png' %}">
+                      <!--<strong>The journey of a thousand rewards begins with one Task !</strong>-->
+                      Get in touch
+                    </div>
+                </div>
+
+
+
+
+     <!--<div class="row justify-content-center">-->
+    <div class="row justify-content-center">
+        <div class="col col-lg-12">
+            <div class="card">
+                <div class="card-header bg-transparent border-0">
+                    <p class="lead">
+                        Please use this form to make <strong>general enquiries</strong> and <strong>raise support
+                        requests</strong>. We will assign our best and brightest worker bunnies on your case and respond to your request as soon as possible.
+                    </p>
+                        <!--<img class="avatar avatar-sm bg-white" src="{% static '/assets/img/brand/players/bunny2_jump.png' %}">-->
+                        <!--CREATE A NEW TASK-->
+
+                </div>
+                <div class="container my-2">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        {% include 'includes/form.html' %}
+
+                        <button type="submit" class="btn btn-success">
+                            <i class="fa fa-cloud"></i>
+                            Submit
+                        </button>
+                            <a href="{% url 'tasks' %}" class="btn btn-secondary" role="button" aria-pressed="true">
+                                <i class="fa fa-times-circle"></i>
+                                Cancel
+                            </a>
+                        <!--TODO: Make expires on work along with the validations-->
+                    </form>
+                </div>
+                <div class="card-footer bg-transparent mt-3">
+                    <!--<button type="submit" class="btn btn-primary">Save</button>-->
+                    <a href="{% url 'tasks' %}" class="text text-primary" role="button" aria-pressed="true">
+                        <i class="fa fa-bar-chart"></i>
+                        TASKS DASHBOARD
+                    </a>
+                    <a href="{% url 'home' %}" class="text text-primary ml-3" role="button" aria-pressed="true">
+                        <i class="fa fa-home"></i>
+                        HOME
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+              <!--<div class="card-body px-lg-5 py-lg-5">-->
+                <div class="card-body">
+
+                    <!--<p class="lead">-->
+                      <!--<strong>Task-a-Thon&copy;</strong> enables parents to engage with classroooms by creating tasks and assigning them to one or more grades.-->
+                      <!--Teachers create a reward claim by marking the task as complete.-->
+                      <!--Parents then approve and make a payment to the school against that task.-->
+
+
+                    <!--<p class="lead">-->
+                      <!--Task-a-Thon uses-->
+                  <!--<a href="https://www.paypal.com/us/webapps/mpp/education" target="_blank"><strong>School Fundraising and School Payment Solutions from PayPal</strong></a> under the hood.-->
+                      <!--Each school is requested to provide a paypal.me account while registering. This enables parents-->
+                      <!--to pay directly to their school's account. We <span class="bg-white rounded">&nbsp;do not keep any portion of the payment.&nbsp;</span>.-->
+                    <!--</p>-->
+
+                  <h4 class="bg-white rounded">&nbsp;Getting started</h4>
+                  <ol class="lead bg-white rounded">
+                    <li>Go to <a href="{% url 'new_school' %}">"Find My School"</a> from the Homepage</li>
+                        <li>Find your school on the drop-down</li>
+                        <li>If your school <span class="text-info">does not exist</span>:</li>
+                            <ul>
+                              <li>Submit a <a href="{% url 'new_school' %}">new request</a> to add your school</li>
+                              <li>Check back after 24-48 hours or wait for to be notified that your school was added.</li>
+                            </ul>
+                    <li>If your school <span class="text-info">exists:</span></li>
+                          <ul>
+                            <li>Sign up as a <a href="{% url 'parent_signup' %}">parent</a></li>
+                            <li>Sign up as a <a href="{% url 'teacher_signup' %}">teacher</a></li>
+                          </ul>
+                        <li>Parents:</li>
+                          <ul>
+                            <li><a href="{% url 'new_task' %}">Create a new task</a> from the dashboard</li>
+                            <li>Discuss task on the task detail screen</li>
+                            <li>Wait for teachers to mark the task as complete</li>
+                            <li>Approve the reward</li>
+                            <li>Pay the Reward</li>
+                          </ul>
+                        <li>Teachers:</li>
+                          <ul>
+                            <li><a href="{% url 'tasks' %}">Review all tasks on your dashboard</a></li>
+                            <li>Discuss task on the task detail screen</li>
+                            <li>Mark Task(s) as complete</li>
+                          </ul>
+                  </ol>
+
+
+            </div>
+
+            <div class="card-footer">
+              <div class="row">
+                <div class="col-lg-3">
+                  <a href="{% url 'parent_signup' %}" class="btn btn-info btn-md btn-block  my-1">
+                    <i class="fa fa-plus-circle"></i>
+                    Parents
+                  </a>
+                </div>
+                <div class="col-lg-3">
+                <a href="{% url 'teacher_signup' %}" class="btn btn-warning btn-md  btn-block my-1">
+                  <i class="fa fa-plus-circle"></i>
+                  Teachers
+                </a>
+                </div>
+                <div class="col-lg-3">
+                <a href="{% url 'new_school' %}" class="btn btn-default btn-md btn-block  my-1">
+                    <i class="fa fa-plus-circle"></i>
+                    Add School
+                </a>
+                </div>
+                <div class="col-lg-3">
+                <a href="{% url 'pricing' %}" class="btn btn-outline-primary btn-md btn-block my-1">
+                  <i class="fa fa-question-circle"></i>
+                  Go Premium
+                </a>
+                </div>
+              </div>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+</div>
+       <!--SVG separator-->
+      <div class="separator separator-bottom separator-skew">
+        <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
+          <polygon class="fill-white" points="2560 0 2560 100 0 100"></polygon>
+        </svg>
+      </div>
+
+    </section>
+
+    <!--<section class="section section-lg section-shaped"></section>-->
+
+
+    <!--<section class="section section-lg bg-primary">-->
+      <!--<div class="container pt-lg pb-300">-->
+        <!--<div class="row text-center justify-content-center">-->
+          <!--<div class="col-lg-10">-->
+            <!--<h2 class="display-3 text-white">Connect with Parents. Fundraise Year Round.</h2>-->
+            <!--<p class="lead text-white">-->
+              <!--Task-a-Thon provides a unique platform for parents and teachers to interact-->
+              <!--and mutually benefit. Parents actively participate by creating assignments which-->
+              <!--are rewarded once completed by the grades.-->
+            <!--</p>-->
+          <!--</div>-->
+        <!--</div>-->
+        <!--<div class="row row-grid mt-5">-->
+          <!--<div class="col-lg-4">-->
+            <!--<div class="icon icon-lg icon-shape bg-gradient-white shadow rounded-circle text-primary">-->
+              <!--<i class="ni ni-settings text-primary"></i>-->
+            <!--</div>-->
+            <!--<h5 class="text-white mt-3">Building tools</h5>-->
+            <!--<p class="text-white mt-3">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+          <!--</div>-->
+          <!--<div class="col-lg-4">-->
+            <!--<div class="icon icon-lg icon-shape bg-gradient-white shadow rounded-circle text-primary">-->
+              <!--<i class="ni ni-ruler-pencil text-primary"></i>-->
+            <!--</div>-->
+            <!--<h5 class="text-white mt-3">Grow your market</h5>-->
+            <!--<p class="text-white mt-3">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+          <!--</div>-->
+          <!--<div class="col-lg-4">-->
+            <!--<div class="icon icon-lg icon-shape bg-gradient-white shadow rounded-circle text-primary">-->
+              <!--<i class="ni ni-atom text-primary"></i>-->
+            <!--</div>-->
+            <!--<h5 class="text-white mt-3">Launch time</h5>-->
+            <!--<p class="text-white mt-3">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--&lt;!&ndash; SVG separator &ndash;&gt;-->
+      <!--<div class="separator separator-bottom separator-skew zindex-100">-->
+        <!--<svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">-->
+          <!--<polygon class="fill-white" points="2560 0 2560 100 0 100"></polygon>-->
+        <!--</svg>-->
+      <!--</div>-->
+    <!--</section>-->
+
+</main>
+
+{% endblock %}
