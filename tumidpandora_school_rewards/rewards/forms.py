@@ -1,6 +1,6 @@
 from django.utils.translation import gettext_lazy as _
 from django.forms import ModelForm, Textarea, CharField, MultiValueField, DateTimeInput, ChoiceField, TextInput, DateTimeField, MultipleChoiceField, ModelChoiceField, Select, EmailInput
-from .models import Task, Post, Claim, School, Payment
+from .models import Task, Post, Claim, School, Payment, Contact
 
 # ref: https://docs.djangoproject.com/en/dev/topics/forms/modelforms/#overriding-the-default-fields
 
@@ -75,6 +75,7 @@ class NewSchoolForm(ModelForm):  # School
 
     requested_by_email = CharField(max_length=254, required=True, widget=EmailInput(), label="Your Email Address",
                       help_text="To send confirmation and request information (if needed).")
+
     school = ModelChoiceField(
         queryset=School.objects.filter(is_active=True),  # display only schools that are active
         widget=Select(),
@@ -185,3 +186,23 @@ class ClaimUpdateForm(ModelForm):
         }
 
 
+class ContactUsForm(ModelForm):  # Contact Us
+
+    # req_email = CharField(max_length=200,
+    #                       required=True,
+    #                       widget=EmailInput(),
+    #                       label="You valid email address",
+    #                       help_text="Required to follow up on your support request.")
+
+    class Meta:
+        model = Contact
+        fields = ['message', 'req_email', ]
+        widgets = {
+            'message': Textarea(attrs={'cols': 80, 'rows': 4}),
+        }
+        labels = {
+            'req_email': _('Your valid email address'),
+        }
+        help_texts = {
+            'req_email': _('Required to follow up on your support request.')
+        }

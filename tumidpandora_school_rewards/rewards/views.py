@@ -11,9 +11,9 @@ from django.http import HttpResponse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 
-from .models import Task, Post, Reward, Status, Claim, Parent, Teacher, User, School, Payment
+from .models import Task, Post, Reward, Status, Claim, Parent, Teacher, User, School, Payment, Contact
 from .forms import (NewTaskForm, NewReplyForm, NewClaimForm, ClaimApprovalForm, NewSchoolForm, NewPaymentForm,
-                    TaskUpdateForm, ClaimUpdateForm)
+                    TaskUpdateForm, ClaimUpdateForm, ContactUsForm)
 
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -38,6 +38,69 @@ def home_view(request):
 
 def aboutus_view(request):
     return render(request, 'about_us.html')
+
+
+def contactus_view(request):
+
+    today = datetime.datetime.now()
+
+    if request.method == 'POST':
+        form = ContactUsForm(request.POST)
+        # reward = Reward.objects.get(id=request.POST['reward'])  # Get reward from select field
+        if form.is_valid():
+            contact = form.save(commit=False)
+
+            # if request.user:
+            #     em = request.user.email
+            # else:
+
+            ts = today  # Set new task status to Open
+            message = form.cleaned_data.get('message')
+
+            # form.save()
+
+            req_email = form.cleaned_data.get('req_email')
+
+            contact = Contact.objects.create(
+                req_email=req_email,
+                # ts=ts,
+                message=message
+            )
+
+            # EMAIL ALERT START
+            subject = "Thank you for contacting Task-a-Thon"
+            preheader = "We have received your support request."
+            to_email = list()
+            to_email.append(req_email)  # send to requestor and bcc personal email
+            bcc_email = "mohapsat@gmail.com"  # replace with a dedicated mailbox for task-a-thon
+            ctx = {"req_email": req_email,
+                   # "school": school,
+                   "message": message,
+                   "contact_time": ts,
+                   "preheader": preheader  # for email pre-header var defined in email_header.html
+                   }
+
+            # print("ctx = %s" % ctx)
+
+            message = get_template('emails/new_contact_email.html').render(ctx)
+            msg = EmailMessage(subject, message, to=to_email, from_email=from_email, bcc=[bcc_email])
+            msg.content_subtype = 'html'
+            msg.send()
+            # EMAIL ALERT END
+
+            messages.success(request, 'Thank you for contacting Task-a-Thon support! '
+                                      'We have received your request and will get back'
+                                      'to you at the earliest.')
+
+            return redirect('contact_us')
+        else:
+            messages.error(request, 'Please submit the required information.', extra_tags='alert-warning')
+
+    else:
+        form = ContactUsForm()
+    return render(request, 'contact_us.html', {"form": form})
+
+    pass
 
 
 def privacy_view(request):

@@ -41,10 +41,13 @@
                     <div class="table-responsive">
                         <span class="heading">{{ school }}</span>
                         <div class="my-2">
-                            <p>For questions or alternate payment arrangements, please send a request to
-                                <a href="mailto:{{ email_support }}" class="text-default">
-                                    <strong>{{ email_support }}</strong>
-                                </a>
+                            <!--<p>For questions or alternate payment arrangements, please send a request to-->
+                                <!--<a href="mailto:{{ email_support }}" class="text-default">-->
+                                    <!--<strong>{{ email_support }}</strong>-->
+                                <!--</a>-->
+                            <!--</p>-->
+                            <p>For questions or support requests, please submit a request
+                                <a href="{% url 'contact_us' %}" target="_blank"> <u>here</u> </a>
                             </p>
                         </div>
                         <table class="table align-items-center table-flush">

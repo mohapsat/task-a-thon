@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Task, Status, Reward, Post, School, Claim, User, Parent, Teacher, Payment, UpgradeCharge
+from .models import Task, Status, Reward, Post, School, Claim, User, Parent, Teacher, Payment, UpgradeCharge, Contact
 
 # Register your models here.
 admin.site.register(Task)
@@ -14,3 +14,4 @@ admin.site.register(Parent)
 admin.site.register(Teacher)
 admin.site.register(Payment)
 admin.site.register(UpgradeCharge)
+admin.site.register(Contact)

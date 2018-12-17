@@ -29,7 +29,7 @@ class School(models.Model):
     city = models.CharField(max_length=64)
     state = USStateField(null=True, blank=True)
     zip_code = models.CharField(max_length=32)
-    paypal_account = models.CharField(max_length=128)
+    paypal_account = models.CharField(max_length=128, null=True)
     is_paid = models.BooleanField(default=False)  # to check for subscription
     is_active = models.BooleanField(default=False)  # display in school's drop-down only if True
     requested_by_email = models.CharField(max_length=254, null=True)
@@ -190,7 +190,7 @@ class Task(models.Model):
     school = models.ForeignKey(School, related_name='school', on_delete=models.CASCADE, null=True)
     starter = models.ForeignKey(User, related_name='tasks', on_delete=models.CASCADE, null=True)
     reward = models.ForeignKey(Reward, related_name='tasks', on_delete=models.CASCADE, null=True, default='GOLD')
-    grade = MultiSelectField(choices=GRADE_CHOICES, max_choices=6, max_length=64)
+    grade = MultiSelectField(choices=GRADE_CHOICES, max_choices=6, max_length=64, null=True)
 
     # TODO: Remove default reward hard coding
     pass
@@ -305,3 +305,14 @@ class UpgradeCharge(models.Model):
 
     def __str__(self):
         return "%s" % self.charge_id
+
+
+class Contact(models.Model):  # Contact Us
+    # req_email = models.CharField(max_length=200, null=True),
+
+    req_email = models.EmailField(max_length=256, null=True)
+    ts = models.DateTimeField(auto_now_add=True),
+    message = models.CharField(max_length=400, null=True)
+
+    def __str__(self):
+        return "%s" % self.req_email
