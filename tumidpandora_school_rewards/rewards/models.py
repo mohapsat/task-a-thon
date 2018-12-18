@@ -316,3 +316,6 @@ class Contact(models.Model):  # Contact Us
 
     def __str__(self):
         return "%s" % self.req_email
+
+    def get_absolute_url(self):
+        return reverse('contact_us')

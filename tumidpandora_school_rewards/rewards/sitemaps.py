@@ -47,7 +47,7 @@ class StaticViewSitemap(Sitemap):
                 'parent_signup', 'teacher_signup', 'my_account',
                 'upgrade_account', 'my_school', 'login',
                 'logout', 'password_reset', 'password_change', 'new_school',
-                'pricing']
+                'pricing', 'contact_us']
 
     def location(self, obj):
         return reverse(obj)
