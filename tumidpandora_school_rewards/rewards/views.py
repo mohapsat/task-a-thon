@@ -72,7 +72,7 @@ def contactus_view(request):
             preheader = "We have received your support request."
             to_email = list()
             to_email.append(req_email)  # send to requestor and bcc personal email
-            bcc_email = "mohapsat@gmail.com"  # replace with a dedicated mailbox for task-a-thon
+            bcc_email = 'mohapsat@gmail.com'  # replace with a dedicated mailbox for task-a-thon
             ctx = {"req_email": req_email,
                    # "school": school,
                    "message": message,
@@ -80,7 +80,7 @@ def contactus_view(request):
                    "preheader": preheader  # for email pre-header var defined in email_header.html
                    }
 
-            # print("ctx = %s" % ctx)
+            print("ctx = %s" % ctx)
 
             message = get_template('emails/new_contact_email.html').render(ctx)
             msg = EmailMessage(subject, message, to=to_email, from_email=from_email, bcc=[bcc_email])
@@ -88,13 +88,12 @@ def contactus_view(request):
             msg.send()
             # EMAIL ALERT END
 
-            messages.success(request, 'Thank you for contacting Task-a-Thon support! '
-                                      'We have received your request and will get back'
+            messages.success(request, 'THANK YOU!! We have received your request and will get back'
                                       'to you at the earliest.')
 
             return redirect('contact_us')
         else:
-            messages.error(request, 'Please submit the required information.', extra_tags='alert-warning')
+            messages.error(request, 'OOPS! Please fix the errors and resubmit your request.', extra_tags='alert-warning')
 
     else:
         form = ContactUsForm()
