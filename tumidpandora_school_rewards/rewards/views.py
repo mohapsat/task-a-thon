@@ -32,6 +32,7 @@ import datetime
 
 from_email = "noreply@task-a-thon.com"
 
+
 def home_view(request):
     return render(request, 'home.html')
 
@@ -55,7 +56,7 @@ def contactus_view(request):
             # else:
 
             ts = today  # Set new task status to Open
-            message = form.cleaned_data.get('message')
+            req_message = form.cleaned_data.get('message')
 
             # form.save()
 
@@ -64,7 +65,7 @@ def contactus_view(request):
             contact = Contact.objects.create(
                 req_email=req_email,
                 # ts=ts,
-                message=message
+                message=req_message
             )
 
             # EMAIL ALERT START
@@ -75,7 +76,7 @@ def contactus_view(request):
             bcc_email = 'mohapsat@gmail.com'  # replace with a dedicated mailbox for task-a-thon
             ctx = {"req_email": req_email,
                    # "school": school,
-                   "message": message,
+                   "message": req_message,
                    "contact_time": ts,
                    "preheader": preheader  # for email pre-header var defined in email_header.html
                    }
