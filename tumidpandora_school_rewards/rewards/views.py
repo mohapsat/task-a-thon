@@ -31,7 +31,7 @@ from django.core.mail import EmailMessage
 import datetime
 
 from_email = "noreply@task-a-thon.com"
-
+bcc_email = "mohapsat@gmail.com"
 
 def home_view(request):
     return render(request, 'home.html')
@@ -89,7 +89,7 @@ def contactus_view(request):
             msg.send()
             # EMAIL ALERT END
 
-            messages.success(request, 'THANK YOU!! We have received your request and will get back'
+            messages.success(request, 'THANK YOU!! We have received your request and will get back '
                                       'to you at the earliest.')
 
             return redirect('contact_us')
@@ -835,7 +835,7 @@ def new_school_view(request):  # create new school
             em = requested_by_email
             to_email = list()
             to_email.append(em)
-            bcc_email = "support@task-a-thon.com"
+            bcc_email = 'mohapsat@gmail.com'
             ctx = {"name": name,
                    "requested_by_email": requested_by_email,
                    "street_address": street_address,
