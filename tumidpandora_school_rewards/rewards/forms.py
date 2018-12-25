@@ -113,10 +113,11 @@ class NewSchoolForm(ModelForm):  # School
         }
         help_texts = {
             'name': _("Enter your school's name (e.g. Little Angels Elementary)"),
-            'paypal_account': _("Your school will receive payments into this Paypal account directly. If you already have an "
+            'paypal_account': _("<span class=\"text-danger\">Your school will receive payments into this Paypal account directly. If you already have an "
                                 "account, please add that here or "
                                 "create a new one at: <a target=\"_blank\" href=\"https://www.paypal.com/us/webapps/mpp/education\">"
-                                "School Payment Solutions with PayPal</a>"),
+                                "School Payment Solutions with PayPal</a></span>"
+                                "&nbsp; (You can also add later using <a target=\"blank_\" href=\"https://www.task-a-thon.com/contact\")><u>our contact form</u></a>)"),
         }
         error_messages = {
             'name': {
