@@ -31,6 +31,7 @@ urlpatterns = [
     path('contact/', views.contactus_view, name='contact_us'),
     path('pricing/', views.pricing_view, name='pricing'),
     path('privacy/', views.privacy_view, name='privacy'),
+    path('press/', views.press_view, name='press'),
     path('signup/', accounts_views.signup_view, name='signup'),
 
     path('signup/parent/', accounts_views.parent_signup_view, name='parent_signup'),  # parent_signup

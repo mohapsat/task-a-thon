@@ -1,0 +1,321 @@
+{% extends 'pub_base.html' %}
+
+{% load static %}
+
+{% block main %}
+
+  <main>
+    <div class="position-relative"></div>
+
+    <section class="section section-md section-shaped">
+      <div class="shape shape-style-1 shape-primary">
+        <!--<span></span>-->
+        <!--<span></span>-->
+        <!--<span></span>-->
+        <!--<span></span>-->
+        <!--&lt;!&ndash;<span></span>&ndash;&gt;-->
+        <!--<span></span>-->
+      </div>
+      <div class="container pb-150">
+        <div class="row justify-content-center">
+        <div class="col-lg-12">
+
+             <div class="card bg-secondary shadow border-0 mt-sm">
+                <div class="card-header bg-primary pb-0">
+                    <div class="mb-md-1 text-white display-4 font-weight-light">
+                        <!--<img class="avatar avatar-lg mr-2 bg-white" src="{% static '/assets/img/brand/players/bunny2_jump.png' %}">-->
+                        PRESS RELEASE
+                    </div>
+                </div>
+              <!--<div class="card-body px-lg-5 py-lg-5">-->
+                <div class="card-body">
+
+                    <p class="badge">DATED: {{reportdate}}</p>
+                    <p class="badge">San Franscisco, CA</p>
+
+                    <p class="h3 text-center">
+                        "TASK-A-THON" PROVIDES AN INNOVATIVE SOLUTION TO
+                        SCHOOL FUNDRAISING AND PARENTAL ENGAGEMENT.<br>
+                        ADDS {{number_schools}} SCHOOL PTAs.
+                    </p>
+                    <p class="small strong text-uppercase text-center">
+                       [ micro fundraisers + parental engagement + classroom development ]
+                    </p>
+                    <br>
+                    <p>
+                        The lack of funds is one of the biggest challenges for schools.
+                        Task-a-Thon is a free service that empowers parents to engage
+                        with schools by creating tasks and providing monetary rewards.
+                        School PTAs and PTOs around the country use the platform  as a channel
+                        to fundraise all year round.
+                    </p>
+
+                    <p>
+                        <a href="https://www.publicschoolreview.com/blog/parental-involvement-is-key-to-student-success" target="_blank">
+                        <u>Research</u></a> has shown that students achieve more in school when their
+                        parents are involved in their education.
+                        The critical role of parental involvement in a child's education
+                        has been examined in countless studies and reports.
+
+                        <span class="text-primary"><strong>Parents are a cornerstone of educational success,
+                            and we need tools and policies that empower, inform and involve them.</strong></span>
+
+                    </p>
+
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6 my-3">
+                            <div class="caption small text-uppercase text-center center-block">Tasks Dashboard</div>
+                            <img src="{% static '/assets/img/press/pri-home.png' %}"
+                            class="img-thumbnail" alt="Tasks Dashboard">
+                        </div>
+                        <div class="col-xl-6 col-lg-6 my-3">
+                            <div class="caption small text-uppercase text-center center-block">Task Details, Rewards and Replies</div>
+                            <img src="{% static '/assets/img/press/pri-taskDetail.png' %}"
+                            class="img-fluid rounded img-thumbnail" alt="Tasks Dashboard">
+                        </div>
+                        <!--<div class="col-xl-4 col-lg-6 my-1">-->
+                            <!--<img src="{% static '/assets/img/press/pri-pay.png' %}"-->
+                            <!--class="img-fluid rounded img-thumbnail" alt="Tasks Dashboard">-->
+                        <!--</div>-->
+                    </div>
+
+                    <p>
+                        Over the past decade <span class="text-primary">US schools have faced drastic budget cuts</span>,
+                        which has lead to less per-pupil funding at the K-12 and also college levels.
+                        As a result, more and more teachers and schools have turned to their
+                        own fundraising activities and events to ensure that students have what
+                        they need in order to be successful both in and outside the classroom.
+                        Fundraisers help with the purchase of additional classroom supplies and
+                        to pay for extracurricular activities, as well as essential tool such as
+                        computers, printers, science equipment, art and music programs, and much more.
+                        These events, however, can also be fun learning experiences for students of
+                        all ages.
+                    </p>
+                    <p>
+                        Traditional fundraisers require parents and students to participate in
+                        activities or buy / sell products that they may or may not be interested in.
+                        While this seems to work in some cases, this does not account for parental
+                        engagement or focus on classroom development.
+
+                        <span class="text-primary">Task-a-Thon bridges
+                            the gap and takes the concept of fundraising to the next level by letting
+                            Parents drive fundraisers with a task - reward model. Parents create tasks
+                            (which can vary from a  <strong>micro fundraiser to a full blown semester long Read-A-Thon</strong>.).
+                        </span>
+
+                        Having Parent’s drive the tasks dashboard, helps them engage more actively
+                        in their schools and act as a source for constant funds. Classrooms play an
+                        active role by completing a task and raising a reward claim which are paid
+                        out by parents after approval.
+                    </p>
+                    <p>
+                        Task-a-Thon uses <a href="https://www.paypal.com/us/webapps/mpp/education" target="_blank">
+                        <u>School Fundraising and School Payment Solutions from PayPal</u></a>
+                        under the hood and passes <span class="bg-yellow text-default rounded">
+                        &nbsp;<strong>100% of the payments to the schools&nbsp;</strong></span>. Schools and
+                        parents are requested to create a paypal account to participate during signup.
+                    </p>
+
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6 my-3">
+                            <div class="caption small text-uppercase  text-center center-block">PAYMENTS</div>
+                            <img src="{% static '/assets/img/press/pri-pay.png' %}"
+                            class="img-thumbnail" alt="Tasks Dashboard">
+
+                        </div>
+
+                        <div class="col-xl-6 col-lg-6 my-3">
+                            <div class="caption small text-uppercase  text-center center-block">My SCHOOL DASHBOARD</div>
+                            <img src="{% static '/assets/img/press/pri-mySchool.png' %}"
+                            class="img-fluid rounded img-thumbnail" alt="Tasks Dashboard">
+                        </div>
+                        <!--<div class="col-xl-4 col-lg-6 my-1">-->
+                            <!--<img src="{% static '/assets/img/press/pri-pay.png' %}"-->
+                            <!--class="img-fluid rounded img-thumbnail" alt="Tasks Dashboard">-->
+                        <!--</div>-->
+                    </div>
+
+
+                    <p class="text-uppercase h4 text-center">
+                        What type of Tasks make sense?
+                    </p>
+                    <p>
+                        Parents, teachers, and educators use a variety of TASKS
+                        on task-a-thon to raise money for their classrooms and schools.
+                        Some tasks are more effective than others, however.
+                        Here’s a list of tasks curated by the task-a-thon community.
+                        The list is not arranged in any specific order.
+                    </p>
+                    <p>
+                        <ul>
+                            <li>
+                                <p class="h6 text-uppercase  bg-white rounded">Inter or Intra class Debate competition:</p>
+                                <ul>
+                                    <li class="h6">Sponsor the reward for a inter or intra class debate competition. This will get the kids talking and learning. </li>
+                                    <li class="h6">Stretch: Sponsor prizes for the most eloquent speaker, most interesting idea among others.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p class="h6 text-uppercase  bg-white rounded">Student Led Presentations</p>
+                                <ul>
+                                    <li class="h6">Sponsor student led presentations on a topic of your choosing or pick a topic after discussing it with parents in the replies section of your task. This can take anywhere from a week to a couple of weeks.</li>
+                                    <li class="h6">Stretch: Request that the sessions be recorded and shared with the parent community on Task-a-Thon.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p class="h6 text-uppercase  bg-white rounded">Walkathon</p>
+                                <ul>
+                                    <li class="h6">A walkathon inside or around the school premises is a perfect way to get the kids moving.</li>
+                                    <li class="h6">Sponsor a walkathon for your grade(s)</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p class="h6 text-uppercase  bg-white rounded">Read-a-Thon</p>
+                                <ul>
+                                    <li class="h6">Read-a-Thon is a popular educational fundraiser that will get the little one’s reading. Scale it down to actionable goals like ‘read 3 books from level 3/C reading level’ for instance. No need to expand it to a semester for a read-a-thon.</li>
+                                    <li class="h6">Do these more often.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p class="h6 text-uppercase  bg-white rounded">Writing letters for a cause, project or event</p>
+                                <ul>
+                                    <li class="h6">Define a clear cause, project or event and ask kids to write letters.</li>
+                                    <li class="h6">The letters could support a cause and indirectly support the classroom with writing skills and rewards.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p class="h6 text-uppercase  bg-white rounded">Mini Sports Tournament</p>
+                                <ul>
+                                    <li class="h6">Pick one or more sports (football, basketball for instance)</li>
+                                    <li class="h6">Ask the grades to organize and classroom tournament</li>
+                                    <li class="h6">Sports tournaments are a great way for kids to learn team dynamics and be active.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p class="h6 text-uppercase  bg-white rounded">Classroom Spelling Bee</p>
+                                <ul>
+                                    <li class="h6">Repeat often, keep kids learning.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p class="h6 text-uppercase  bg-white rounded">Mini Marathons</p>
+                                <ul>
+                                    <li class="h6">Ping Pong, Badminton, Dancing. </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p class="h6 text-uppercase bg-white rounded">Formals Day</p>
+                                <ul>
+                                    <li class="h6">Sponsor a Formals Day Task for your grades where students are allowed to wear formal clothes to school for the day. </li>
+                                    <li class="h6">Make sure teachers and staff get in on the fun as well</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p class="h6 text-uppercase  bg-white rounded">&lt;PICK A TASK&gt;-a-Thon</p>
+                                <ul>
+                                    <li class="h6">Bike-a-Thon, Dance-a-Thon, Sing-a-Thon and more.
+                                    <li class="h6">Make sure teachers and staff get in on the fun as well</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </p>
+                    <br>
+                    <p class="text-center">For questions, general enquiries or support requests, please submit a request
+                        <a href="{% url 'contact_us' %}" target="_blank"><u>here</u></a></p>
+
+                </div>
+
+            <div class="card-footer">
+              <div class="row">
+                <div class="col-lg-3">
+                  <a href="{% url 'parent_signup' %}" class="btn btn-info btn-md btn-block  my-1">
+                    <i class="fa fa-plus-circle"></i>
+                    PARENTS SIGNUP
+                  </a>
+                </div>
+                <div class="col-lg-3">
+                <a href="{% url 'teacher_signup' %}" class="btn btn-warning btn-md  btn-block my-1">
+                  <i class="fa fa-plus-circle"></i>
+                  TEACHERS SIGNUP
+                </a>
+                </div>
+                <div class="col-lg-3">
+                <a href="{% url 'new_school' %}" class="btn btn-default btn-md btn-block  my-1">
+                    <i class="fa fa-plus-circle"></i>
+                    REGISTER YOUR SCHOOL
+                </a>
+                </div>
+                <div class="col-lg-3">
+                <a href="{% url 'pricing' %}" class="btn btn-white btn-md btn-block my-1">
+                  <i class="fa fa-question-circle"></i>
+                  PREMIUM
+                </a>
+                </div>
+              </div>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+</div>
+       <!--SVG separator-->
+      <div class="separator separator-bottom separator-skew">
+        <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
+          <polygon class="fill-white" points="2560 0 2560 100 0 100"></polygon>
+        </svg>
+      </div>
+
+    </section>
+
+    <!--<section class="section section-lg section-shaped"></section>-->
+
+
+    <!--<section class="section section-lg bg-primary">-->
+      <!--<div class="container pt-lg pb-300">-->
+        <!--<div class="row text-center justify-content-center">-->
+          <!--<div class="col-lg-10">-->
+            <!--<h2 class="display-3 text-white">Connect with Parents. Fundraise Year Round.</h2>-->
+            <!--<p class="lead text-white">-->
+              <!--Task-a-Thon provides a unique platform for parents and teachers to interact-->
+              <!--and mutually benefit. Parents actively participate by creating assignments which-->
+              <!--are rewarded once completed by the grades.-->
+            <!--</p>-->
+          <!--</div>-->
+        <!--</div>-->
+        <!--<div class="row row-grid mt-5">-->
+          <!--<div class="col-lg-4">-->
+            <!--<div class="icon icon-lg icon-shape bg-gradient-white shadow rounded-circle text-primary">-->
+              <!--<i class="ni ni-settings text-primary"></i>-->
+            <!--</div>-->
+            <!--<h5 class="text-white mt-3">Building tools</h5>-->
+            <!--<p class="text-white mt-3">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+          <!--</div>-->
+          <!--<div class="col-lg-4">-->
+            <!--<div class="icon icon-lg icon-shape bg-gradient-white shadow rounded-circle text-primary">-->
+              <!--<i class="ni ni-ruler-pencil text-primary"></i>-->
+            <!--</div>-->
+            <!--<h5 class="text-white mt-3">Grow your market</h5>-->
+            <!--<p class="text-white mt-3">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+          <!--</div>-->
+          <!--<div class="col-lg-4">-->
+            <!--<div class="icon icon-lg icon-shape bg-gradient-white shadow rounded-circle text-primary">-->
+              <!--<i class="ni ni-atom text-primary"></i>-->
+            <!--</div>-->
+            <!--<h5 class="text-white mt-3">Launch time</h5>-->
+            <!--<p class="text-white mt-3">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--&lt;!&ndash; SVG separator &ndash;&gt;-->
+      <!--<div class="separator separator-bottom separator-skew zindex-100">-->
+        <!--<svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">-->
+          <!--<polygon class="fill-white" points="2560 0 2560 100 0 100"></polygon>-->
+        <!--</svg>-->
+      <!--</div>-->
+    <!--</section>-->
+
+</main>
+
+{% endblock %}

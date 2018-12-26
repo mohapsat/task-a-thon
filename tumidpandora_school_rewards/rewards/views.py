@@ -33,12 +33,19 @@ import datetime
 from_email = "noreply@task-a-thon.com"
 bcc_email = "mohapsat@gmail.com"
 
+
 def home_view(request):
     return render(request, 'home.html')
 
 
 def aboutus_view(request):
     return render(request, 'about_us.html')
+
+
+def press_view(request):
+    reportdate = datetime.datetime.now() - datetime.timedelta(1)
+    number_schools = School.objects.all().count()
+    return render(request, 'press.html', {"reportdate": reportdate, "number_schools": number_schools})
 
 
 def contactus_view(request):
