@@ -24,69 +24,80 @@
         </div>
 
         <div class="row justify-content-center">
-          <div class="col-lg-5">
+          <div class="col-lg-9">
             <div class="card bg-secondary shadow border-0">
               <div class="card-header bg-gradient-primary pb-0">
-                <div class="mb-md-1 text-white text-center">
-                    <img class="avatar avatar-lg mr-2" src="{% static '/assets/img/brand/players/bunny1_jump.png' %}">
-                    PLEASE LOG IN
+                <div class="mb-md-1 text-white text-uppercase">
+                    <img class="avatar avatar-lg mr-2 bg-white" src="{% static '/assets/img/brand/players/bunny1_jump.png' %}">
+                  PLEASE <u>LOG IN</u> or <u>experience</u> the app using demo accounts
                 </div>
               </div>
               <!--<div class="card-body px-lg-5 py-lg-5">-->
               <div class="card-body">
-            <!--<div>-->
-                <!--&lt;!&ndash;<div class="row">&ndash;&gt;-->
-                  <!--<div class="col-lg-12 my-1">-->
-                    <!--<a href="{% url 'parent_signup' %}" class="btn btn-light btn-md btn-block" role="button" aria-pressed="true">-->
-                      <!--<i class="fa fa-user-circle-o"></i>-->
-                      <!--<strong>PARENTS SIGNUP</strong>-->
-                    <!--</a>-->
-                  <!--</div>-->
-                  <!--<div class="col-lg-12 my-1">-->
-                    <!--<a href="{% url 'teacher_signup' %}" class="btn btn-white btn-md btn-block" role="button" aria-pressed="true">-->
-                      <!--<i class="fa fa-user-circle-o"></i>-->
-                      <!--<strong>TEACHERS SIGNUP</strong></a>-->
-                  <!--</div>-->
-                <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--<div class="col-lg-12 my-1">-->
-                      <!--<a href="{% url 'new_school' %}" class="btn btn-info btn-md btn-block" role="button" aria-pressed="true">-->
-                        <!--<i class="fa fa-book"></i>-->
-                        <!--<strong>REGISTER MY SCHOOL</strong>-->
-                      <!--</a>-->
-                    <!--</div>-->
-            <!--</div>-->
+                <div class="row">
+                  <div class="col col-lg-5">
+                    <form role="form" method="post" novalidate>
+                      {% csrf_token %}
+                      <input type="hidden" name="next" value="{{ next }}">
+                      {% include 'includes/form.html' %}
 
+                      <p class="required small">
+                        <i class="fa fa-exclamation-circle"></i>
+                        &nbsp;By logging In, I consent to Task-a-Thon's <a href="{% url 'privacy' %}" target="_blank">privacy policy</a>
 
-                <!--<div class="text-center text-muted mb-4">-->
-                  <!--<small>Or sign in with credentials</small>-->
-                <!--</div>-->
-                <form role="form" method="post" novalidate>
-                  {% csrf_token %}
-                  <input type="hidden" name="next" value="{{ next }}">
-                  {% include 'includes/form.html' %}
+                        <a href="{% url 'password_reset' %}">
+                          <span class="text-uppercase bg-white rounded text-primary float-right">&nbsp;Forgot password?&nbsp;</span>
+                        </a>
 
-                  <!--<div class="custom-control custom-control-alternative custom-checkbox">-->
-                    <!--<input class="custom-control-input" id="customCheckLogin" type="checkbox"> &lt;!&ndash;checked="checked"&ndash;&gt;-->
-                    <!--<label class="custom-control-label" for="customCheckLogin">-->
-                      <!--<span>Remember me</span>-->
-                    <!--</label>-->
-                  <!--</div>-->
-
-                  <p class="required">
-                    <i class="fa fa-exclamation-circle"></i>
-                    &nbsp;By logging In, I consent to Task-a-Thon<sup>&copy;</sup> <a href="{% url 'privacy' %}" target="_blank">privacy policy</a>
-                  </p>
-                  <div class="text-center">
-                    <button type="submit" class="btn btn-primary my-1">
-                      <!--<img class="bg-transparent" src="{% static '/assets/img/brand/keyGreen.png' %}">-->
-                      <i class="fa fa-lock"></i>
-                      Log In
-                    </button>
-
+                      </p>
+                      <div class="text-center">
+                        <button type="submit" class="btn btn-primary my-3">
+                          <!--<img class="bg-transparent" src="{% static '/assets/img/brand/keyGreen.png' %}">-->
+                          <i class="fa fa-lock"></i>
+                          Log In
+                        </button>
+                      </div>
+                    </form>
                   </div>
-                </form>
-
+                  <div class="col col-lg-7">
+                    <h6><span class="bg-white text-default rounded shadow">&nbsp;Live Demo Accounts&nbsp;</span></h6>
+                    <div class="table-responsive rounded">
+                      <table class="table align-items-center table-white table-flush rounded">
+                        <thead class="thead-light">
+                                <tr>
+                                  <th scope="col"><span class="small"><strong>ROLE</strong></span></th>
+                                  <th scope="col"><span class="small"><strong>USERNAME</strong></span></th>
+                                  <th scope="col"><span class="small"><strong>PASSWORD</strong></span></th>
+                                </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                              <td class="align-middle">
+                                <span class="small rounded bg-success text-white">&nbsp;Parent&nbsp;</span>
+                              </td>
+                              <td class="align-middle small">parentuser</td>
+                              <td class="align-middle small">demopassword</td>
+                          </tr>
+                          <tr>
+                              <td class="align-middle">
+                                <span class="small rounded bg-warning text-white">&nbsp;Teacher&nbsp;</span>
+                              </td>
+                              <td class="align-middle small">teacheruser</td>
+                              <td class="align-middle small">demopassword</td>
+                          </tr>
+                          <tr>
+                              <td class="align-middle">
+                                <span class="small rounded bg-info text-white">&nbsp;School Admin&nbsp;</span>
+                              </td>
+                              <td class="align-middle small">schooladmin</td>
+                              <td class="align-middle small">demopassword</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                  </div>
+                </div>
             <div>
+          </div>
                 <!--<div class="row">-->
                   <div class="col-lg-12 my-1">
                     <a href="{% url 'parent_signup' %}" class="btn btn-light btn-md btn-block" role="button" aria-pressed="true">
@@ -108,7 +119,7 @@
                     </div>
             </div>
 
-              </div>
+
 
               <!--<div class="card-footer">-->
                 <!--&lt;!&ndash;New to School Rewards?&ndash;&gt;-->
@@ -121,18 +132,16 @@
               <!--</div>-->
               <!--</div>-->
             </div>
-            <div class="row mt-3">
-              <div class="col">
-                <a href="{% url 'password_reset' %}" class="text-neutral">
-                  <small class="text-uppercase">Forgot password ?</small>
-                </a>
-              </div>
-              <!--<div class="col-6 text-right">-->
-                <!--<a href="#" class="text-light">-->
-                  <!--<small>Create new account</small>-->
-                <!--</a>-->
+            <!--<div class="row mt-3">-->
+              <!--<div class="col">-->
+                <!---->
               <!--</div>-->
-            </div>
+              <!--&lt;!&ndash;<div class="col-6 text-right">&ndash;&gt;-->
+                <!--&lt;!&ndash;<a href="#" class="text-light">&ndash;&gt;-->
+                  <!--&lt;!&ndash;<small>Create new account</small>&ndash;&gt;-->
+                <!--&lt;!&ndash;</a>&ndash;&gt;-->
+              <!--&lt;!&ndash;</div>&ndash;&gt;-->
+            <!--</div>-->
           </div>
         </div>
       </div>
