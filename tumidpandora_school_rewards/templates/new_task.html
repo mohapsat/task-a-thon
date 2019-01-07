@@ -24,7 +24,7 @@
 
     <!--<div class="row justify-content-center">-->
     <div class="row justify-content-center">
-        <div class="col col-lg-7">
+        <div class="col col-lg-12">
             <div class="card shadow">
                 <div class="card-header bg-gradient-primary border-0">
                     <h5 class="text-neutral my-0">
@@ -33,20 +33,103 @@
                     </h5>
                 </div>
                 <div class="container my-3">
-                    <form method="post" novalidate>
-                        {% csrf_token %}
-                        {% include 'includes/form.html' %}
+                    <div class="row">
+                        <div class="col col-lg-5 col-xl-5 col-12 border-right mb-5">
+                            <form method="post" novalidate>
+                                {% csrf_token %}
+                                {% include 'includes/form.html' %}
 
-                        <button type="submit" class="btn btn-success">
-                            <i class="fa fa-cloud"></i>
-                            Save
-                        </button>
-                            <a href="{% url 'tasks' %}" class="btn btn-secondary" role="button" aria-pressed="true">
-                                <i class="fa fa-times-circle"></i>
-                                Cancel
-                            </a>
-                        <!--TODO: Make expires on work along with the validations-->
-                    </form>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fa fa-cloud"></i>
+                                    Save
+                                </button>
+                                    <a href="{% url 'tasks' %}" class="btn btn-secondary" role="button" aria-pressed="true">
+                                        <i class="fa fa-times-circle"></i>
+                                        Cancel
+                                    </a>
+                                <!--TODO: Make expires on work along with the validations-->
+                            </form>
+                        </div>
+                        <div class="col col-lg-5 col-xl-7 col-12">
+
+                            <p class="h5 mb-3">
+                                Awesome! here're some ideas to get you started...
+                            </p>
+
+                            <ul>
+                            <li>
+                                <p class="text-uppercase bg-secondary rounded h6">&nbsp;Inter or Intra class Debate</p>
+                                <ul>
+                                    <li class="small">Sponsor the reward for a inter or intra class debate competition. This will get the kids talking and learning. </li>
+                                    <li class="small">Stretch: Sponsor prizes for the most eloquent speaker, most interesting idea among others.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p class="text-uppercase bg-secondary rounded h6">&nbsp;Student Led Presentations</p>
+                                <ul>
+                                    <li class="small">Sponsor student led presentations on a topic of your choosing or pick a topic after discussing it with parents in the replies section of your task. This can take anywhere from a week to a couple of weeks.</li>
+                                    <li class="small">Stretch: Request that the sessions be recorded and shared with the parent community on Task-a-Thon.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p class="text-uppercase bg-secondary rounded h6">&nbsp;Walkathon</p>
+                                <ul>
+                                    <li class="small">A walkathon inside or around the school premises is a perfect way to get the kids moving.</li>
+                                    <li class="small">Sponsor a walkathon for your grade(s)</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p class="text-uppercase bg-secondary rounded h6">&nbsp;Read-a-Thon</p>
+                                <ul>
+                                    <li class="small">Read-a-Thon is a popular educational fundraiser that will get the little one’s reading. Scale it down to actionable goals like ‘read 3 books from level 3/C reading level’ for instance. No need to expand it to a semester for a read-a-thon.</li>
+                                    <li class="small">Do these more often.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p class="text-uppercase bg-secondary rounded h6">&nbsp;Writing letters for a cause, project or event</p>
+                                <ul>
+                                    <li class="small">Define a clear cause, project or event and ask kids to write letters.</li>
+                                    <li class="small">The letters could support a cause and indirectly support the classroom with writing skills and rewards.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p class="text-uppercase bg-secondary rounded h6">&nbsp;Mini Sports Tournament</p>
+                                <ul>
+                                    <li class="small">Pick one or more sports (football, basketball for instance)</li>
+                                    <li class="small">Ask the grades to organize and classroom tournament</li>
+                                    <li class="small">Sports tournaments are a great way for kids to learn team dynamics and be active.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p class="text-uppercase bg-secondary rounded h6">&nbsp;Classroom Spelling Bee</p>
+                                <ul>
+                                    <li class="small">Repeat often, keep kids learning.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p class="text-uppercase bg-secondary rounded h6">&nbsp;Mini Marathons</p>
+                                <ul>
+                                    <li class="small">Ping Pong, Badminton, Dancing. </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p class="text-uppercase bg-secondary rounded h6">&nbsp;Formals Day</p>
+                                <ul>
+                                    <li class="small">Sponsor a Formals Day Task for your grades where students are allowed to wear formal clothes to school for the day. </li>
+                                    <li class="small">Make sure teachers and staff get in on the fun as well</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p class="text-uppercase bg-secondary rounded h6">&nbsp;&lt;PICK A TASK&gt;-a-Thon</p>
+                                <ul>
+                                    <li class="small">Bike-a-Thon, Dance-a-Thon, Sing-a-Thon and more.
+                                </ul>
+                            </li>
+                        </ul>
+
+                        </div>
+                    </div>
+
                 </div>
                 <div class="card-footer">
                     <!--<button type="submit" class="btn btn-primary">Save</button>-->
@@ -60,3 +143,42 @@
     </div>
 
 {% endblock %}
+
+
+
+    <!--&lt;!&ndash;<div class="row justify-content-center">&ndash;&gt;-->
+    <!--<div class="row justify-content-center">-->
+        <!--<div class="col col-lg-7">-->
+            <!--<div class="card shadow">-->
+                <!--<div class="card-header bg-gradient-primary border-0">-->
+                    <!--<h5 class="text-neutral my-0">-->
+                        <!--<img class="avatar avatar-sm bg-white" src="{% static '/assets/img/brand/players/bunny2_jump.png' %}">-->
+                        <!--CREATE A NEW TASK-->
+                    <!--</h5>-->
+                <!--</div>-->
+                <!--<div class="container my-3">-->
+                    <!--<form method="post" novalidate>-->
+                        <!--{% csrf_token %}-->
+                        <!--{% include 'includes/form.html' %}-->
+
+                        <!--<button type="submit" class="btn btn-success">-->
+                            <!--<i class="fa fa-cloud"></i>-->
+                            <!--Save-->
+                        <!--</button>-->
+                            <!--<a href="{% url 'tasks' %}" class="btn btn-secondary" role="button" aria-pressed="true">-->
+                                <!--<i class="fa fa-times-circle"></i>-->
+                                <!--Cancel-->
+                            <!--</a>-->
+                        <!--&lt;!&ndash;TODO: Make expires on work along with the validations&ndash;&gt;-->
+                    <!--</form>-->
+                <!--</div>-->
+                <!--<div class="card-footer">-->
+                    <!--&lt;!&ndash;<button type="submit" class="btn btn-primary">Save</button>&ndash;&gt;-->
+                    <!--<a href="{% url 'tasks' %}" class="text text-primary" role="button" aria-pressed="true">-->
+                        <!--<i class="fa fa-caret-left"></i>-->
+                        <!--TASKS DASHBOARD-->
+                    <!--</a>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
