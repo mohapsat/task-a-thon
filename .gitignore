@@ -6,3 +6,7 @@ venv/
 # SQLite database files
 
 *.sqlite3
+static/
+migrations/
+templates/
+*.html
