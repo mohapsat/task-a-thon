@@ -22,7 +22,7 @@ School PTAs and PTOs can use the platform to fundraise all year round.
 ![MY SCHOOL DASHBOARD](https://www.task-a-thon.com/static/assets/img/press/pri-mySchool.png)
 
 ## Explainer Video
-<iframe  title="Task-a-Thon Explainer" width="480" height="390" src="https://www.youtube.com/watch?v=KXZZHSzWric?autoplay=1" frameborder="0" allowfullscreen></iframe>
+[![Task-a-Thon Explainer](https://www.task-a-thon.com/static/assets/img/press/pri-home.png)](https://www.youtube.com/watch?v=KXZZHSzWric "Click Here to Play")
 
 ## Deployment Strategy
 ![Deployment](https://raw.githubusercontent.com/mohapsat/task-a-thon/master/draw/task-a-thon_deployment_strategy.jpg)
