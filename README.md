@@ -1,4 +1,4 @@
-# Task-a-Thon ([link](https://www.task-a-thon.com/))
+# Task-a-Thon ([link](https://task-a-thon.netlify.app/))
 
 ### Innovative Micro-Fundraising Solution for School PTAs & PTOs
 
